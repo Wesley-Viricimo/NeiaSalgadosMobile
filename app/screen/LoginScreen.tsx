@@ -4,11 +4,15 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from '../../components/Loading'; 
 import { useRouter } from 'expo-router';
+import login from '../api/login/loginApi';
+import LoginModel from '../model/LoginModel';
+import LoginResponse from '../api/response/LoginResponse';
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -17,14 +21,25 @@ const LoginScreen = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = () => {
+  
+  const handleLogin = async () => {
     setIsLoading(true);
-    // Simulação de autenticação
-    setTimeout(() => {
+    try {
+      if(email && password) {
+        const data = await login(new LoginModel(email, password));
+        if(data instanceof LoginResponse) {
+            router.push('/screen/HomeScreen');
+        } else {
+            Alert.alert('Erro', data);
+        }
+      } else {
+        Alert.alert('Erro', `Email e senha devem ser fornecidos!`);
+      }
+    } catch (error: any) {
+      Alert.alert('Erro', error);
+    } finally {
       setIsLoading(false);
-      alert('Login realizado!');
-      router.push('/screen/HomeScreen');
-    }, 2000);
+    }
   };
 
   return (
