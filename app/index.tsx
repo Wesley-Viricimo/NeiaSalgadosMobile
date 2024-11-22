@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { Text, View } from 'react-native';
 import UserStorage from './storage/user.storage';
 
+const userStorage = new UserStorage();
+
 export default function Index() {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
@@ -10,7 +12,7 @@ export default function Index() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const data = await new UserStorage().getUserData();
+        const data = await userStorage.getUserData(); 
         console.log('data', data);
         setUserData(data);
       } catch (error) {

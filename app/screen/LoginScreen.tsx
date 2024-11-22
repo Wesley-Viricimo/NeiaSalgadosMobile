@@ -21,6 +21,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const userStorge: UserStorage = new UserStorage();
   
   const handleLogin = async () => {
     setIsLoading(true);
@@ -29,7 +30,7 @@ const LoginScreen = () => {
         const data = await login(new LoginModel(email, password));
         if(data instanceof LoginResponse) {
             router.push('/screen/HomeScreen');
-            await new UserStorage().saveUserData({ id: data.id, name: data.name, role: data.role, token: data.token });
+            userStorge.saveUserData({ id: data.id, name: data.name, role: data.role, token: data.token });
         } else {
             Alert.alert('Erro', data);
         }
