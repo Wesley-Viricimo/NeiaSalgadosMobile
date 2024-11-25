@@ -2,22 +2,22 @@ import React, { useState, useEffect } from "react";
 import { View, TextInput, StyleSheet, FlatList } from "react-native";
 import ProductCard from "../../components/ProductCard";
 import LoadingIndicator from "../../components/LoadingIndicator";
-import debounce from "../../utils/debounce";
 import { fetchProducts } from "../../api/request/productApi";
 import UserStorage from "../../storage/user.storage";
+import { styles } from "./styles";
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState(""); // Armazena o valor digitado
-  const [search, setSearch] = useState(""); // Controla o texto para a busca
+  const [inputValue, setInputValue] = useState(""); // Valor digitado pelo usuário
+  const [debouncedInput, setDebouncedInput] = useState(""); // Valor com debounce
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const userStorage = new UserStorage();
 
-  // Carrega produtos da API
+  // Função para carregar produtos da API
   const loadProducts = async (searchText = "", pageNum = 1) => {
-    if (loading || !hasMore) return;
+    if (loading || (pageNum > 1 && !hasMore)) return;
 
     setLoading(true);
     try {
@@ -26,7 +26,7 @@ export default function Home() {
 
       if (data.length > 0) {
         setProducts((prev) => (pageNum === 1 ? data : [...prev, ...data]));
-        setHasMore(data.length === 10); // Verifica se há mais itens (tamanho do lote)
+        setHasMore(data.length === 10); // Verifica se há mais itens no lote
       } else {
         setHasMore(false);
       }
@@ -37,38 +37,28 @@ export default function Home() {
     }
   };
 
-  // Atualiza a busca quando o usuário para de digitar
-  const debouncedSearch = debounce((text) => {
-    setSearch(text);
-    setPage(1);
-    setHasMore(true);
-    loadProducts(text, 1); // Reinicia a busca com a página 1
-  }, 500);
-
-  // Dispara a busca ao alterar o estado `inputValue`
+  // Atualiza o estado com debounce ao alterar `inputValue`
   useEffect(() => {
-    if (inputValue === "") {
-      // Se o campo de busca estiver vazio, retorna ao estado inicial
-      setSearch("");
-      setPage(1);
-      setHasMore(true);
-      loadProducts("", 1);
-    } else {
-      debouncedSearch(inputValue);
-    }
+    const handler = setTimeout(() => {
+      setDebouncedInput(inputValue);
+    }, 300);
+
+    return () => clearTimeout(handler); // Limpa o timeout anterior
   }, [inputValue]);
 
-  // Carregamento inicial
+  // Dispara a busca ao alterar `debouncedInput`
   useEffect(() => {
-    loadProducts();
-  }, []);
+    setPage(1); // Reinicia para a página inicial
+    setHasMore(true);
+    loadProducts(debouncedInput, 1);
+  }, [debouncedInput]);
 
   // Carrega mais produtos ao rolar a lista
   const handleLoadMore = () => {
     if (!loading && hasMore) {
       const nextPage = page + 1;
       setPage(nextPage);
-      loadProducts(search, nextPage);
+      loadProducts(debouncedInput, nextPage);
     }
   };
 
@@ -77,7 +67,7 @@ export default function Home() {
       <TextInput
         style={styles.searchBar}
         placeholder="Pesquisar produtos..."
-        onChangeText={setInputValue} // Atualiza o valor digitado imediatamente
+        onChangeText={setInputValue} // Atualiza o valor digitado
         value={inputValue}
       />
       <FlatList
@@ -91,20 +81,3 @@ export default function Home() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#f9f9f9",
-  },
-  searchBar: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    backgroundColor: "#fff",
-    marginBottom: 16,
-  },
-});

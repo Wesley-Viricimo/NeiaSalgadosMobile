@@ -4,14 +4,15 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#f9f9f9",
   },
   searchBar: {
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 16,
     paddingHorizontal: 8,
+    backgroundColor: "#fff",
+    marginBottom: 16,
   },
 });
