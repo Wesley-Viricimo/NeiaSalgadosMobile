@@ -1,6 +1,6 @@
-import apiPublicRoute from '@/app/api/api';
-import LoginModel from '@/app/model/LoginModel';
-import LoginResponse from '@/app/api/response/LoginResponse';
+import apiClient from '../apiClient';
+import LoginModel from '../../model/LoginModel';
+import LoginResponse from '../response/LoginResponse';
 
 const login = async (loginModel: LoginModel) => {
     try {
@@ -15,7 +15,7 @@ const login = async (loginModel: LoginModel) => {
             }),
         };
 
-        const response = await apiPublicRoute('/auth', options); 
+        const response = await apiClient('/auth', options); 
         
         if(response.message.summary == "Unauthorized") {
             return response.message.detail; 
