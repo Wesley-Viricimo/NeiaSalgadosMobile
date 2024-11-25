@@ -7,7 +7,8 @@ import { fetchProducts } from "../../api/request/productApi";
 import UserStorage from "../../storage/user.storage";
 
 export default function Home() {
-  const [search, setSearch] = useState("");
+  const [inputValue, setInputValue] = useState(""); // Armazena o valor digitado
+  const [search, setSearch] = useState(""); // Controla o texto para a busca
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -36,13 +37,26 @@ export default function Home() {
     }
   };
 
-  // Debounce para busca otimizada
-  const handleSearch = debounce((text) => {
+  // Atualiza a busca quando o usuário para de digitar
+  const debouncedSearch = debounce((text) => {
     setSearch(text);
     setPage(1);
     setHasMore(true);
     loadProducts(text, 1); // Reinicia a busca com a página 1
   }, 500);
+
+  // Dispara a busca ao alterar o estado `inputValue`
+  useEffect(() => {
+    if (inputValue === "") {
+      // Se o campo de busca estiver vazio, retorna ao estado inicial
+      setSearch("");
+      setPage(1);
+      setHasMore(true);
+      loadProducts("", 1);
+    } else {
+      debouncedSearch(inputValue);
+    }
+  }, [inputValue]);
 
   // Carregamento inicial
   useEffect(() => {
@@ -63,8 +77,8 @@ export default function Home() {
       <TextInput
         style={styles.searchBar}
         placeholder="Pesquisar produtos..."
-        onChangeText={handleSearch}
-        value={search}
+        onChangeText={setInputValue} // Atualiza o valor digitado imediatamente
+        value={inputValue}
       />
       <FlatList
         data={products}
