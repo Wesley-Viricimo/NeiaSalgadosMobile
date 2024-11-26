@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, StyleSheet, FlatList } from "react-native";
+import { View, TextInput, FlatList } from "react-native";
 import ProductCard from "../../components/ProductCard";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { fetchProducts } from "../../api/request/productApi";
 import UserStorage from "../../storage/user.storage";
 import { styles } from "./styles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState(""); // Valor digitado pelo usuário
@@ -63,7 +64,7 @@ export default function Home() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TextInput
         style={styles.searchBar}
         placeholder="Pesquisar produtos..."
@@ -78,6 +79,6 @@ export default function Home() {
         onEndReachedThreshold={0.1} // Percentual da altura da lista para acionar o carregamento
         ListFooterComponent={loading ? <LoadingIndicator /> : null} // Exibe indicador de carregamento no final
       />
-    </View>
+    </SafeAreaView>
   );
 }
