@@ -1,22 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View, Text } from "react-native";
 import OptionCard from "../../components/optionCard/index";
-import UserStorage from "../../storage/user.storage";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Admin = () => {
-  const userStorage = new UserStorage();
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    const fetchUserName = async () => {
-      const userData = await userStorage.getUserData();
-      setUserName(userData?.name || "Usuário");
-    };
-
-    fetchUserName();
-  }, []);
 
   const handlePendingOrders = () => {
     console.log("Pedidos Pendentes");
@@ -36,7 +24,7 @@ const Admin = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.greeting}>Olá, {userName}!</Text>
+      <Text style={styles.greeting}>Painel Administrativo</Text>
       <View style={styles.optionsContainer}>
         <OptionCard
           iconName="pending-actions"
