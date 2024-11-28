@@ -3,8 +3,10 @@ import { View, Text } from "react-native";
 import OptionCard from "../../components/optionCard/index";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 const Admin = () => {
+  const navigation = useNavigation();
 
   const handlePendingOrders = () => {
     console.log("Pedidos Pendentes");
@@ -15,7 +17,7 @@ const Admin = () => {
   };
 
   const handleProductControl = () => {
-    console.log("Controle de Produtos");
+    navigation.navigate("ProductControl");
   };
 
   const handleUserControl = () => {

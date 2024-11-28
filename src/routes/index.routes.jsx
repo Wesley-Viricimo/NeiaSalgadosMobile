@@ -4,6 +4,7 @@ import Login from '../pages/login';
 import BottomRoutes from './bottom.routes';
 import UserStorage from '../storage/user.storage'; // Importando a classe UserStorage
 import { ActivityIndicator, View, StyleSheet } from 'react-native'; // Indicador de carregamento
+import ProductControl from '../pages/productControl';
 
 export default function Routes() {
   const Stack = createStackNavigator();
@@ -47,6 +48,13 @@ export default function Routes() {
       <Stack.Screen
         name="BottomRoutes"
         component={BottomRoutes}
+      />
+      <Stack.Screen
+        name="ProductControl"
+        component={ProductControl}
+        options={{
+          headerShown: false, // Oculta o header padrão
+        }}
       />
     </Stack.Navigator>
   );
