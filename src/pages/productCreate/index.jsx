@@ -6,7 +6,7 @@ import InputField from "../../components/inputField/index";
 import SubmitButton from "../../components/submitButton/index";
 import { useNavigation } from "@react-navigation/native";
 import { validateFile } from "../../utils/fileValidator";
-import { createProduct } from "../../api/request/Product.service";
+import { createProduct } from "../../api/request/ProductService";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ProductCreate = () => {

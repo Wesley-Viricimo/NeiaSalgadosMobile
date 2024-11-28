@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, FlatList } from "react-native";
+import { TextInput, FlatList } from "react-native";
 import ProductCard from "../../components/ProductCard";
 import LoadingIndicator from "../../components/LoadingIndicator";
-import { fetchProducts } from "../../api/request/Product.service";
-import UserStorage from "../../storage/user.storage";
+import ProductService from "../../api/request/ProductService";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,7 +13,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const userStorage = new UserStorage();
 
   // Função para carregar produtos da API
   const loadProducts = async (searchText = "", pageNum = 1) => {
@@ -22,8 +20,7 @@ export default function Home() {
 
     setLoading(true);
     try {
-      const userData = await userStorage.getUserData();
-      const data = await fetchProducts(searchText, pageNum, userData.token);
+      const data = await ProductService.fetchProducts(searchText, pageNum);
 
       if (data.length > 0) {
         setProducts((prev) => (pageNum === 1 ? data : [...prev, ...data]));

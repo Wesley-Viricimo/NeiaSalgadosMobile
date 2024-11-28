@@ -1,16 +1,19 @@
 import ProductModel from '../../model/ProductModel';
-import UserStorage from '../../storage/user.storage';
 import apiClient from '../apiClient';
 import ProductResponse from '../response/ProductResponse';
+import TokenService from '../service/TokenService';
 
 class ProductService {
-  static async fetchProducts(title = '', page = 1, token = ''): Promise<ProductResponse[]> {
+  // Método estático para buscar produtos
+  static async fetchProducts(title = '', page = 1): Promise<ProductResponse[]> {
     try {
+      const token = await TokenService.getToken(); // Obtemos o token diretamente aqui
+
       const options = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token, // Corrigir o erro de ponto e vírgula (;) em vez de vírgula (,)
+          'Authorization': token, // Usamos o token obtido pela função `getToken`
         },
       };
 
@@ -37,21 +40,21 @@ class ProductService {
   // Método estático para criar um produto
   static async createProduct(productModel: ProductModel) {
     try {
+      const token = await TokenService.getToken(); // Obtemos o token diretamente aqui
+
       const file = productModel.file;
 
       // Verificar se estamos no ambiente de React Native e se file tem a propriedade `uri`
       let fileUri = '';
       if ((file as any).uri) {
-        // Se tiver uri, estamos no React Native
         fileUri = (file as any).uri;
       } else {
-        // Caso contrário, usar o nome do arquivo diretamente (caso seja um `File` no navegador)
         fileUri = (file as any).name || '';
       }
 
       const fileName = file.name || 'file.jpg'; // Nome do arquivo
 
-      // Carregar o arquivo e convertê-lo para um Blob, se necessário (para React Native)
+      // Carregar o arquivo e convertê-lo para um Blob, se necessário
       const fileBlob = await fetch(fileUri)
         .then(res => res.blob())
         .catch(error => {
@@ -70,7 +73,7 @@ class ProductService {
         method: 'POST',
         headers: {
           "Content-Type": "multipart/form-data",
-          'Authorization': 'colocar token', // Aqui você pode colocar o token da maneira que preferir
+          'Authorization': token, // Usamos o token obtido pela função `getToken`
         },
         body: formData,
       };
