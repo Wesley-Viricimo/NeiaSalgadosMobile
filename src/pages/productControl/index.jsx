@@ -28,7 +28,7 @@ const ProductControl = () => {
         <OptionCard
           iconName="add-box"
           title="Cadastrar Novo Produto"
-          onPress={() => console.log("Cadastrar Novo Produto")}
+          onPress={() => navigation.navigate("ProductCreate")}
         />
       </View>
     </SafeAreaView>
