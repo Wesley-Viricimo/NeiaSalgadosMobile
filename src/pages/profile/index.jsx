@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Text, View, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import OptionItem from "../../components/optionItem/index";
 import UserStorage from "../../storage/user.storage";
 import { styles } from "./styles";
@@ -7,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const Profile = () => {
   const [username, setUsername] = useState("");
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -16,6 +18,31 @@ const Profile = () => {
     };
     fetchUserName();
   }, []);
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Confirmação de saída",
+      "Você tem certeza que deseja sair?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sim",
+          onPress: async () => {
+            const userStorage = new UserStorage();
+            await userStorage.removeUserData(); // Limpa as informações do usuário
+            navigation.reset({ // Redefine a pilha para que a tela de login seja a única acessível
+              index: 0,
+              routes: [{ name: "Login" }]
+            });
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   const initialOptions = [
     {
@@ -59,7 +86,7 @@ const Profile = () => {
       id: "6",
       title: "Sair",
       iconName: "logout",
-      onPress: () => alert("Sair"),
+      onPress: handleLogout, // Chama a função de logout ao clicar em "Sair"
     },
   ];
 
