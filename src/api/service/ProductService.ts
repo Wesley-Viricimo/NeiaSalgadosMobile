@@ -1,7 +1,7 @@
 import ProductModel from '../../model/ProductModel';
 import apiClient from '../apiClient';
 import ProductResponse from '../response/ProductResponse';
-import TokenService from '../service/TokenService';
+import TokenService from './TokenService';
 
 class ProductService {
   // Método estático para buscar produtos

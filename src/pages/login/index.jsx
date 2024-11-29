@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Loading from '../../components/Loading';
-import login from '../../api/request/loginApi';
+import LoginService from '../../api/service/LoginService';
 import LoginModel from '../../model/LoginModel';
 import LoginResponse from '../../api/response/LoginResponse';
 import UserStorage from '../../storage/user.storage';
@@ -28,7 +28,7 @@ export default function Login() {
         setIsLoading(true);
         try {
             if (email && password) {
-                const data = await login(new LoginModel(email, password));
+                const data = await LoginService.login(new LoginModel(email, password));
                 if (data instanceof LoginResponse) {
                     navigation.navigate("BottomRoutes");
                     userStorge.saveUserData({ id: data.id, name: data.name, role: data.role, token: data.token })

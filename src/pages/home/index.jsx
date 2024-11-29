@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { TextInput, FlatList } from "react-native";
 import ProductCard from "../../components/ProductCard";
 import LoadingIndicator from "../../components/LoadingIndicator";
-import ProductService from "../../api/request/ProductService";
+import ProductService from "../../api/service/ProductService";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
