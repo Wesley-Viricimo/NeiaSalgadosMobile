@@ -28,4 +28,21 @@ export const styles = StyleSheet.create({
     padding: 16,
     justifyContent: "center",
   },
+  filePreview: {
+    marginVertical: 16,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#DDD",
+    borderRadius: 8,
+    backgroundColor: "#F9F9F9",
+    alignItems: "center",
+  },
+  fileName: {
+    fontSize: 16,
+    color: "#333",
+  },
+  filePlaceholder: {
+    fontSize: 14,
+    color: "#AAA",
+  },
 });

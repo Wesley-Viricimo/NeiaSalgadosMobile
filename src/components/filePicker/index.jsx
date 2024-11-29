@@ -6,12 +6,10 @@ import { styles } from "./styles";
 const FilePicker = ({ onFileSelect }) => {
   const pickFile = async () => {
     const result = await DocumentPicker.getDocumentAsync({
-      type: ["image/png", "image/jpeg", "image/jpg"],
+      mimeType: ["image/png", "image/jpeg", "image/jpg"],
     });
 
-    if (result.type === "success") {
-      onFileSelect(result);
-    }
+    onFileSelect(result); // Retorna o arquivo selecionado
   };
 
   return (

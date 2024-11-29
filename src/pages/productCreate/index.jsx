@@ -6,8 +6,9 @@ import InputField from "../../components/inputField/index";
 import SubmitButton from "../../components/submitButton/index";
 import { useNavigation } from "@react-navigation/native";
 import { validateFile } from "../../utils/fileValidator";
-import { createProduct } from "../../api/service/ProductService";
+import ProductService from "../../api/service/ProductService";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ProductModel from "../../model/ProductModel";
 
 const ProductCreate = () => {
   const navigation = useNavigation();
@@ -20,12 +21,12 @@ const ProductCreate = () => {
       return Alert.alert("Erro", "Todos os campos são obrigatórios!");
     }
 
-    if (!validateFile(file.name)) {
+    if (!validateFile(file.assets[0].mimeType)) {
       return Alert.alert("Erro", "O tipo do arquivo é inválido!");
     }
 
     try {
-      const response = await createProduct(file, description, price);
+      const response = await ProductService.createProduct(new ProductModel(file, description, price));
 
       if (response.status === 201) {
         Alert.alert("Sucesso", "Produto cadastrado com sucesso!");
@@ -48,6 +49,13 @@ const ProductCreate = () => {
       </View>
       <View style={styles.body}>
         <FilePicker onFileSelect={setFile} />
+        <View style={styles.filePreview}>
+          {file ? (
+            <Text style={styles.fileName}>{file.assets[0].name}</Text>
+          ) : (
+            <Text style={styles.filePlaceholder}>Nenhuma imagem selecionada</Text>
+          )}
+        </View>
         <InputField
           placeholder="Descrição do produto"
           value={description}
@@ -62,7 +70,7 @@ const ProductCreate = () => {
         <SubmitButton title="Cadastrar Produto" onPress={handleSubmit} />
       </View>
     </SafeAreaView>
-  );
+  );  
 };
 
 export default ProductCreate;
