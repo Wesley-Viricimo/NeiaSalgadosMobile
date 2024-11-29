@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Animated } from "react-native";
 import Home from "../pages/home";
 import Orders from "../pages/orders";
 import Profile from "../pages/profile";
 import Admin from "../pages/admin/index";
-import Icon from "react-native-vector-icons/MaterialIcons"; // Importa a biblioteca de ícones
-import UserStorage from "../storage/user.storage"; // Assumindo que você já possui um UserStorage configurado
+import Icon from "react-native-vector-icons/MaterialIcons";
+import UserStorage from "../storage/user.storage";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +17,7 @@ export default function BottomRoutes() {
   useEffect(() => {
     const fetchUserRole = async () => {
       const userData = await userStorage.getUserData();
-      setUserRole(userData.role); // Supondo que o role é armazenado como "admin", "dev", etc.
+      setUserRole(userData?.role);
     };
 
     fetchUserRole();
@@ -24,51 +25,58 @@ export default function BottomRoutes() {
 
   return (
     <Tab.Navigator
-      screenOptions={{
-        headerShown: false, // Remove o header no topo
+      screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#fff", // Define o estilo da barra inferior
-          height: 50, // Ajusta a altura da barra
+          backgroundColor: "#fff",
+          height: 60,
         },
-      }}
+        tabBarIconStyle: {
+          marginTop: 5,
+        },
+        tabBarActiveTintColor: "#1E90FF", // Cor ativa
+        tabBarInactiveTintColor: "#808080", // Cor inativa
+        tabBarIcon: ({ color, size, focused }) => {
+          const scaleAnim = new Animated.Value(focused ? 1.2 : 1); // Define a escala
+          const opacityAnim = new Animated.Value(focused ? 1 : 0.5); // Define opacidade
+
+          // Animações ao mudar o foco
+          Animated.timing(scaleAnim, {
+            toValue: focused ? 1.2 : 1,
+            duration: 250,
+            useNativeDriver: true,
+          }).start();
+
+          Animated.timing(opacityAnim, {
+            toValue: focused ? 1 : 0.5,
+            duration: 250,
+            useNativeDriver: true,
+          }).start();
+          
+          let iconName;
+          if (route.name === "Inicio") iconName = "home";
+          if (route.name === "Pedidos") iconName = "shopping-cart";
+          if (route.name === "Perfil") iconName = "person";
+          if (route.name === "Admin") iconName = "settings";
+
+          return (
+            <Animated.View
+              style={{
+                transform: [{ scale: scaleAnim }],
+                opacity: opacityAnim,
+              }}
+            >
+              <Icon name={iconName} color={color} size={size || 24} />
+            </Animated.View>
+          );
+        },
+      })}
     >
-      <Tab.Screen
-        name="Inicio"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="home" color={color} size={size || 24} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Pedidos"
-        component={Orders}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="shopping-cart" color={color} size={size || 24} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Perfil"
-        component={Profile}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="person" color={color} size={size || 24} />
-          ),
-        }}
-      />
-      {["ADMIN", "DEV"].includes(userRole) && ( // Condicional para exibir apenas se for admin ou dev
-        <Tab.Screen
-          name="Admin"
-          component={Admin}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="settings" color={color} size={size || 24} />
-            ),
-          }}
-        />
+      <Tab.Screen name="Inicio" component={Home} />
+      <Tab.Screen name="Pedidos" component={Orders} />
+      <Tab.Screen name="Perfil" component={Profile} />
+      {["ADMIN", "DEV"].includes(userRole) && (
+        <Tab.Screen name="Admin" component={Admin} />
       )}
     </Tab.Navigator>
   );

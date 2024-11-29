@@ -1,33 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import Login from '../pages/login';
 import BottomRoutes from './bottom.routes';
-import UserStorage from '../storage/user.storage'; // Importando a classe UserStorage
-import { ActivityIndicator, View, StyleSheet } from 'react-native'; // Indicador de carregamento
+import UserStorage from '../storage/user.storage';
+import { View, StyleSheet } from 'react-native';
 import ProductControl from '../pages/productControl';
 import ProductCreate from '../pages/productCreate';
+import * as Animatable from 'react-native-animatable'; // Importa a biblioteca de animações
 
 export default function Routes() {
   const Stack = createStackNavigator();
-  const [initialRoute, setInitialRoute] = useState(null); // Para definir a rota inicial
+  const [initialRoute, setInitialRoute] = useState(null);
 
   useEffect(() => {
     const checkAuthentication = async () => {
       const userStorage = new UserStorage();
-      const userData = await userStorage.getUserData(); // Recupera os dados do usuário do AsyncStorage
-
-      // Define a rota inicial com base nos dados de autenticação
+      const userData = await userStorage.getUserData();
       setInitialRoute(userData ? 'BottomRoutes' : 'Login');
     };
 
     checkAuthentication();
   }, []);
 
-  // Exibe indicador de carregamento enquanto verifica autenticação
   if (!initialRoute) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#1E90FF" />
+        <View style={styles.dotsContainer}>
+          {/* Pontinho 1 */}
+          <Animatable.Text
+            style={styles.dot}
+            animation="bounce"
+            iterationCount="infinite"
+            delay={0}
+          >
+            ●
+          </Animatable.Text>
+          {/* Pontinho 2 */}
+          <Animatable.Text
+            style={styles.dot}
+            animation="bounce"
+            iterationCount="infinite"
+            delay={200} // Atraso para o efeito ser escalonado
+          >
+            ●
+          </Animatable.Text>
+          {/* Pontinho 3 */}
+          <Animatable.Text
+            style={styles.dot}
+            animation="bounce"
+            iterationCount="infinite"
+            delay={400}
+          >
+            ●
+          </Animatable.Text>
+        </View>
       </View>
     );
   }
@@ -37,31 +63,16 @@ export default function Routes() {
       initialRouteName={initialRoute}
       screenOptions={{
         headerShown: false,
-        cardStyle: {
-          backgroundColor: '#FFF',
-        },
+        cardStyle: { backgroundColor: '#FFF' },
+        gestureEnabled: true,
+        animationEnabled: true,
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}
     >
-      <Stack.Screen
-        name="Login"
-        component={Login}
-      />
-      <Stack.Screen
-        name="BottomRoutes"
-        component={BottomRoutes}
-      />
-      <Stack.Screen
-        name="ProductControl"
-        component={ProductControl}
-        options={{
-          headerShown: false, // Oculta o header padrão
-        }}
-      />
-      <Stack.Screen
-        name="ProductCreate"
-        component={ProductCreate}
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="BottomRoutes" component={BottomRoutes} />
+      <Stack.Screen name="ProductControl" component={ProductControl} />
+      <Stack.Screen name="ProductCreate" component={ProductCreate} />
     </Stack.Navigator>
   );
 }
@@ -71,5 +82,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFF',
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dot: {
+    fontSize: 30, // Tamanho dos pontinhos
+    color: '#1E90FF',
+    marginHorizontal: 5, // Espaçamento entre os pontinhos
   },
 });
