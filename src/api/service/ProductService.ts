@@ -37,6 +37,34 @@ class ProductService {
     }
   }
 
+  // Outros métodos...
+
+  static async fetchHighlights() {
+    try {
+      const token = await TokenService.getToken(); // Obtemos o token diretamente aqui
+
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token, // Usamos o token obtido pela função getToken
+        },
+      };
+
+      const response = await apiClient('/highlights', options);
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Erro ao buscar destaques');
+      }
+
+      return response.json(); // Certifique-se de que o backend retorna os itens corretamente.
+    } catch (error) {
+      console.error('Erro ao buscar destaques:', error);
+      throw new Error('Erro na comunicação com a API');
+    }
+  }
+
   static async createProduct(productModel: ProductModel) {
     try {
       const token = await TokenService.getToken(); // Obtemos o token diretamente aqui
