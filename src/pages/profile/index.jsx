@@ -5,6 +5,7 @@ import OptionItem from "../../components/optionItem/index";
 import UserStorage from "../../storage/user.storage";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TokenService from "../../api/service/TokenService";
 
 const Profile = () => {
   const [username, setUsername] = useState("");
@@ -33,6 +34,7 @@ const Profile = () => {
           onPress: async () => {
             const userStorage = new UserStorage();
             await userStorage.removeUserData(); // Limpa as informações do usuário
+            TokenService.clearToken();
             navigation.reset({ // Redefine a pilha para que a tela de login seja a única acessível
               index: 0,
               routes: [{ name: "Login" }]
