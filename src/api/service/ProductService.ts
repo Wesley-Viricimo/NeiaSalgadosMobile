@@ -37,58 +37,36 @@ class ProductService {
     }
   }
 
-  static async createProduct(productModel: ProductModel) {
+  static async createProduct(formData: FormData) {
     try {
-      const token = await TokenService.getToken(); // Obtemos o token diretamente aqui
+      const token = await TokenService.getToken();
   
-      // Acessando o primeiro item do array 'assets' para pegar os dados do arquivo
-      const fileAsset = productModel.file.assets[0]; 
-  
-      // Extraindo as propriedades necessárias
-      const fileUri = fileAsset.uri;
-      const fileName = fileAsset.name || 'file.jpg';
-      const fileType = fileAsset.mimeType || 'application/octet-stream';
-  
-      // Carregar o arquivo como Blob
-      const fileBlob = await fetch(fileUri)
-        .then(res => res.blob())
-        .catch((error) => {
-          console.error('Erro ao carregar o arquivo:', error);
-          throw new Error("Erro ao carregar o arquivo.");
-        });
-  
-      // Criação do FormData
-      const formData = new FormData();
-      formData.append("file", fileBlob, fileName); // Passando o Blob como arquivo
-      formData.append("description", productModel.description); // Descrição do produto
-      formData.append("price", String(productModel.price)); // Convertendo price para string
-  
-      // Configurações da requisição
       const options = {
         method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': token, // Usamos o token obtido pela função `getToken`
+          'Authorization': token,
         },
-        body: formData, // FormData já cuida do Content-Type correto
+        body: formData,
       };
   
-      // Enviar requisição
-      const response = await apiClient(`/product`, options);
-      const responseData = await response.json();
-  
-      console.log('Response:', responseData);
-  
+      const responseData = await apiClient(`/product`, options);
+
+      if(responseData.statusCode === 201) {
+        return {
+          status: responseData.statusCode, // Defina explicitamente o status esperado
+          message: responseData.message.detail
+        };
+      }
+
       return {
-        status: response.status,
-        data: responseData,
+        message: responseData.message.detail
       };
+      
     } catch (error) {
-      console.error("Erro ao realizar requisição:", error);
-      throw new Error("Erro na comunicação com a API.");
+      console.error("Erro ao realizar requisição:", error.message);
+      throw new Error(error.message || "Erro na comunicação com a API.");
     }
-  }
-    
+  }  
 }
 
 // Exporte a classe ProductService

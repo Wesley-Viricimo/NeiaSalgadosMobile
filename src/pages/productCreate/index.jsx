@@ -17,27 +17,44 @@ const ProductCreate = () => {
   const [price, setPrice] = useState("");
 
   const handleSubmit = async () => {
-    if (!file || !description || !price) {
-      return Alert.alert("Erro", "Todos os campos são obrigatórios!");
+    if (!description || !price) {
+      return Alert.alert("Erro", "Campos de descrição e preço são obrigatórios!");
     }
-
+  
+    // Validação do tipo de arquivo
     if (!validateFile(file.assets[0].mimeType)) {
       return Alert.alert("Erro", "O tipo do arquivo é inválido!");
     }
-
+  
     try {
-      const response = await ProductService.createProduct(new ProductModel(file, description, price));
-
+      // Preparando o arquivo para envio
+      const fileUri = file.assets[0].uri;
+      const fileName = file.assets[0].name || 'file.jpg';
+      const fileType = file.assets[0].mimeType || 'application/octet-stream';
+  
+      // Criação do FormData
+      const formData = new FormData();
+      formData.append("product-image", {
+        uri: fileUri,
+        name: fileName,
+        type: fileType,
+      }); // Passando a URI diretamente para o FormData
+      formData.append("description", description); // Descrição do produto
+      formData.append("price", String(price)); // Preço como string
+  
+      // Enviar para a API
+      const response = await ProductService.createProduct(formData);
+  
       if (response.status === 201) {
-        Alert.alert("Sucesso", "Produto cadastrado com sucesso!");
+        Alert.alert(response.message);
         navigation.goBack();
       } else {
-        Alert.alert("Erro", response.data.message || "Erro ao cadastrar o produto.");
+        Alert.alert("Erro", response.message || "Erro ao cadastrar o produto.");
       }
     } catch (error) {
       Alert.alert("Erro", error.message || "Erro inesperado.");
     }
-  };
+  };  
 
   return (
     <SafeAreaView style={styles.container}>

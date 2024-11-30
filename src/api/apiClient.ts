@@ -4,10 +4,27 @@ const API_URL = Constants.expoConfig?.extra?.API_URL;
 
 const apiClient = async (endpoint: string, options: RequestInit) => {
   const fullUrl = `${API_URL}${endpoint}`;
-  console.log('full url', fullUrl)
 
-  const response = await fetch(fullUrl, options);
-  return response.json();
+  try {
+    const response = await fetch(fullUrl, options);
+
+    if (!response.ok) {
+      const responseError = await response.json();
+      return responseError;
+    }
+
+    // Tenta interpretar o corpo como JSON
+    try {
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      console.error("Erro ao interpretar JSON:", error);
+      throw new Error("Resposta não é um JSON válido.");
+    }
+  } catch (error) {
+    console.error("Erro ao realizar requisição:", error.message);
+    throw new Error("Erro na comunicação com a API.");
+  }
 };
 
 export default apiClient;
