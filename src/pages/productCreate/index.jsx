@@ -8,7 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { validateFile } from "../../utils/fileValidator";
 import ProductService from "../../api/service/ProductService";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProductModel from "../../model/ProductModel";
 
 const ProductCreate = () => {
   const navigation = useNavigation();

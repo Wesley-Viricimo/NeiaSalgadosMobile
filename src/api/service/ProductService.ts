@@ -1,4 +1,3 @@
-import ProductModel from '../../model/ProductModel';
 import apiClient from '../apiClient';
 import ProductResponse from '../response/ProductResponse';
 import TokenService from './TokenService';

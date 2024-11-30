@@ -13,7 +13,6 @@ const apiClient = async (endpoint: string, options: RequestInit) => {
       return responseError;
     }
 
-    // Tenta interpretar o corpo como JSON
     try {
       const responseData = await response.json();
       return responseData;
