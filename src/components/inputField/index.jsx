@@ -36,7 +36,7 @@ export default function InputField({ value, onChange, index, onFocus, onBlur }) 
         maxLength={1}
         onChangeText={handleChange}
         onKeyPress={handleKeyPress}
-        keyboardType="numeric"  // Ajustado para aceitar apenas números
+        keyboardType="text"     // Ajustado para aceitar apenas números
         onFocus={onFocus}       // Foco no campo (se necessário)
         onBlur={onBlur}         // Garante o foco correto ao perder o foco
       />

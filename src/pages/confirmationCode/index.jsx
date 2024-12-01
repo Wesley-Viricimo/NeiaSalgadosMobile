@@ -4,6 +4,7 @@ import InputField from '../../components/inputConfirmation/index';
 import ResendCodeButton from '../../components/resendCodeButton/index';
 import { styles } from './styles';
 import UserService from '../../api/service/UserService'; // Importar a API de serviço para o código
+import VerifyCodeModel from '../../model/VerifyCodeModel';
 
 export default function ConfirmationCode({ route, navigation }) {
   const { email } = route.params;  // Pega o email da tela anterior
@@ -14,12 +15,12 @@ export default function ConfirmationCode({ route, navigation }) {
   const handleCodeSubmit = async () => {
     setIsLoading(true);
     try {
-      const response = await UserService.verifyCode(email, code.join(''));
+      const response = await UserService.verifyCode(new VerifyCodeModel(email, code.join('')));
       if (response.status === 200) {
-        Alert.alert('Sucesso', 'Conta ativada com sucesso!');
+        Alert.alert('Sucesso', response.message);
         navigation.navigate('Login');
       } else {
-        Alert.alert('Erro', 'Código incorreto!');
+        Alert.alert('Erro', response.message);
         setCode(Array(5).fill(''));  // Limpar os campos
       }
     } catch (error) {
