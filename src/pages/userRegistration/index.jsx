@@ -39,8 +39,7 @@ export default function UserRegistration() {
         try {
             const response = await UserService.registerUser(new UserModel(name, surname, cpf, phone, email, password));
             if (response.status === 201) {
-                Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
-                navigation.navigate('Login');
+                navigation.navigate('ConfirmationCode', { email: email });
             } else {
                 Alert.alert('Erro', response.message || 'Erro ao cadastrar usuário.');
             }
