@@ -11,12 +11,14 @@ import PasswordInput from '../../components/passwordInput/index';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserService from '../../api/service/UserService';
+import UserModel from '../../model/UserModel';
 
 export default function UserRegistration() {
     const navigation = useNavigation();
 
     const [name, setName] = useState('');
-    const [nickname, setNickname] = useState('');
+    const [surname, setSurname] = useState('');
     const [cpf, setCpf] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
@@ -25,7 +27,7 @@ export default function UserRegistration() {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleRegister = async () => {
-        if (!name || !nickname || !cpf || !phone || !email || !password || !confirmPassword) {
+        if (!name || !surname || !cpf || !phone || !email || !password || !confirmPassword) {
             return Alert.alert('Erro', 'Todos os campos são obrigatórios!');
         }
 
@@ -35,20 +37,12 @@ export default function UserRegistration() {
 
         setIsLoading(true); // Inicia o indicador de carregamento
         try {
-            const response = await fetch('https://sua-api.com/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, nickname, cpf, phone, email, password }),
-            });
-
+            const response = await UserService.registerUser(new UserModel(name, surname, cpf, phone, email, password));
             if (response.status === 201) {
                 Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
                 navigation.navigate('Login');
             } else {
-                const errorData = await response.json();
-                Alert.alert('Erro', errorData.message || 'Erro ao cadastrar usuário.');
+                Alert.alert('Erro', response.message || 'Erro ao cadastrar usuário.');
             }
         } catch (error) {
             Alert.alert('Erro', 'Erro inesperado ao cadastrar usuário.');
@@ -70,8 +64,8 @@ export default function UserRegistration() {
                 />
                 <CustomInput
                     label="Como gostaria de ser chamado"
-                    value={nickname}
-                    onChangeText={setNickname}
+                    value={surname}
+                    onChangeText={setSurname}
                     icon="happy"
                 />
                 <CustomInput
