@@ -1,3 +1,4 @@
+import ResendCodeModel from "../../model/ResendCodeModel";
 import UserModel from "../../model/UserModel";
 import VerifyCodeModel from "../../model/VerifyCodeModel";
 import apiClient from "../apiClient";
@@ -18,7 +19,7 @@ export default class UserService {
 
       if(responseData.statusCode === 201) {
         return {
-          status: responseData.statusCode, // Defina explicitamente o status esperado
+          status: responseData.statusCode, 
           message: responseData.message.detail
         };
       }
@@ -36,7 +37,7 @@ export default class UserService {
   static async verifyCode(verifyCodeModel: VerifyCodeModel) {
     try {
       const options = {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -45,11 +46,9 @@ export default class UserService {
 
       const responseData = await apiClient(`/user/confirm-code`, options);
 
-      console.log('response data', responseData);
-      
       if(responseData.statusCode === 200) {
         return {
-          status: responseData.statusCode, // Defina explicitamente o status esperado
+          status: responseData.statusCode, 
           message: responseData.message.detail
         };
       }
@@ -61,6 +60,35 @@ export default class UserService {
     } catch (error) {
       console.error("Erro ao realizar requisição:", error.message);
       throw new Error("Erro ao ativar conta!");
+    }
+  }
+
+  static async resendCode(resendCodeModel: ResendCodeModel) {
+    try {
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(resendCodeModel)
+      };
+
+      const responseData = await apiClient(`/user/resend-confirm-code`, options);
+
+      if(responseData.statusCode === 200) {
+        return {
+          status: responseData.statusCode,
+          message: responseData.message.detail
+        };
+      }
+
+      return {
+        message: responseData.message.detail
+      };
+
+    } catch (error) {
+      console.error("Erro ao realizar requisição:", error.message);
+      throw new Error("Erro ao reenviar email!");
     }
   }
 }

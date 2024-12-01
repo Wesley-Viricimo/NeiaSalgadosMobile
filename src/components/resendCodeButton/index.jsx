@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, TouchableOpacity, Alert } from 'react-native';
 import UserService from '../../api/service/UserService';
 import { styles } from './styles';
+import ResendCodeModel from '../../model/ResendCodeModel';
 
 const ResendCodeButton = ({ email }) => {
   const [timer, setTimer] = useState(30);
@@ -17,12 +18,12 @@ const ResendCodeButton = ({ email }) => {
 
   const resendCode = async () => {
     try {
-      const response = await UserService.resendCode(email);
+      const response = await UserService.resendCode(new ResendCodeModel(email));
       if (response.status === 200) {
-        Alert.alert('Sucesso', 'Código reenviado com sucesso!');
+        Alert.alert('Sucesso', response.message);
         setTimer(30);  // Resetar o contador
       } else {
-        Alert.alert('Erro', 'Erro ao reenviar o código!');
+        Alert.alert('Erro', response.message);
       }
     } catch (error) {
       Alert.alert('Erro', 'Erro ao reenviar o código!');
