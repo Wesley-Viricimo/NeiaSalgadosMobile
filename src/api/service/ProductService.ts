@@ -68,5 +68,4 @@ class ProductService {
   }  
 }
 
-// Exporte a classe ProductService
 export default ProductService;

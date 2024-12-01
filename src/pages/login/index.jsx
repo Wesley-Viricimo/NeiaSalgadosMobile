@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import {
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     Alert
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import Loading from '../../components/Loading';
 import LoginService from '../../api/service/LoginService';
 import LoginModel from '../../model/LoginModel';
@@ -14,13 +12,14 @@ import LoginResponse from '../../api/response/LoginResponse';
 import UserStorage from '../../storage/user.storage';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
+import PasswordInput from '../../components/passwordInput';
+import CustomInput from '../../components/customInput';
 
 export default function Login() {
     const navigation = useNavigation();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const userStorge = new UserStorage();
 
@@ -47,40 +46,18 @@ export default function Login() {
 
     return (
         <View style={styles.container}>
-            {/* Campo de Email */}
-            <View style={styles.inputContainer}>
-                <Ionicons name="person" size={20} color="#888" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
-            </View>
+            <CustomInput
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                icon="person"
+            />
 
-            {/* Campo de Senha */}
-            <View style={styles.inputContainer}>
-                <Ionicons name="lock-closed" size={20} color="#888" style={styles.icon} />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Senha"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={!isPasswordVisible}
-                />
-                <TouchableOpacity
-                    onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                    style={styles.eyeIcon}
-                >
-                    <Ionicons
-                        name={isPasswordVisible ? 'eye-off' : 'eye'}
-                        size={20}
-                        color="#888"
-                    />
-                </TouchableOpacity>
-            </View>
+            <PasswordInput
+                label="Senha"
+                value={password}
+                onChangeText={setPassword}
+            />
 
             {/* Texto Esqueceu sua senha */}
             <TouchableOpacity style={styles.forgotPassword}>
@@ -97,7 +74,7 @@ export default function Login() {
             </TouchableOpacity>
 
             {/* Texto para Cadastro */}
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('UserRegistration')}>
                 <Text style={styles.linkText}>Cadastre-se</Text>
             </TouchableOpacity>
         </View>

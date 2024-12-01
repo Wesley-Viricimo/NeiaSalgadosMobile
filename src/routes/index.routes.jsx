@@ -7,6 +7,7 @@ import { View, StyleSheet } from 'react-native';
 import ProductControl from '../pages/productControl';
 import ProductCreate from '../pages/productCreate';
 import * as Animatable from 'react-native-animatable'; // Importa a biblioteca de animações
+import UserRegistration from '../pages/userRegistration';
 
 export default function Routes() {
   const Stack = createStackNavigator();
@@ -73,6 +74,7 @@ export default function Routes() {
       <Stack.Screen name="BottomRoutes" component={BottomRoutes} />
       <Stack.Screen name="ProductControl" component={ProductControl} />
       <Stack.Screen name="ProductCreate" component={ProductCreate} />
+      <Stack.Screen name="UserRegistration" component={UserRegistration} />
     </Stack.Navigator>
   );
 }
