@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, Alert } from "react-native";
 import { styles } from "./styles";
-import FilePicker from "../../components/filePicker/index";
-import InputField from "../../components/inputField/index";
-import SubmitButton from "../../components/submitButton/index";
+import FilePicker from "../../../components/filePicker/index";
+import InputField from "../../../components/inputField/index";
+import SubmitButton from "../../../components/submitButton/index";
 import { useNavigation } from "@react-navigation/native";
-import { validateFile } from "../../utils/fileValidator";
-import ProductService from "../../api/service/ProductService";
+import { validateFile } from "../../../utils/fileValidator";
+import ProductService from "../../../api/service/ProductService";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ProductCreate = () => {

@@ -6,13 +6,13 @@ import {
     ScrollView,
     ActivityIndicator,
 } from 'react-native';
-import CustomInput from '../../components/customInput/index';
-import PasswordInput from '../../components/passwordInput/index';
+import CustomInput from '../../../components/customInput/index';
+import PasswordInput from '../../../components/passwordInput/index';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserService from '../../api/service/UserService';
-import UserModel from '../../model/UserModel';
+import UserService from '../../../api/service/UserService';
+import UserModel from '../../../model/UserModel';
 
 export default function UserRegistration() {
     const navigation = useNavigation();

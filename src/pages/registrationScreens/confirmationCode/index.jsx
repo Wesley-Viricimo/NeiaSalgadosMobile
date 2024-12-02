@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
-import InputField from '../../components/inputConfirmation/index';
-import ResendCodeButton from '../../components/resendCodeButton/index';
+import InputField from '../../../components/inputConfirmation/index';
+import ResendCodeButton from '../../../components/resendCodeButton/index';
 import { styles } from './styles';
-import UserService from '../../api/service/UserService';
-import VerifyCodeModel from '../../model/VerifyCodeModel';
+import UserService from '../../../api/service/UserService';
+import VerifyCodeModel from '../../../model/VerifyCodeModel';
 
 export default function ConfirmationCode({ route, navigation }) {
   const { email } = route.params; // Pega o email da tela anterior

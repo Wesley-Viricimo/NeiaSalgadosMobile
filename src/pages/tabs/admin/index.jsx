@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import OptionCard from "../../components/optionCard/index";
+import OptionCard from "../../../components/optionCard/index";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";

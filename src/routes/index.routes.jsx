@@ -4,11 +4,11 @@ import Login from '../pages/login';
 import BottomRoutes from './bottom.routes';
 import UserStorage from '../storage/user.storage';
 import { View, StyleSheet } from 'react-native';
-import ProductControl from '../pages/productControl';
-import ProductCreate from '../pages/productCreate';
 import * as Animatable from 'react-native-animatable'; // Importa a biblioteca de animações
-import UserRegistration from '../pages/userRegistration';
-import ConfirmationCode from '../pages/confirmationCode';
+import ProductControl from '../pages/productControlScreens/productControl';
+import ProductCreate from '../pages/productControlScreens/productCreate';
+import UserRegistration from '../pages/registrationScreens/userRegistration';
+import ConfirmationCode from '../pages/registrationScreens/confirmationCode';
 
 export default function Routes() {
   const Stack = createStackNavigator();

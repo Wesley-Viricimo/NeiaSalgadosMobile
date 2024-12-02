@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Animated } from "react-native";
-import Home from "../pages/home";
-import Orders from "../pages/orders";
-import Profile from "../pages/profile";
-import Admin from "../pages/admin/index";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import UserStorage from "../storage/user.storage";
+import Home from "../pages/tabs/home";
+import Orders from "../pages/tabs/orders";
+import Profile from "../pages/tabs/profile";
+import Admin from "../pages/tabs/admin";
 
 const Tab = createBottomTabNavigator();
 
