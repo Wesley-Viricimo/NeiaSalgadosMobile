@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { TextInput, FlatList } from "react-native";
-import ProductCard from "../../../components/ProductCard";
-import LoadingIndicator from "../../../components/loadingIndicator/index";
+import React, { useState, useEffect, useCallback } from "react";
+import { FlatList } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+import SearchBar from "../../../components/searchBar/index";
+import ProductCard from "../../../components/productCard/index";
+import LoadingAnimation from "../../../components/loadingAnimation/index";
+import EmptyListMessage from "../../../components/emptyListMessage/index";
 import ProductService from "../../../api/service/ProductService";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState(""); // Valor digitado pelo usuário
-  const [debouncedInput, setDebouncedInput] = useState(""); // Valor com debounce
+  const [inputValue, setInputValue] = useState("");
+  const [debouncedInput, setDebouncedInput] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  // Função para carregar produtos da API
   const loadProducts = async (searchText = "", pageNum = 1) => {
     if (loading || (pageNum > 1 && !hasMore)) return;
-
     setLoading(true);
     try {
       const data = await ProductService.fetchProducts(searchText, pageNum);
-
       if (data.length > 0) {
         setProducts((prev) => (pageNum === 1 ? data : [...prev, ...data]));
-        setHasMore(data.length === 10); // Verifica se há mais itens no lote
+        setHasMore(data.length === 10);
       } else {
         setHasMore(false);
       }
@@ -35,23 +35,17 @@ export default function Home() {
     }
   };
 
-  // Atualiza o estado com debounce ao alterar `inputValue`
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedInput(inputValue);
-    }, 300);
-
-    return () => clearTimeout(handler); // Limpa o timeout anterior
+    const handler = setTimeout(() => setDebouncedInput(inputValue), 300);
+    return () => clearTimeout(handler);
   }, [inputValue]);
 
-  // Dispara a busca ao alterar `debouncedInput`
   useEffect(() => {
-    setPage(1); // Reinicia para a página inicial
+    setPage(1);
     setHasMore(true);
     loadProducts(debouncedInput, 1);
   }, [debouncedInput]);
 
-  // Carrega mais produtos ao rolar a lista
   const handleLoadMore = () => {
     if (!loading && hasMore) {
       const nextPage = page + 1;
@@ -60,22 +54,37 @@ export default function Home() {
     }
   };
 
+  const handleCardPress = (product) => {
+    // Ação ao clicar no card
+  };
+
+  // Recarrega os produtos ao focar na aba
+  useFocusEffect(
+    useCallback(() => {
+      setPage(1);
+      setHasMore(true);
+      loadProducts(debouncedInput, 1);
+    }, [debouncedInput])
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Pesquisar produtos..."
-        onChangeText={setInputValue} // Atualiza o valor digitado
-        value={inputValue}
-      />
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.idProduct.toString()}
-        renderItem={({ item }) => <ProductCard product={item} />}
-        onEndReached={handleLoadMore} // Chamado ao alcançar o final da lista
-        onEndReachedThreshold={0.1} // Percentual da altura da lista para acionar o carregamento
-        ListFooterComponent={loading ? <LoadingIndicator /> : null} // Exibe indicador de carregamento no final
-      />
+      <SearchBar value={inputValue} onChange={setInputValue} />
+      {loading && page === 1 ? (
+        <LoadingAnimation />
+      ) : (
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.idProduct.toString()}
+          renderItem={({ item }) => <ProductCard product={item} onPress={handleCardPress} />}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={loading ? <LoadingAnimation small /> : null}
+          ListEmptyComponent={
+            !loading && <EmptyListMessage message="Nenhum produto encontrado!" />
+          }
+        />
+      )}
     </SafeAreaView>
   );
 }

@@ -25,7 +25,7 @@ class ProductService {
       const responseProductsList: ProductResponse[] = [];
 
       for (const prd of response.data) {
-        const product = new ProductResponse(prd.idProduct, prd.description, prd.price, prd.urlImage);
+        const product = new ProductResponse(prd.idProduct, prd.title, prd.description, prd.price, prd.urlImage);
         responseProductsList.push(product);
       }
 
