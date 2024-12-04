@@ -1,4 +1,5 @@
 import apiClient from '../apiClient';
+import CategoryResponse from '../response/CategoryResponse';
 import ProductResponse from '../response/ProductResponse';
 import TokenService from './TokenService';
 
@@ -33,6 +34,37 @@ class ProductService {
     } catch (error: any) {
       console.log('Erro:', error);
       throw new Error(error.message || 'Erro ao buscar produtos');
+    }
+  }
+
+  static async getCategories() {
+    try {
+      const token = await TokenService.getToken();
+
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+      };
+
+      const responseData = await apiClient(`/category`, options);
+
+      if(responseData.statusCode === 200) {
+        return {
+          data: responseData.data,
+          status: responseData.statusCode
+        };
+      }
+
+      return {
+        message: responseData.message.detail
+      }
+      
+    } catch (error) {
+      console.log('Erro:', error);
+      throw new Error(error.message || 'Erro ao buscar categorias');
     }
   }
 

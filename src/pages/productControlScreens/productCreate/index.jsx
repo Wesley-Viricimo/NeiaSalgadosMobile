@@ -25,9 +25,9 @@ const ProductCreate = () => {
       try {
         const response = await ProductService.getCategories();
         if (response.status === 200) {
-          setCategories(response.data); // Supondo que `response.data` contenha as categorias
+          setCategories(response.data);
         } else {
-          Alert.alert("Erro", "Não foi possível carregar as categorias.");
+          Alert.alert("Erro", 'Deu erro');
         }
       } catch (error) {
         Alert.alert("Erro", error.message || "Erro ao buscar categorias.");

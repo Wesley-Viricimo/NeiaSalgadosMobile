@@ -12,7 +12,7 @@ const CategoryPicker = ({ selectedCategory, onValueChange, categories }) => {
       >
         <Picker.Item label="Selecione uma categoria" value="" />
         {categories.map((category) => (
-          <Picker.Item key={category.id} label={category.name} value={category.id} />
+          <Picker.Item key={category.idCategory} label={category.description} value={category.idCategory} />
         ))}
       </Picker>
     </View>
