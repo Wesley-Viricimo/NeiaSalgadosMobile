@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Alert, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Alert } from "react-native";
 import { styles } from "./styles";
 import FilePicker from "../../../components/filePicker/index";
 import InputField from "../../../components/inputField/index";
@@ -13,31 +13,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const ProductCreate = () => {
   const navigation = useNavigation();
   const [file, setFile] = useState(null);
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(""); // Categoria selecionada
-  const [categories, setCategories] = useState([]); // Lista de categorias
-  const [loadingCategories, setLoadingCategories] = useState(true); // Estado de carregamento
-
-  // Buscar categorias ao renderizar a tela
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await ProductService.getCategories();
-        if (response.status === 200) {
-          setCategories(response.data);
-        } else {
-          Alert.alert("Erro", 'Deu erro');
-        }
-      } catch (error) {
-        Alert.alert("Erro", error.message || "Erro ao buscar categorias.");
-      } finally {
-        setLoadingCategories(false); // Finalizar carregamento
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   const handleSubmit = async () => {
     if (!description || !price || !selectedCategory) {
@@ -47,8 +26,8 @@ const ProductCreate = () => {
       );
     }
 
-    if (!validateFile(file.assets[0].mimeType)) {
-      return Alert.alert("Erro", "O tipo do arquivo é inválido!");
+    if (!file || !validateFile(file.assets[0].mimeType)) {
+      return Alert.alert("Erro", "O tipo do arquivo é inválido ou não foi selecionado!");
     }
 
     try {
@@ -56,20 +35,23 @@ const ProductCreate = () => {
       const fileName = file.assets[0].name || "file.jpg";
       const fileType = file.assets[0].mimeType || "application/octet-stream";
 
+      console.log('selectedCategory', selectedCategory);
+
       const formData = new FormData();
       formData.append("product-image", {
         uri: fileUri,
         name: fileName,
         type: fileType,
       });
+      formData.append("title", title);
       formData.append("description", description);
       formData.append("price", String(price));
-      formData.append("category_id", selectedCategory); // Enviar ID da categoria selecionada
+      formData.append("idCategory", selectedCategory);
 
       const response = await ProductService.createProduct(formData);
 
       if (response.status === 201) {
-        Alert.alert(response.message);
+        Alert.alert("Sucesso", response.message || "Produto cadastrado com sucesso!");
         navigation.goBack();
       } else {
         Alert.alert("Erro", response.message || "Erro ao cadastrar o produto.");
@@ -96,15 +78,15 @@ const ProductCreate = () => {
             <Text style={styles.filePlaceholder}>Nenhuma imagem selecionada</Text>
           )}
         </View>
-        {loadingCategories ? (
-          <ActivityIndicator size="large" color="#007BFF" />
-        ) : (
-          <CategoryPicker
-            selectedCategory={selectedCategory}
-            onValueChange={setSelectedCategory}
-            categories={categories} // Passar categorias como prop
-          />
-        )}
+        <CategoryPicker
+          selectedCategory={selectedCategory}
+          onValueChange={setSelectedCategory}
+        />
+        <InputField
+          placeholder="Título do produto"
+          value={title}
+          onChangeText={setTitle}
+        />
         <InputField
           placeholder="Descrição do produto"
           value={description}
