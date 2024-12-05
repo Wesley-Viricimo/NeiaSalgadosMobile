@@ -1,5 +1,4 @@
 import apiClient from '../apiClient';
-import CategoryResponse from '../response/CategoryResponse';
 import ProductResponse from '../response/ProductResponse';
 import TokenService from './TokenService';
 
