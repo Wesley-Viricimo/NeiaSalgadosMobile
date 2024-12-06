@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { FlatList } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import SearchBar from "../../../components/searchBar/index";
 import ProductCard from "../../../components/productCard/index";
 import LoadingAnimation from "../../../components/loadingAnimation/index";
@@ -8,7 +7,7 @@ import EmptyListMessage from "../../../components/emptyListMessage/index";
 import ProductService from "../../../api/service/ProductService";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 export default function Home() {
   const navigation = useNavigation();
@@ -38,15 +37,14 @@ export default function Home() {
     }
   };
 
+  // Gerencia a pesquisa com debounce
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedInput(inputValue), 300);
+    const handler = setTimeout(() => {
+      setPage(1);
+      setHasMore(true);
+      loadProducts(debouncedInput, 1);
+    }, 300);
     return () => clearTimeout(handler);
-  }, [inputValue]);
-
-  useEffect(() => {
-    setPage(1);
-    setHasMore(true);
-    loadProducts(debouncedInput, 1);
   }, [debouncedInput]);
 
   const handleLoadMore = () => {
@@ -61,15 +59,6 @@ export default function Home() {
     navigation.navigate("ProductDetails", { product });
   };
 
-  // Recarrega os produtos ao focar na aba
-  useFocusEffect(
-    useCallback(() => {
-      setPage(1);
-      setHasMore(true);
-      loadProducts(debouncedInput, 1);
-    }, [debouncedInput])
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar value={inputValue} onChange={setInputValue} />
@@ -79,7 +68,9 @@ export default function Home() {
         <FlatList
           data={products}
           keyExtractor={(item) => item.idProduct.toString()}
-          renderItem={({ item }) => <ProductCard product={item} onPress={handleCardPress} />}
+          renderItem={({ item }) => (
+            <ProductCard product={item} onPress={handleCardPress} />
+          )}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.1}
           ListFooterComponent={loading ? <LoadingAnimation small /> : null}
