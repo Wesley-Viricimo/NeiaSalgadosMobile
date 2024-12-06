@@ -8,8 +8,11 @@ import EmptyListMessage from "../../../components/emptyListMessage/index";
 import ProductService from "../../../api/service/ProductService";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from '@react-navigation/native';
 
 export default function Home() {
+  const navigation = useNavigation();
+
   const [inputValue, setInputValue] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
   const [products, setProducts] = useState([]);
@@ -55,7 +58,7 @@ export default function Home() {
   };
 
   const handleCardPress = (product) => {
-    // Ação ao clicar no card
+    navigation.navigate("ProductDetails", { product });
   };
 
   // Recarrega os produtos ao focar na aba
