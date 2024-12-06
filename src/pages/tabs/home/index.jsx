@@ -37,14 +37,19 @@ export default function Home() {
     }
   };
 
-  // Gerencia a pesquisa com debounce
+  // Atualiza o valor de debounce após 300ms
   useEffect(() => {
     const handler = setTimeout(() => {
-      setPage(1);
-      setHasMore(true);
-      loadProducts(debouncedInput, 1);
+      setDebouncedInput(inputValue); // Reflete o valor atualizado para o debounce
     }, 300);
-    return () => clearTimeout(handler);
+    return () => clearTimeout(handler); // Cancela a atualização anterior
+  }, [inputValue]);
+
+  // Atualiza os produtos toda vez que o debouncedInput muda
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+    loadProducts(debouncedInput, 1);
   }, [debouncedInput]);
 
   const handleLoadMore = () => {
