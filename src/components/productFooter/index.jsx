@@ -1,9 +1,22 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ToastAndroid } from "react-native";
 import { styles } from "./styles";
+import { removeOrderItemById } from "../../database/orderItemService";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function ProductFooter({ price, quantity, setQuantity }) {
+export default function ProductFooter({
+  productId,
+  price,
+  quantity,
+  setQuantity,
+  onAddToCart,
+}) {
   const total = price * quantity;
+
+  const handleRemoveFromCart = async () => {
+    await removeOrderItemById(productId);
+    ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
+  };
 
   return (
     <View style={styles.container}>
@@ -16,8 +29,11 @@ export default function ProductFooter({ price, quantity, setQuantity }) {
           <Text style={styles.icon}>+</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.addButton}>
+      <TouchableOpacity style={styles.addButton} onPress={onAddToCart}>
         <Text style={styles.addButtonText}>Adicionar R$ {total.toFixed(2)}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.trashIcon} onPress={handleRemoveFromCart}>
+        <Ionicons name="trash-outline" size={24} color="#FF0000" />
       </TouchableOpacity>
     </View>
   );

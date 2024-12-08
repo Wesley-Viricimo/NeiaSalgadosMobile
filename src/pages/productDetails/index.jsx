@@ -1,37 +1,47 @@
-import React, { useState } from "react";
-import { View, Text, Image, TextInput, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  ScrollView,
+  ToastAndroid,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import ProductFooter from "../../components/productFooter/index";
 import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getOrderItemById, upsertOrderItem } from "../../database/orderItemService";
 
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
+  const [observation, setObservation] = useState("");
   const route = useRoute();
   const { product } = route.params;
 
-  const [observation, setObservation] = useState("");
+  useEffect(() => {
+    const fetchProductData = async () => {
+      const item = await getOrderItemById(product.id);
+      if (item) {
+        setQuantity(item.quantity);
+        setObservation(item.observation || "");
+      }
+    };
+    fetchProductData();
+  }, [product.id]);
 
-  const handleObservationChange = (text) => {
-    if (text.length <= 140) {
-      setObservation(text);
-    }
+  const handleAddToCart = async () => {
+    await upsertOrderItem(product.id, quantity, observation);
+    ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {/* Imagem do Produto */}
         <Image source={{ uri: product.urlImage }} style={styles.image} />
-
-        {/* Título do Produto */}
         <Text style={styles.title}>{product.title}</Text>
-
-        {/* Descrição do Produto */}
         <Text style={styles.description}>{product.description}</Text>
-
-        {/* Observações */}
         <View style={styles.observationContainer}>
           <View style={styles.label}>
             <View style={styles.iconBackground}>
@@ -46,16 +56,18 @@ export default function ProductDetails() {
             maxLength={140}
             placeholder="Ex: tirar cebola, maionese à parte etc."
             value={observation}
-            onChangeText={handleObservationChange}
+            onChangeText={(text) => {
+              if (text.length <= 140) setObservation(text);
+            }}
           />
         </View>
       </ScrollView>
-
-      {/* Rodapé */}
       <ProductFooter
+        productId={product.id}
         price={product.price}
         quantity={quantity}
         setQuantity={setQuantity}
+        onAddToCart={handleAddToCart}
       />
     </SafeAreaView>
   );
