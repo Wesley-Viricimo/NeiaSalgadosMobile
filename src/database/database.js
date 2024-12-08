@@ -1,4 +1,5 @@
 import * as SQLite from "expo-sqlite";
+import * as FileSystem from "expo-file-system";
 
 let dbInstance = null;
 
@@ -7,12 +8,21 @@ export const initializeDatabase = async () => {
   if (!dbInstance) {
     dbInstance = await SQLite.openDatabaseAsync("neiasalgados.db");
 
+    // Mova o banco de dados para um diretório acessível
+    const fileUri = FileSystem.documentDirectory + "neiasalgados.db";
+    await FileSystem.moveAsync({
+      from: dbInstance,
+      to: fileUri,
+    });
+    console.log("Banco de dados movido para:", fileUri);
+
     // Configurações e criação de tabelas
     await dbInstance.execAsync(`
       PRAGMA journal_mode = WAL;
       CREATE TABLE IF NOT EXISTS orderItem (
         id INTEGER PRIMARY KEY NOT NULL,
         quantity INTEGER NOT NULL,
+        price FLOAT,
         observation TEXT
       );
     `);

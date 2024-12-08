@@ -32,7 +32,7 @@ export default function ProductDetails() {
   }, [product.id]);
 
   const handleAddToCart = async () => {
-    await upsertOrderItem(product.id, quantity, observation);
+    await upsertOrderItem(product.id, quantity, product.price, observation);
     ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
   };
 

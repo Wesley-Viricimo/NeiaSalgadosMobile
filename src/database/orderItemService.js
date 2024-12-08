@@ -1,15 +1,16 @@
 import { executeCommand, getFirstRow } from "./database";
 
 // Adicionar ou atualizar um item
-export const upsertOrderItem = async (id, quantity, observation = "") => {
+export const upsertOrderItem = async (id, quantity, price, observation = "") => {
   const query = `
-    INSERT INTO orderItem (id, quantity, observation)
-    VALUES (?, ?, ?)
+    INSERT INTO orderItem (id, quantity, price, observation)
+    VALUES (?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET 
       quantity = excluded.quantity,
+      price = excluded.price,
       observation = excluded.observation;
   `;
-  const result = await executeCommand(query, [id, quantity, observation]);
+  const result = await executeCommand(query, [id, quantity, price, observation]);
   return result;
 };
 
