@@ -8,7 +8,7 @@ import {
   ToastAndroid,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import ProductFooter from "../../components/productFooter/index";
+import ProductFooter from "../../components/productFooter";
 import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,18 +22,23 @@ export default function ProductDetails() {
 
   useEffect(() => {
     const fetchProductData = async () => {
-      const item = await getOrderItemById(product.id);
+      const item = await getOrderItemById(product.idProduct);
       if (item) {
         setQuantity(item.quantity);
         setObservation(item.observation || "");
       }
     };
     fetchProductData();
-  }, [product.id]);
+  }, [product.idProduct]);
 
   const handleAddToCart = async () => {
-    await upsertOrderItem(product.id, quantity, product.price, observation);
-    ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
+    try {
+      await upsertOrderItem(product.idProduct, quantity, product.price, observation);
+      ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
+    } catch (error) {
+      ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);
+      console.error(error);
+    }
   };
 
   return (
@@ -56,14 +61,12 @@ export default function ProductDetails() {
             maxLength={140}
             placeholder="Ex: tirar cebola, maionese à parte etc."
             value={observation}
-            onChangeText={(text) => {
-              if (text.length <= 140) setObservation(text);
-            }}
+            onChangeText={(text) => setObservation(text)}
           />
         </View>
       </ScrollView>
       <ProductFooter
-        productId={product.id}
+        productId={product.idProduct}
         price={product.price}
         quantity={quantity}
         setQuantity={setQuantity}

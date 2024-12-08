@@ -1,22 +1,12 @@
 import * as SQLite from "expo-sqlite";
-import * as FileSystem from "expo-file-system";
 
 let dbInstance = null;
 
 // Inicializa o banco de dados ou retorna a instância existente
 export const initializeDatabase = async () => {
   if (!dbInstance) {
-    dbInstance = await SQLite.openDatabaseAsync("neiasalgados.db");
+    dbInstance = await SQLite.openDatabaseAsync("neiasalgados");
 
-    // Mova o banco de dados para um diretório acessível
-    const fileUri = FileSystem.documentDirectory + "neiasalgados.db";
-    await FileSystem.moveAsync({
-      from: dbInstance,
-      to: fileUri,
-    });
-    console.log("Banco de dados movido para:", fileUri);
-
-    // Configurações e criação de tabelas
     await dbInstance.execAsync(`
       PRAGMA journal_mode = WAL;
       CREATE TABLE IF NOT EXISTS orderItem (
@@ -27,35 +17,27 @@ export const initializeDatabase = async () => {
       );
     `);
 
-    console.log("Banco de dados inicializado e tabela 'orderItem' criada.");
   }
   return dbInstance;
 };
 
-// Funções utilitárias para o banco de dados
+// Função utilitária para execução de comandos
 export const executeCommand = async (query, params = []) => {
-  if (!dbInstance) {
-    await initializeDatabase();
-  }
+  if (!dbInstance) await initializeDatabase();
   const result = await dbInstance.runAsync(query, params);
-  console.log("Execução do comando concluída:", result);
   return result;
 };
 
+// Obter a primeira linha do resultado
 export const getFirstRow = async (query, params = []) => {
-  if (!dbInstance) {
-    await initializeDatabase();
-  }
-  const result = await dbInstance.getFirstAsync(query, params);
-  console.log("Primeira linha:", result);
-  return result;
+  if (!dbInstance) await initializeDatabase();
+  const row = await dbInstance.getFirstAsync(query, params);
+  return row;
 };
 
+// Obter todas as linhas do resultado
 export const getAllRows = async (query, params = []) => {
-  if (!dbInstance) {
-    await initializeDatabase();
-  }
+  if (!dbInstance) await initializeDatabase();
   const rows = await dbInstance.getAllAsync(query, params);
-  console.log("Todas as linhas:", rows);
   return rows;
 };
