@@ -1,61 +1,54 @@
 import React, { useState } from "react";
-import { View, Text, Image, ScrollView } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import AdditionalOption from "../../components/additionalOption/index";
+import { View, Text, Image, TextInput, ScrollView } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import ProductFooter from "../../components/productFooter/index";
 import { styles } from "./styles";
+import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProductDetails() {
-  const navigation = useNavigation();
+  const [quantity, setQuantity] = useState(1);
   const route = useRoute();
   const { product } = route.params;
 
-  const [selectedAdditions, setSelectedAdditions] = useState({});
-  const [quantity, setQuantity] = useState(1);
+  const [observation, setObservation] = useState("");
 
-  const toggleAddition = (name) => {
-    setSelectedAdditions((prev) => ({
-      ...prev,
-      [name]: !prev[name],
-    }));
+  const handleObservationChange = (text) => {
+    if (text.length <= 140) {
+      setObservation(text);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.backIcon} onPress={() => navigation.goBack()}>
-          {"<"}
-        </Text>
-        <Text style={styles.title}>{product.title}</Text>
-      </View>
-
-      {/* Corpo da Tela */}
       <ScrollView>
+        {/* Imagem do Produto */}
         <Image source={{ uri: product.urlImage }} style={styles.image} />
+
+        {/* Título do Produto */}
+        <Text style={styles.title}>{product.title}</Text>
+
+        {/* Descrição do Produto */}
         <Text style={styles.description}>{product.description}</Text>
 
-        {/* Adicionais */}
-        <Text style={styles.additionalTitle}>Adicionais</Text>
-        <AdditionalOption
-          title="Maionese extra"
-          price={10}
-          checked={!!selectedAdditions["Maionese extra"]}
-          onPress={() => toggleAddition("Maionese extra")}
-        />
-        <AdditionalOption
-          title="Catchup extra"
-          price={10}
-          checked={!!selectedAdditions["Catchup extra"]}
-          onPress={() => toggleAddition("Catchup extra")}
-        />
-        <AdditionalOption
-          title="Catupiry extra"
-          price={10}
-          checked={!!selectedAdditions["Catupiry extra"]}
-          onPress={() => toggleAddition("Catupiry extra")}
-        />
+        {/* Observações */}
+        <View style={styles.observationContainer}>
+          <View style={styles.label}>
+            <View style={styles.iconBackground}>
+              <Ionicons name="chatbubble" size={15} color="#fff" />
+            </View>
+            <Text style={styles.labelText}>Alguma observação?</Text>
+            <Text style={styles.charCount}>{`${observation.length}/140`}</Text>
+          </View>
+          <TextInput
+            style={styles.observationInput}
+            multiline
+            maxLength={140}
+            placeholder="Ex: tirar cebola, maionese à parte etc."
+            value={observation}
+            onChangeText={handleObservationChange}
+          />
+        </View>
       </ScrollView>
 
       {/* Rodapé */}
