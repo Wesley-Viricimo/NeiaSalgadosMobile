@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 4,
+    position: "relative",
   },
   image: {
     width: 150,
@@ -19,6 +20,21 @@ export const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     backgroundColor: "#F0F0F0",
+  },
+  soldIndicator: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "#FF6347",
+    borderRadius: 12,
+    padding: 4,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  quantity: {
+    color: "#fff",
+    fontSize: 12,
+    marginLeft: 4,
   },
   info: {
     flex: 1,

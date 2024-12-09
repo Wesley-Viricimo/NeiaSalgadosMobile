@@ -15,6 +15,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
   const [products, setProducts] = useState([]);
+  const [soldProducts, setSoldProducts] = useState({}); // Estado para produtos vendidos
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -37,15 +38,13 @@ export default function Home() {
     }
   };
 
-  // Atualiza o valor de debounce após 300ms
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedInput(inputValue); // Reflete o valor atualizado para o debounce
+      setDebouncedInput(inputValue);
     }, 300);
-    return () => clearTimeout(handler); // Cancela a atualização anterior
+    return () => clearTimeout(handler);
   }, [inputValue]);
 
-  // Atualiza os produtos toda vez que o debouncedInput muda
   useEffect(() => {
     setPage(1);
     setHasMore(true);
@@ -61,7 +60,13 @@ export default function Home() {
   };
 
   const handleCardPress = (product) => {
-    navigation.navigate("ProductDetails", { product });
+    navigation.navigate("ProductDetails", {
+      product,
+      soldQuantity: soldProducts[product.idProduct] || 0,
+      onAddToCart: (id, quantity) => {
+        setSoldProducts((prev) => ({ ...prev, [id]: quantity })); // Atualiza produtos vendidos
+      },
+    });
   };
 
   return (
@@ -74,7 +79,11 @@ export default function Home() {
           data={products}
           keyExtractor={(item) => item.idProduct.toString()}
           renderItem={({ item }) => (
-            <ProductCard product={item} onPress={handleCardPress} />
+            <ProductCard
+              product={item}
+              onPress={handleCardPress}
+              soldQuantity={soldProducts[item.idProduct] || 0} // Passa a quantidade vendida
+            />
           )}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.1}
