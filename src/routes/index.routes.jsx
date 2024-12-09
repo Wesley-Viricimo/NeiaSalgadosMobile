@@ -9,7 +9,6 @@ import ProductControl from '../pages/productControlScreens/productControl';
 import ProductCreate from '../pages/productControlScreens/productCreate';
 import UserRegistration from '../pages/registrationScreens/userRegistration';
 import ConfirmationCode from '../pages/registrationScreens/confirmationCode';
-import ProductDetails from '../pages/productDetails';
 
 export default function Routes() {
   const Stack = createStackNavigator();
@@ -78,7 +77,6 @@ export default function Routes() {
       <Stack.Screen name="ProductCreate" component={ProductCreate} />
       <Stack.Screen name="UserRegistration" component={UserRegistration} />
       <Stack.Screen name="ConfirmationCode" component={ConfirmationCode} />
-      <Stack.Screen name="ProductDetails" component={ProductDetails} />
     </Stack.Navigator>
   );
 }

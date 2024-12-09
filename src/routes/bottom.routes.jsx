@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import { Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import UserStorage from "../storage/user.storage";
@@ -7,22 +8,12 @@ import Home from "../pages/tabs/home";
 import Orders from "../pages/tabs/orders";
 import Profile from "../pages/tabs/profile";
 import Admin from "../pages/tabs/admin";
+import ProductDetails from "../pages/productDetails";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-export default function BottomRoutes() {
-  const [userRole, setUserRole] = useState(null);
-  const userStorage = new UserStorage();
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      const userData = await userStorage.getUserData();
-      setUserRole(userData?.role);
-    };
-
-    fetchUserRole();
-  }, []);
-
+function Tabs({ userRole }) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -52,7 +43,7 @@ export default function BottomRoutes() {
             duration: 250,
             useNativeDriver: true,
           }).start();
-          
+
           let iconName;
           if (route.name === "Inicio") iconName = "home";
           if (route.name === "Pedidos") iconName = "shopping-cart";
@@ -79,5 +70,28 @@ export default function BottomRoutes() {
         <Tab.Screen name="Admin" component={Admin} />
       )}
     </Tab.Navigator>
+  );
+}
+
+export default function BottomRoutes() {
+  const [userRole, setUserRole] = useState(null);
+  const userStorage = new UserStorage();
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const userData = await userStorage.getUserData();
+      setUserRole(userData?.role);
+    };
+
+    fetchUserRole();
+  }, []);
+
+  if (userRole === null) return null; // Evita carregamento enquanto a role não é definida
+
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Tabs" children={() => <Tabs userRole={userRole} />} />
+      <Stack.Screen name="ProductDetails" component={ProductDetails} />
+    </Stack.Navigator>
   );
 }

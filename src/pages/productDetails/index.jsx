@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  ScrollView,
-  ToastAndroid,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, Image, TextInput, ScrollView, ToastAndroid, ActivityIndicator } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import ProductFooter from "../../components/productFooter";
 import { styles } from "./styles";
@@ -46,7 +38,7 @@ export default function ProductDetails() {
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
       // Aguarda 1000ms e navega para a aba Home
       setTimeout(() => {
-        navigation.navigate("BottomRoutes", { screen: "Inicio" });
+        navigation.goBack();
       }, 1000);
     } catch (error) {
       ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);

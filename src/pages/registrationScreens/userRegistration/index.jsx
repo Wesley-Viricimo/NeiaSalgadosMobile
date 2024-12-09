@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-    Text,
-    TouchableOpacity,
-    Alert,
-    ScrollView,
-    ActivityIndicator,
-} from 'react-native';
+import { Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import CustomInput from '../../../components/customInput/index';
 import PasswordInput from '../../../components/passwordInput/index';
 import { styles } from './styles';
