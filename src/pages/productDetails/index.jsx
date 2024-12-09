@@ -6,8 +6,9 @@ import {
   TextInput,
   ScrollView,
   ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import ProductFooter from "../../components/productFooter";
 import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,15 +18,23 @@ import { getOrderItemById, upsertOrderItem } from "../../database/orderItemServi
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [observation, setObservation] = useState("");
+  const [loading, setLoading] = useState(true); // Estado para indicador de carregamento
   const route = useRoute();
+  const navigation = useNavigation();
   const { product } = route.params;
 
   useEffect(() => {
     const fetchProductData = async () => {
-      const item = await getOrderItemById(product.idProduct);
-      if (item) {
-        setQuantity(item.quantity);
-        setObservation(item.observation || "");
+      try {
+        const item = await getOrderItemById(product.idProduct);
+        if (item) {
+          setQuantity(item.quantity);
+          setObservation(item.observation || "");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar produto:", error);
+      } finally {
+        setLoading(false); // Finaliza o indicador de carregamento
       }
     };
     fetchProductData();
@@ -35,11 +44,25 @@ export default function ProductDetails() {
     try {
       await upsertOrderItem(product.idProduct, quantity, product.price, observation);
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
+      // Aguarda 1000ms e navega para a aba Home
+      setTimeout(() => {
+        navigation.navigate("BottomRoutes", { screen: "Inicio" });
+      }, 1000);
     } catch (error) {
       ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);
       console.error(error);
     }
   };
+
+  if (loading) {
+    // Exibir indicador de carregamento enquanto os dados são buscados
+    return (
+      <View style={[styles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Carregando informações...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>

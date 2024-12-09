@@ -5,7 +5,7 @@ import { styles } from "./styles";
 export default function LoadingAnimation({ small }) {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={small ? "small" : "large"} color="#1E90FF" />
+      <ActivityIndicator size={small ? "small" : "large"} color="#0000ff" />
     </View>
   );
 }

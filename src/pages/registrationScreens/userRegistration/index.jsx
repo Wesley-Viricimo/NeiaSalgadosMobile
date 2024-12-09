@@ -103,7 +103,7 @@ export default function UserRegistration() {
                     disabled={isLoading}
                 >
                     {isLoading ? (
-                        <ActivityIndicator color="#fff" />
+                        <ActivityIndicator color="#0000ff" />
                     ) : (
                         <Text style={styles.buttonText}>Cadastrar</Text>
                     )}

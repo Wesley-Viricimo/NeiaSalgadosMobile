@@ -57,4 +57,9 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     textAlignVertical: "top", // Garante alinhamento no topo
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

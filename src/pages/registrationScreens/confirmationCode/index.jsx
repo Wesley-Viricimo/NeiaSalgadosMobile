@@ -66,7 +66,7 @@ export default function ConfirmationCode({ route, navigation }) {
         ))}
       </View>
       <TouchableOpacity style={styles.submitButton} onPress={handleCodeSubmit} disabled={isLoading}>
-        {isLoading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Confirmar</Text>}
+        {isLoading ? <ActivityIndicator color="#0000ff" /> : <Text style={styles.buttonText}>Confirmar</Text>}
       </TouchableOpacity>
       <ResendCodeButton email={email} />
     </View>
