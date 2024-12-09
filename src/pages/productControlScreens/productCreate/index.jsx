@@ -35,8 +35,6 @@ const ProductCreate = () => {
       const fileName = file.assets[0].name || "file.jpg";
       const fileType = file.assets[0].mimeType || "application/octet-stream";
 
-      console.log('selectedCategory', selectedCategory);
-
       const formData = new FormData();
       formData.append("product-image", {
         uri: fileUri,

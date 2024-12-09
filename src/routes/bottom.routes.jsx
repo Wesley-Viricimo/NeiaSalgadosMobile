@@ -9,6 +9,8 @@ import Orders from "../pages/tabs/orders";
 import Profile from "../pages/tabs/profile";
 import Admin from "../pages/tabs/admin";
 import ProductDetails from "../pages/productDetails";
+import ProductControl from "../pages/productControlScreens/productControl";
+import ProductCreate from "../pages/productControlScreens/productCreate";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -92,6 +94,8 @@ export default function BottomRoutes() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Tabs" children={() => <Tabs userRole={userRole} />} />
       <Stack.Screen name="ProductDetails" component={ProductDetails} />
+      <Stack.Screen name="ProductControl" component={ProductControl} />
+      <Stack.Screen name="ProductCreate" component={ProductCreate} />
     </Stack.Navigator>
   );
 }

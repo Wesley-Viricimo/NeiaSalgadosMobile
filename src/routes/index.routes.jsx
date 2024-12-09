@@ -6,7 +6,6 @@ import UserStorage from '../storage/user.storage';
 import { View, StyleSheet } from 'react-native';
 import * as Animatable from 'react-native-animatable'; // Importa a biblioteca de animações
 import ProductControl from '../pages/productControlScreens/productControl';
-import ProductCreate from '../pages/productControlScreens/productCreate';
 import UserRegistration from '../pages/registrationScreens/userRegistration';
 import ConfirmationCode from '../pages/registrationScreens/confirmationCode';
 
@@ -73,8 +72,6 @@ export default function Routes() {
     >
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="BottomRoutes" component={BottomRoutes} />
-      <Stack.Screen name="ProductControl" component={ProductControl} />
-      <Stack.Screen name="ProductCreate" component={ProductCreate} />
       <Stack.Screen name="UserRegistration" component={UserRegistration} />
       <Stack.Screen name="ConfirmationCode" component={ConfirmationCode} />
     </Stack.Navigator>
