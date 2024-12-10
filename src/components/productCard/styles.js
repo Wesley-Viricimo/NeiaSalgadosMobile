@@ -23,9 +23,9 @@ export const styles = StyleSheet.create({
   },
   soldIndicator: {
     position: "absolute",
-    top: 8,
+    top: 12,
     right: 8,
-    backgroundColor: "#FF6347",
+    backgroundColor: "#363636",
     borderRadius: 12,
     padding: 4,
     flexDirection: "row",
