@@ -19,6 +19,7 @@ export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [observation, setObservation] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isInCart, setIsInCart] = useState(false);
   const route = useRoute();
   const navigation = useNavigation();
   const { product, soldQuantity, onAddToCart } = route.params;
@@ -30,6 +31,9 @@ export default function ProductDetails() {
         if (item) {
           setQuantity(item.quantity || soldQuantity); // Sincroniza com soldQuantity
           setObservation(item.observation || "");
+          setIsInCart(true); // Produto já está no carrinho
+        } else {
+          setIsInCart(false); // Produto ainda não está no carrinho
         }
       } catch (error) {
         console.error("Erro ao buscar produto:", error);
@@ -38,7 +42,7 @@ export default function ProductDetails() {
       }
     };
     fetchProductData();
-  }, [product.idProduct]);
+  }, [product.idProduct]);  
 
   const handleAddToCart = async () => {
     try {
@@ -91,6 +95,7 @@ export default function ProductDetails() {
         quantity={quantity}
         setQuantity={setQuantity}
         onAddToCart={handleAddToCart}
+        isInCart={isInCart} // Novo prop
       />
     </SafeAreaView>
   );

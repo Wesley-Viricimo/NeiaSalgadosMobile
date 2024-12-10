@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center", // Garante alinhamento vertical
     padding: 16,
     borderTopWidth: 1,
     borderTopColor: "#ddd",
@@ -31,5 +32,8 @@ export const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  trashIcon: {
+    marginLeft: 16, // Espaço para separar do botão de adicionar
   },
 });
