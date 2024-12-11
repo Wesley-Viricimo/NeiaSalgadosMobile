@@ -64,10 +64,18 @@ export default function Home() {
       product,
       soldQuantity: soldProducts[product.idProduct] || 0,
       onAddToCart: (id, quantity) => {
-        setSoldProducts((prev) => ({ ...prev, [id]: quantity })); // Atualiza produtos vendidos
+        if (quantity > 0) {
+          setSoldProducts((prev) => ({ ...prev, [id]: quantity })); // Adiciona/Atualiza o produto vendido
+        } else {
+          setSoldProducts((prev) => {
+            const updated = { ...prev };
+            delete updated[id]; // Remove o produto vendido
+            return updated;
+          });
+        }
       },
     });
-  };
+  };  
 
   return (
     <SafeAreaView style={styles.container}>

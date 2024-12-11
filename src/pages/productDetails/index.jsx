@@ -13,7 +13,7 @@ import ProductFooter from "../../components/productFooter";
 import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getOrderItemById, upsertOrderItem } from "../../database/orderItemService";
+import { getOrderItemById, removeOrderItemById, upsertOrderItem } from "../../database/orderItemService";
 
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
@@ -47,11 +47,24 @@ export default function ProductDetails() {
   const handleAddToCart = async () => {
     try {
       await upsertOrderItem(product.idProduct, quantity, product.price, observation);
+      console.log('quantity details', quantity);
       onAddToCart(product.idProduct, quantity); // Atualiza estado de produtos vendidos na Home
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
       navigation.goBack();
     } catch (error) {
       ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);
+      console.error(error);
+    }
+  };
+
+  const handleRemoveFromCart = async () => {
+    try {
+      await removeOrderItemById(product.idProduct);
+      onAddToCart(product.idProduct, 0);
+      ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
+      navigation.goBack();
+    } catch (error) {
+      ToastAndroid.show("Erro ao remover o produto!", ToastAndroid.LONG);
       console.error(error);
     }
   };
@@ -90,11 +103,11 @@ export default function ProductDetails() {
         </View>
       </ScrollView>
       <ProductFooter
-        productId={product.idProduct}
         price={product.price}
         quantity={quantity}
         setQuantity={setQuantity}
         onAddToCart={handleAddToCart}
+        onPressClearIcon={handleRemoveFromCart}
         isInCart={isInCart} // Novo prop
       />
     </SafeAreaView>
