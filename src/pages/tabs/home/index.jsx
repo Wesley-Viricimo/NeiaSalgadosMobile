@@ -5,6 +5,7 @@ import ProductCard from "../../../components/productCard/index";
 import LoadingAnimation from "../../../components/loadingAnimation/index";
 import EmptyListMessage from "../../../components/emptyListMessage/index";
 import ProductService from "../../../api/service/ProductService";
+import { getOrderItemById } from "../../../database/orderItemService";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -12,11 +13,10 @@ import { useNavigation } from "@react-navigation/native";
 export default function Home() {
   const navigation = useNavigation();
 
-  
   const [inputValue, setInputValue] = useState("");
   const [debouncedInput, setDebouncedInput] = useState("");
   const [products, setProducts] = useState([]);
-  const [soldProducts, setSoldProducts] = useState({}); // Estado para produtos vendidos
+  const [soldProducts, setSoldProducts] = useState({});
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -27,7 +27,20 @@ export default function Home() {
     try {
       const data = await ProductService.fetchProducts(searchText, pageNum);
       if (data.length > 0) {
-        setProducts((prev) => (pageNum === 1 ? data : [...prev, ...data]));
+        const updatedSoldProducts = { ...soldProducts };
+
+        // Atualizar quantidade de produtos vendidos
+        await Promise.all(
+          data.map(async (product) => {
+            const orderItem = await getOrderItemById(product.idProduct);
+            updatedSoldProducts[product.idProduct] = orderItem?.quantity || 0;
+          })
+        );
+
+        setSoldProducts(updatedSoldProducts);
+        setProducts((prev) =>
+          pageNum === 1 ? data : [...prev, ...data]
+        );
         setHasMore(data.length === 10);
       } else {
         setHasMore(false);
@@ -76,7 +89,7 @@ export default function Home() {
         }
       },
     });
-  };  
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -91,12 +104,14 @@ export default function Home() {
             <ProductCard
               product={item}
               onPress={handleCardPress}
-              soldQuantity={soldProducts[item.idProduct] || 0} // Passa a quantidade vendida
+              soldQuantity={soldProducts[item.idProduct] || 0}
             />
           )}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.1}
-          ListFooterComponent={loading ? <LoadingAnimation small /> : null}
+          ListFooterComponent={
+            loading ? <LoadingAnimation small /> : null
+          }
           ListEmptyComponent={
             !loading && <EmptyListMessage message="Nenhum produto encontrado!" />
           }
