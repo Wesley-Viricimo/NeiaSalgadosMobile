@@ -24,3 +24,8 @@ export const removeOrderItemById = async (id) => {
   const query = "DELETE FROM orderItem WHERE id = ?";
   return await executeCommand(query, [id]);
 };
+
+export const sumOrderItemQuantities = async () => {
+  const query = "SELECT SUM(quantity) as totalQuantity FROM orderItem";
+  return executeCommand(query);
+};

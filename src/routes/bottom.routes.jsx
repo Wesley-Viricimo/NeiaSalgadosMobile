@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Animated } from "react-native";
@@ -11,6 +12,7 @@ import Admin from "../pages/tabs/admin";
 import ProductDetails from "../pages/productDetails";
 import ProductControl from "../pages/productControlScreens/productControl";
 import ProductCreate from "../pages/productControlScreens/productCreate";
+import TabFooter from "../components/tabFooter";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -27,13 +29,12 @@ function Tabs({ userRole }) {
         tabBarIconStyle: {
           marginTop: 5,
         },
-        tabBarActiveTintColor: "#1E90FF", // Cor ativa
-        tabBarInactiveTintColor: "#808080", // Cor inativa
+        tabBarActiveTintColor: "#1E90FF",
+        tabBarInactiveTintColor: "#808080",
         tabBarIcon: ({ color, size, focused }) => {
-          const scaleAnim = new Animated.Value(focused ? 1.2 : 1); // Define a escala
-          const opacityAnim = new Animated.Value(focused ? 1 : 0.5); // Define opacidade
+          const scaleAnim = new Animated.Value(focused ? 1.2 : 1);
+          const opacityAnim = new Animated.Value(focused ? 1 : 0.5);
 
-          // Animações ao mudar o foco
           Animated.timing(scaleAnim, {
             toValue: focused ? 1.2 : 1,
             duration: 250,
@@ -88,14 +89,32 @@ export default function BottomRoutes() {
     fetchUserRole();
   }, []);
 
-  if (userRole === null) return null; // Evita carregamento enquanto a role não é definida
+  if (userRole === null) return null;
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Tabs" children={() => <Tabs userRole={userRole} />} />
-      <Stack.Screen name="ProductDetails" component={ProductDetails} />
-      <Stack.Screen name="ProductControl" component={ProductControl} />
-      <Stack.Screen name="ProductCreate" component={ProductCreate} />
-    </Stack.Navigator>
+    <View style={styles.container}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Tabs">
+          {() => (
+            <View style={styles.innerContainer}>
+              <Tabs userRole={userRole} />
+              <TabFooter />
+            </View>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="ProductDetails" component={ProductDetails} />
+        <Stack.Screen name="ProductControl" component={ProductControl} />
+        <Stack.Screen name="ProductCreate" component={ProductCreate} />
+      </Stack.Navigator>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  innerContainer: {
+    flex: 1,
+  },
+});
