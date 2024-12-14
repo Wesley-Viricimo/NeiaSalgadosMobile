@@ -26,6 +26,10 @@ export const removeOrderItemById = async (id) => {
 };
 
 export const sumOrderItemQuantities = async () => {
-  const query = "SELECT SUM(quantity) as totalQuantity FROM orderItem";
-  return await executeQuery(query);
+  const query = "SELECT SUM(quantity) AS totalQuantity, SUM(quantity * price) AS totalPrice FROM orderItem";
+  const result = await executeQuery(query);
+  return {
+      totalQuantity: result.totalQuantity || 0,
+      totalPrice: result.totalPrice || 0,
+  };
 };

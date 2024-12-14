@@ -6,9 +6,10 @@ import { sumOrderItemQuantities } from "../../database/orderItemService";
 
 export default function FinishOrderFooter() {
     const [totalQuantity, setTotalQuantity] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
     const navigation = useNavigation();
 
-    const fetchTotalQuantity = async () => {
+    const fetchTotalQuantityAndPrice = async () => {
         try {
             const result = await sumOrderItemQuantities();
             if (!isNaN(result.totalQuantity)) {
@@ -16,15 +17,20 @@ export default function FinishOrderFooter() {
             } else {
                 setTotalQuantity(0);
             }
+
+            if (!isNaN(result.totalPrice)) {
+                setTotalPrice(result.totalPrice);
+            } else {
+                setTotalPrice(0);
+            }
         } catch (error) {
-            console.error("Erro ao buscar quantidade total:", error);
+            console.error("Erro ao buscar dados do pedido:", error);
         }
     };
-    
 
     useEffect(() => {
-        fetchTotalQuantity();
-        const unsubscribe = navigation.addListener("focus", fetchTotalQuantity); // Atualiza ao focar
+        fetchTotalQuantityAndPrice();
+        const unsubscribe = navigation.addListener("focus", fetchTotalQuantityAndPrice); // Atualiza ao focar
         return unsubscribe;
     }, [navigation]);
 
@@ -34,18 +40,26 @@ export default function FinishOrderFooter() {
     }
 
     return (
-        <TouchableOpacity
-            style={styles.footerContainer}
-            onPress={() => alert("Cupons")} // Corrigido para executar apenas ao clicar
-        >
+        <View style={styles.footerContainer}>
             <View style={styles.iconContainer}>
                 <Icon name="shopping-cart" size={24} color="#fff" />
                 <View style={styles.badge}>
                     <Text style={styles.badgeText}>{totalQuantity}</Text>
                 </View>
             </View>
-            <Text style={styles.footerText}>Finalizar Pedido</Text>
-        </TouchableOpacity>
+
+            {/* Exibindo "Total R$: {totalPrice}" dentro de um componente Text */}
+            <Text style={styles.footerText}>
+                {"Total R$: " + totalPrice.toFixed(2)}
+            </Text>
+
+            {/* Botão "Ver Carrinho" com o texto dentro de um componente Text */}
+            <TouchableOpacity 
+                style={styles.cartButton}
+                onPress={() => navigation.navigate("Cart")}> 
+                <Text style={styles.cartButtonText}>Ver Carrinho</Text>
+            </TouchableOpacity>
+        </View>
     );
 }
 
@@ -63,7 +77,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     iconContainer: {
-        marginRight: 10,
+        marginRight: 15,
         position: "relative",
     },
     badge: {
@@ -82,5 +96,16 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 16,
         fontWeight: "bold",
+    },
+    cartButton: {
+        marginLeft: 30,
+        backgroundColor: "#FF4500",
+        paddingVertical: 10,
+        paddingHorizontal: 30,
+        borderRadius: 5,
+    },
+    cartButtonText: {
+        color: "#fff",
+        fontSize: 14,
     },
 });
