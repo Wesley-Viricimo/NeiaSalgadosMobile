@@ -55,4 +55,55 @@ export const styles = StyleSheet.create({
     scrollContent: {
         padding: 20,
     },
+
+    // Estilos para o endereço de retirada
+    pickupAddressContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 20,
+        marginHorizontal: 15,
+        backgroundColor: "#f9f9f9",
+        padding: 15,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: "#ccc",
+    },
+    iconContainer: {
+        marginRight: 15,
+    },
+    addressTextContainer: {
+        flex: 1,
+    },
+    pickupTextBold: {
+        fontWeight: "bold",
+        fontSize: 18,
+        color: "#333",
+    },
+    pickupText: {
+        fontSize: 16,
+        color: "#555",
+    },
+
+    // Estilos para tempo estimado
+    timeContainer: {
+        marginTop: 20,
+        marginHorizontal: 20,
+    },
+    timeText: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#333",
+    },
+    timeValue: {
+        fontSize: 16,
+        color: "#555",
+    },
+
+    // Linha de separação
+    separator: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+        marginVertical: 20,
+        marginHorizontal: 10,
+    },
 });

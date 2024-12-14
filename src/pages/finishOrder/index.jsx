@@ -53,17 +53,45 @@ export default function FinishOrder() {
                 </TouchableOpacity>
             </View>
 
-            {/* Botão de Seleção de Endereço (aparece apenas se Entrega for selecionada) */}
+            {/* Se opção for entrega, exibe botão de seleção de endereço */}
             {selectedOption === "entrega" && (
                 <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
                     <Text style={styles.selectAddressButtonText}>Selecione o endereço de entrega</Text>
                 </TouchableOpacity>
             )}
 
-            {/* Exibindo as informações do endereço selecionado */}
+            {/* Exibindo as informações do endereço selecionado para entrega */}
             {selectedOption === "entrega" && staticAddress && (
                 <AddressCard address={staticAddress} /> // Exibe o card com as informações do endereço
             )}
+
+            {/* Exibindo informações do endereço de retirada */}
+            {selectedOption === "retirada" && (
+                <View style={styles.pickupAddressContainer}>
+                    <View style={styles.iconContainer}>
+                        <Icon name="place" size={24} color="#000" />
+                    </View>
+                    <View style={styles.addressTextContainer}>
+                        <Text style={styles.pickupTextBold}>Retire seu pedido em:</Text>
+                        <Text style={styles.pickupText}>R Antônio Luiz do Prado, 55</Text>
+                        <Text style={styles.pickupText}>Jardim das Oliveiras</Text>
+                        <Text style={styles.pickupText}>Paraguaçu Paulista - São Paulo</Text>
+                    </View>
+                </View>
+            )}
+
+            {/* Tempo estimado para entrega ou retirada */}
+            <View style={styles.timeContainer}>
+                <Text style={styles.timeText}>
+                    {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
+                </Text>
+                <Text style={styles.timeValue}>
+                    {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
+                </Text>
+            </View>
+
+            {/* Linha de separação */}
+            <View style={styles.separator} />
 
             {/* ScrollView para conteúdo principal */}
             <ScrollView contentContainerStyle={styles.scrollContent}>

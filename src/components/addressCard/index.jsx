@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
     },
     addressType: {
         fontWeight: "bold",
-        fontSize: 16,
+        fontSize: 18,
         color: "#333",
         marginBottom: 5, // Espaçamento entre o tipo de endereço e as informações
     },
     addressText: {
-        fontSize: 14,
+        fontSize: 16,
         color: "#555",
         marginBottom: 5, // Espaçamento entre as linhas do endereço
     },

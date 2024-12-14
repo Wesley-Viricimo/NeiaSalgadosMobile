@@ -8,9 +8,10 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     modalTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: "bold",
         marginBottom: 20,
+        textAlign: "center"
     },
     addressCard: {
         padding: 15,
