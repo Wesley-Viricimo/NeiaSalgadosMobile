@@ -11,6 +11,7 @@ export default function FinishOrder() {
     const navigation = useNavigation();
     const [selectedOption, setSelectedOption] = useState("entrega");  // Set default option to "entrega"
     const [modalVisible, setModalVisible] = useState(false);
+    const [paymentOption, setPaymentOption] = useState("pagarEntrega"); // Variável para controlar a opção de pagamento
 
     // Dados de endereço estáticos para visualização
     const staticAddress = {
@@ -92,6 +93,23 @@ export default function FinishOrder() {
 
             {/* Linha de separação */}
             <View style={styles.separator} />
+
+            {/* Seção de Pagamento */}
+            <View style={styles.paymentSection}>
+                <Text style={styles.paymentText}>Pagamento</Text>
+
+                {/* Opções de pagamento */}
+                <TouchableOpacity
+                    onPress={() => setPaymentOption("pagarEntrega")}
+                >
+                    <Text style={styles.paymentOptionText}>
+                        {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
+                    </Text>
+                    {paymentOption === "pagarEntrega" && (
+                        <View style={styles.selectedPaymentOption} /> // Aplica a linha somente se estiver selecionado
+                    )}
+                </TouchableOpacity>
+            </View>
 
             {/* ScrollView para conteúdo principal */}
             <ScrollView contentContainerStyle={styles.scrollContent}>

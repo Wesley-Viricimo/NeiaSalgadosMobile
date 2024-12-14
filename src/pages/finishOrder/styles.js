@@ -76,26 +76,26 @@ export const styles = StyleSheet.create({
     },
     pickupTextBold: {
         fontWeight: "bold",
-        fontSize: 18,
+        fontSize: 16,
         color: "#333",
     },
     pickupText: {
-        fontSize: 16,
+        fontSize: 14,
         color: "#555",
     },
 
     // Estilos para tempo estimado
     timeContainer: {
         marginTop: 20,
-        marginHorizontal: 20,
+        marginHorizontal: 15,
     },
     timeText: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: "bold",
         color: "#333",
     },
     timeValue: {
-        fontSize: 16,
+        fontSize: 18,
         color: "#555",
     },
 
@@ -104,6 +104,32 @@ export const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#ddd",
         marginVertical: 20,
-        marginHorizontal: 10,
+        marginHorizontal: 15,
+    },
+
+    // Estilos para pagamento
+    paymentSection: {
+        marginHorizontal: 15,
+    },
+    paymentText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#333",
+        marginBottom: 10,
+    },
+
+    paymentOptionText: {
+        fontSize: 18,
+        color: "#FF4500",
+        paddingLeft: 10,
+    },
+
+    // Estilo para o sublinhado
+    selectedPaymentOption: {
+        height: 2,  // Altura do sublinhado
+        backgroundColor: "#FF4500",  // Cor do sublinhado
+        marginTop: 5,  // Espaçamento entre o texto e a linha
+        width: "45%",  // Largura do sublinhado, ajustada ao texto
+        alignSelf: "flex-start",  // Alinha o sublinhado com o texto
     },
 });
