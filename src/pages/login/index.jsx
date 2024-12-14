@@ -29,8 +29,11 @@ export default function Login() {
             if (email && password) {
                 const data = await LoginService.login(new LoginModel(email, password));
                 if (data instanceof LoginResponse) {
-                    navigation.navigate("BottomRoutes");
-                    userStorge.saveUserData({ id: data.id, name: data.name, role: data.role, token: data.token })
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'BottomRoutes' }],
+                    });
+                    userStorge.saveUserData({ id: data.id, name: data.name, role: data.role, token: data.token });
                 } else {
                     Alert.alert('Erro', data);
                 }
@@ -42,7 +45,7 @@ export default function Login() {
         } finally {
             setIsLoading(false);
         }
-    };
+    };    
 
     return (
         <View style={styles.container}>
