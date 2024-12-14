@@ -28,6 +28,13 @@ export const executeCommand = async (query, params = []) => {
   return result;
 };
 
+// Função para execução de consultas de leitura (SELECT)
+export const executeQuery = async (query, params = []) => {
+  if (!dbInstance) await initializeDatabase();
+  const result = await dbInstance.getFirstAsync(query, params); // Usando getFirstAsync para pegar o primeiro resultado
+  return result;
+};
+
 // Obter a primeira linha do resultado
 export const getFirstRow = async (query, params = []) => {
   if (!dbInstance) await initializeDatabase();
