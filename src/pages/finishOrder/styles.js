@@ -52,8 +52,13 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: "center",
     },
+
+    // Estilos para o conteúdo scrollável
     scrollContent: {
-        padding: 20,
+        padding: 5,
+    },
+    scrollContentContainer: {
+        paddingBottom: 20, // Adiciona um pouco de espaço no final do conteúdo
     },
 
     // Estilos para o endereço de retirada
@@ -125,11 +130,98 @@ export const styles = StyleSheet.create({
     },
 
     // Estilo para o sublinhado
-    selectedPaymentOption: {
+    selectedPaymentOptionLine: {
         height: 2,  // Altura do sublinhado
         backgroundColor: "#FF4500",  // Cor do sublinhado
         marginTop: 5,  // Espaçamento entre o texto e a linha
         width: "45%",  // Largura do sublinhado, ajustada ao texto
         alignSelf: "flex-start",  // Alinha o sublinhado com o texto
+    },
+
+    // Novo texto para escolher forma de pagamento
+    choosePaymentText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginTop: 30,
+        marginBottom: 10,
+        color: "#333",
+    },
+
+    // Contêiner das opções de pagamento
+    radioGroupContainer: {
+        marginTop: 10,
+    },
+
+    // Estilos para cada opção de pagamento
+    radioOption: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 15,
+        borderWidth: 2,
+        borderColor: "#ccc",  // Cor padrão da borda
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 5,
+    },
+
+    // Estilos para opção de pagamento selecionada
+    selectedPaymentOption: {
+        borderColor: "#FF4500",  // Cor da borda quando selecionado
+    },
+
+    radioOptionText: {
+        fontSize: 18,
+        marginLeft: 10,
+        color: "#333",
+    },
+
+    // Estilos para o modal de endereço
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        backgroundColor: "#fff",
+        width: "80%",
+        padding: 20,
+        borderRadius: 10,
+    },
+    modalHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#333",
+    },
+    modalCloseButton: {
+        padding: 5,
+    },
+    modalCloseButtonText: {
+        fontSize: 16,
+        color: "#FF4500",
+    },
+    modalBody: {
+        marginBottom: 20,
+    },
+    modalFooter: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    modalButton: {
+        backgroundColor: "#FF4500",
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    modalButtonText: {
+        color: "#fff",
+        fontSize: 16,
+        textAlign: "center",
     },
 });

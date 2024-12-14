@@ -12,6 +12,7 @@ export default function FinishOrder() {
     const [selectedOption, setSelectedOption] = useState("entrega");  // Set default option to "entrega"
     const [modalVisible, setModalVisible] = useState(false);
     const [paymentOption, setPaymentOption] = useState("pagarEntrega"); // Variável para controlar a opção de pagamento
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(""); // Controla o pagamento selecionado
 
     // Dados de endereço estáticos para visualização
     const staticAddress = {
@@ -61,59 +62,103 @@ export default function FinishOrder() {
                 </TouchableOpacity>
             )}
 
-            {/* Exibindo as informações do endereço selecionado para entrega */}
-            {selectedOption === "entrega" && staticAddress && (
-                <AddressCard address={staticAddress} /> // Exibe o card com as informações do endereço
-            )}
+            {/* Seção de conteúdo scrollável */}
+            <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
+                {/* Exibindo as informações do endereço selecionado para entrega */}
+                {selectedOption === "entrega" && staticAddress && (
+                    <AddressCard address={staticAddress} /> // Exibe o card com as informações do endereço
+                )}
 
-            {/* Exibindo informações do endereço de retirada */}
-            {selectedOption === "retirada" && (
-                <View style={styles.pickupAddressContainer}>
-                    <View style={styles.iconContainer}>
-                        <Icon name="place" size={24} color="#000" />
+                {/* Exibindo informações do endereço de retirada */}
+                {selectedOption === "retirada" && (
+                    <View style={styles.pickupAddressContainer}>
+                        <View style={styles.iconContainer}>
+                            <Icon name="place" size={24} color="#000" />
+                        </View>
+                        <View style={styles.addressTextContainer}>
+                            <Text style={styles.pickupTextBold}>Retire seu pedido em:</Text>
+                            <Text style={styles.pickupText}>R Antônio Luiz do Prado, 55</Text>
+                            <Text style={styles.pickupText}>Jardim das Oliveiras</Text>
+                            <Text style={styles.pickupText}>Paraguaçu Paulista - São Paulo</Text>
+                        </View>
                     </View>
-                    <View style={styles.addressTextContainer}>
-                        <Text style={styles.pickupTextBold}>Retire seu pedido em:</Text>
-                        <Text style={styles.pickupText}>R Antônio Luiz do Prado, 55</Text>
-                        <Text style={styles.pickupText}>Jardim das Oliveiras</Text>
-                        <Text style={styles.pickupText}>Paraguaçu Paulista - São Paulo</Text>
-                    </View>
-                </View>
-            )}
+                )}
 
-            {/* Tempo estimado para entrega ou retirada */}
-            <View style={styles.timeContainer}>
-                <Text style={styles.timeText}>
-                    {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
-                </Text>
-                <Text style={styles.timeValue}>
-                    {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
-                </Text>
-            </View>
-
-            {/* Linha de separação */}
-            <View style={styles.separator} />
-
-            {/* Seção de Pagamento */}
-            <View style={styles.paymentSection}>
-                <Text style={styles.paymentText}>Pagamento</Text>
-
-                {/* Opções de pagamento */}
-                <TouchableOpacity
-                    onPress={() => setPaymentOption("pagarEntrega")}
-                >
-                    <Text style={styles.paymentOptionText}>
-                        {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
+                {/* Tempo estimado para entrega ou retirada */}
+                <View style={styles.timeContainer}>
+                    <Text style={styles.timeText}>
+                        {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
                     </Text>
-                    {paymentOption === "pagarEntrega" && (
-                        <View style={styles.selectedPaymentOption} /> // Aplica a linha somente se estiver selecionado
-                    )}
-                </TouchableOpacity>
-            </View>
+                    <Text style={styles.timeValue}>
+                        {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
+                    </Text>
+                </View>
 
-            {/* ScrollView para conteúdo principal */}
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                {/* Aqui você pode adicionar outros campos ou componentes para a finalização do pedido */}
+                {/* Linha de separação */}
+                <View style={styles.separator} />
+
+                {/* Seção de Pagamento */}
+                <View style={styles.paymentSection}>
+                    <Text style={styles.paymentText}>Pagamento</Text>
+
+                    {/* Opções de pagamento */}
+                    <TouchableOpacity
+                        onPress={() => setPaymentOption("pagarEntrega")}
+                    >
+                        <Text style={styles.paymentOptionText}>
+                            {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
+                        </Text>
+                        {paymentOption === "pagarEntrega" && (
+                            <View style={styles.selectedPaymentOptionLine} /> // Aplica a linha somente se estiver selecionado
+                        )}
+                    </TouchableOpacity>
+
+                    {/* Texto de escolha da forma de pagamento */}
+                    <Text style={styles.choosePaymentText}>Escolha a forma de pagamento</Text>
+
+                    {/* Opções de pagamento */}
+                    <View style={styles.radioGroupContainer}>
+                        {/* Dinheiro */}
+                        <TouchableOpacity
+                            style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
+                            onPress={() => setSelectedPaymentMethod("dinheiro")}
+                        >
+                            <Icon
+                                name="attach-money"
+                                size={24}
+                                color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"}
+                            />
+                            <Text style={styles.radioOptionText}>Dinheiro</Text>
+                        </TouchableOpacity>
+
+                        {/* Cartão */}
+                        <TouchableOpacity
+                            style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
+                            onPress={() => setSelectedPaymentMethod("cartao")}
+                        >
+                            <Icon
+                                name="credit-card"
+                                size={24}
+                                color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"}
+                            />
+                            <Text style={styles.radioOptionText}>Cartão</Text>
+                        </TouchableOpacity>
+
+                        {/* Pix */}
+                        <TouchableOpacity
+                            style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
+                            onPress={() => setSelectedPaymentMethod("pix")}
+                        >
+                            <Icon
+                                name="account-balance-wallet"
+                                size={24}
+                                color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"}
+                            />
+                            <Text style={styles.radioOptionText}>Pix</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                </View>
             </ScrollView>
 
             {/* Modal de Endereço */}
