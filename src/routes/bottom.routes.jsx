@@ -13,7 +13,6 @@ import ProductDetails from "../pages/productDetails";
 import ProductControl from "../pages/productControlScreens/productControl";
 import ProductCreate from "../pages/productControlScreens/productCreate";
 import FinishOrderFooter from "../components/finishOrderFooter";
-import { useNavigationState } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -89,11 +88,6 @@ export default function BottomRoutes() {
 
         fetchUserRole();
     }, []);
-
-    const state = useNavigationState((state) => state);
-    const currentRoute = state?.routes[state?.index]?.name;
-
-    const shouldShowFooter = ["Inicio", "Pedidos"].includes(currentRoute);
 
     if (userRole === null) return null;
 
