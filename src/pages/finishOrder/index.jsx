@@ -1,15 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import AddressModal from "../../components/addressModal"; // Importando o novo componente de Modal
+import AddressModal from "../../components/addressModal/index"; // Importando o novo componente de Modal
 import { SafeAreaView } from "react-native-safe-area-context";
+import AddressCard from "../../components/addressCard/index";  // Importando o novo componente de AddressCard
 import { styles } from "./styles";
 
 export default function FinishOrder() {
     const navigation = useNavigation();
     const [selectedOption, setSelectedOption] = useState("entrega");  // Set default option to "entrega"
     const [modalVisible, setModalVisible] = useState(false);
+
+    // Dados de endereço estáticos para visualização
+    const staticAddress = {
+        type: "casa",  // Ou "trabalho"
+        road: "Rua Hermínio Cavalari",
+        number: "701",
+        district: "Sítios de Recreio Panambi",
+        city: "Marília",
+        state: "São Paulo",
+        complement: "Apartamento 926, bloco 9"
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -48,6 +60,11 @@ export default function FinishOrder() {
                 </TouchableOpacity>
             )}
 
+            {/* Exibindo as informações do endereço selecionado */}
+            {selectedOption === "entrega" && staticAddress && (
+                <AddressCard address={staticAddress} /> // Exibe o card com as informações do endereço
+            )}
+
             {/* ScrollView para conteúdo principal */}
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {/* Aqui você pode adicionar outros campos ou componentes para a finalização do pedido */}
@@ -57,10 +74,13 @@ export default function FinishOrder() {
             <AddressModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
+                onSelectAddress={(address) => {
+                    // Aqui você poderia setar o endereço selecionado da API
+                    setModalVisible(false); // Fecha o modal após selecionar o endereço
+                }}
                 onAddAddress={() => {
-                    // Função para cadastrar um novo endereço
                     console.log("Cadastrar novo endereço");
-                    setModalVisible(false); // Fecha o modal após adicionar o endereço
+                    setModalVisible(false);
                 }}
             />
         </SafeAreaView>
