@@ -10,12 +10,17 @@ export default function TabFooter() {
 
     const fetchTotalQuantity = async () => {
         try {
-            const total = await sumOrderItemQuantities();
-            setTotalQuantity(total);
+            const result = await sumOrderItemQuantities();
+            if (!isNaN(result.totalQuantity)) {
+                setTotalQuantity(result.totalQuantity);
+            } else {
+                setTotalQuantity(0);
+            }
         } catch (error) {
             console.error("Erro ao buscar quantidade total:", error);
         }
     };
+    
 
     useEffect(() => {
         fetchTotalQuantity();
