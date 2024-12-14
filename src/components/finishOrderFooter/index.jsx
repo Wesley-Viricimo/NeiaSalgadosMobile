@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { sumOrderItemQuantities } from "../../database/orderItemService";
 
-export default function TabFooter() {
+export default function FinishOrderFooter() {
     const [totalQuantity, setTotalQuantity] = useState(0);
     const navigation = useNavigation();
 

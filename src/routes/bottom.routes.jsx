@@ -12,7 +12,7 @@ import Admin from "../pages/tabs/admin";
 import ProductDetails from "../pages/productDetails";
 import ProductControl from "../pages/productControlScreens/productControl";
 import ProductCreate from "../pages/productControlScreens/productCreate";
-import TabFooter from "../components/tabFooter";
+import FinishOrderFooter from "../components/finishOrderFooter";
 import { useNavigationState } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
@@ -104,7 +104,7 @@ export default function BottomRoutes() {
                     {() => (
                         <View style={styles.innerContainer}>
                             <Tabs userRole={userRole} />
-                            <TabFooter />
+                            <FinishOrderFooter />
                         </View>
                     )}
                 </Stack.Screen>
