@@ -10,7 +10,7 @@ export default function TabFooter() {
 
     const fetchTotalQuantity = async () => {
         try {
-            const total = await sumOrderItemQuantities(); // Soma todas as quantidades na tabela
+            const total = await sumOrderItemQuantities();
             setTotalQuantity(total);
         } catch (error) {
             console.error("Erro ao buscar quantidade total:", error);
@@ -23,18 +23,21 @@ export default function TabFooter() {
         return unsubscribe;
     }, [navigation]);
 
+    // Não renderizar o rodapé se a quantidade for 0
+    if (totalQuantity <= 0) {
+        return null;
+    }
+
     return (
         <TouchableOpacity
             style={styles.footerContainer}
-            onPress={alert("Cupons")} // Navega para a tela de Finalizar Pedido
+            onPress={() => alert("Cupons")} // Corrigido para executar apenas ao clicar
         >
             <View style={styles.iconContainer}>
                 <Icon name="shopping-cart" size={24} color="#fff" />
-                {totalQuantity > 0 && (
-                    <View style={styles.badge}>
-                        <Text style={styles.badgeText}>{totalQuantity}</Text>
-                    </View>
-                )}
+                <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{totalQuantity}</Text>
+                </View>
             </View>
             <Text style={styles.footerText}>Finalizar Pedido</Text>
         </TouchableOpacity>
@@ -44,7 +47,7 @@ export default function TabFooter() {
 const styles = StyleSheet.create({
     footerContainer: {
         position: "absolute",
-        bottom: 60, // Espaço acima das tabs
+        bottom: 60,
         left: 0,
         right: 0,
         flexDirection: "row",
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#1E90FF",
         padding: 15,
-        zIndex: 10, // Garantir que fique acima das tabs
+        zIndex: 10,
     },
     iconContainer: {
         marginRight: 10,
@@ -75,4 +78,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
     },
-});  
+});

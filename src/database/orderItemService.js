@@ -1,4 +1,4 @@
-import { executeCommand, getFirstRow } from "./database";
+import { executeCommand, getFirstRow, executeQuery } from "./database";
 
 // Adicionar ou atualizar um item no banco
 export const upsertOrderItem = async (id, quantity, price, observation = "") => {
@@ -27,5 +27,5 @@ export const removeOrderItemById = async (id) => {
 
 export const sumOrderItemQuantities = async () => {
   const query = "SELECT SUM(quantity) as totalQuantity FROM orderItem";
-  return executeCommand(query);
+  return await executeQuery(query);
 };
