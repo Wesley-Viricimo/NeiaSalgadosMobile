@@ -8,6 +8,7 @@ import AddressCard from "../../components/addressCard/index";
 import { styles } from "./styles";
 import AdditionalOption from "../../components/additionalOption"; // Importando o componente de Adicional
 import { OrderService } from "../../api/service/OrderService";
+import OrderItemCard from "../../components/orderItemCard/index"; // Importando o novo componente OrderItemCard
 
 export default function FinishOrder() {
   const navigation = useNavigation();
@@ -17,6 +18,7 @@ export default function FinishOrder() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [additionals, setAdditionals] = useState([]); // Estado para armazenar os adicionais
   const [selectedAdditionals, setSelectedAdditionals] = useState({}); // Estado para armazenar os adicionais selecionados
+  const [orderItems, setOrderItems] = useState([]); // Estado para armazenar os itens do pedido
 
   // Dados de endereço estáticos para visualização
   const staticAddress = {
@@ -32,16 +34,26 @@ export default function FinishOrder() {
   // Função para buscar adicionais da API
   useEffect(() => {
     const fetchAdditionals = async () => {
-      // Exemplo de chamada à API
       const response = await OrderService.getAdditionals();
-      if(response.status === 200) {
+      if (response.status === 200) {
         setAdditionals(response.data);
       } else {
         Alert.alert("Erro", "Não foi possível carregar os adicionais.");
       }
     };
 
+    const fetchOrderItems = async () => {
+      // Aqui você pode buscar os itens do pedido da API
+      // Exemplo estático de itens do pedido
+      const items = [
+        { id: 1, description: "Hamburguer", quantity: 2, price: 20.0 },
+        { id: 2, description: "Batata Frita", quantity: 1, price: 10.0 },
+      ];
+      setOrderItems(items);
+    };
+
     fetchAdditionals();
+    fetchOrderItems();
   }, []);
 
   // Função para alterar a seleção do adicional
@@ -199,6 +211,20 @@ export default function FinishOrder() {
               onPress={() => handleAdditionalSelection(additional.idAdditional)}
             />
           ))}
+
+          {/* Seção de Itens do Pedido */}
+          <View style={styles.orderItemsSection}>
+            <Text style={styles.orderItemsTitle}>Resumo do pedido</Text>
+            {/* Exibindo os itens do pedido */}
+            {orderItems.map((item) => (
+              <OrderItemCard
+                key={item.id}
+                description={item.description}
+                quantity={item.quantity}
+                price={item.price}
+              />
+            ))}
+          </View>
         </View>
       </ScrollView>
 
