@@ -11,6 +11,7 @@ export const initializeDatabase = async () => {
       PRAGMA journal_mode = WAL;
       CREATE TABLE IF NOT EXISTS orderItem (
         id INTEGER PRIMARY KEY NOT NULL,
+        description TEXT,
         quantity INTEGER NOT NULL,
         price FLOAT,
         observation TEXT
