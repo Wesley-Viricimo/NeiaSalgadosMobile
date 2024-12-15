@@ -36,6 +36,13 @@ export const executeQuery = async (query, params = []) => {
   return result;
 };
 
+export const executeQueryAll = async (query, params = []) => {
+  if (!dbInstance) await initializeDatabase();
+  const result = await dbInstance.getAllAsync(query, params); // Usando getAllAsync para pegar todos os resultados
+  return result;
+};
+
+
 // Obter a primeira linha do resultado
 export const getFirstRow = async (query, params = []) => {
   if (!dbInstance) await initializeDatabase();

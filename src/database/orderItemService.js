@@ -1,10 +1,10 @@
-import { executeCommand, getFirstRow, executeQuery } from "./database";
+import { executeCommand, getFirstRow, executeQuery, executeQueryAll } from "./database";
 
 // Adicionar ou atualizar um item no banco
 export const upsertOrderItem = async (id, description, quantity, price, observation = "") => {
   const query = `
     INSERT INTO orderItem (id, description, quantity, price, observation)
-    VALUES (?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET 
       description = excluded.description,
       quantity = excluded.quantity,
@@ -18,6 +18,11 @@ export const upsertOrderItem = async (id, description, quantity, price, observat
 export const getOrderItemById = async (id) => {
   const query = "SELECT * FROM orderItem WHERE id = ?";
   return await getFirstRow(query, [id]);
+};
+
+export const getAllOrderItem = async () => {
+  const query = "SELECT * FROM orderItem";
+  return await executeQueryAll(query);
 };
 
 // Remover item pelo ID

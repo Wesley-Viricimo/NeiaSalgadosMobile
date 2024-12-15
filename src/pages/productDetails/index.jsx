@@ -47,7 +47,6 @@ export default function ProductDetails() {
   const handleAddToCart = async () => {
     try {
       await upsertOrderItem(product.idProduct, product.title, quantity, product.price, observation);
-      console.log('quantity details', quantity);
       onAddToCart(product.idProduct, quantity); // Atualiza estado de produtos vendidos na Home
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
       navigation.goBack();

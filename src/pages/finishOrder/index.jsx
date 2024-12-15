@@ -9,6 +9,7 @@ import { styles } from "./styles";
 import AdditionalOption from "../../components/additionalOption"; // Importando o componente de Adicional
 import { OrderService } from "../../api/service/OrderService";
 import OrderItemCard from "../../components/orderItemCard/index"; // Importando o novo componente OrderItemCard
+import { getAllOrderItem } from "../../database/orderItemService";
 
 export default function FinishOrder() {
   const navigation = useNavigation();
@@ -34,22 +35,25 @@ export default function FinishOrder() {
   // Função para buscar adicionais da API
   useEffect(() => {
     const fetchAdditionals = async () => {
-      const response = await OrderService.getAdditionals();
-      if (response.status === 200) {
-        setAdditionals(response.data);
-      } else {
-        Alert.alert("Erro", "Não foi possível carregar os adicionais.");
+      try {
+        const response = await OrderService.getAdditionals();
+        if (response.status === 200) {
+          setAdditionals(response.data);
+        } else {
+          Alert.alert("Erro", "Não foi possível carregar os adicionais.");
+        }
+      } catch (error) {
+        console.error("Erro ao buscar adicionais!", error);
       }
     };
 
     const fetchOrderItems = async () => {
-      // Aqui você pode buscar os itens do pedido da API
-      // Exemplo estático de itens do pedido
-      const items = [
-        { id: 1, description: "Hamburguer", quantity: 2, price: 20.0 },
-        { id: 2, description: "Batata Frita", quantity: 1, price: 10.0 },
-      ];
-      setOrderItems(items);
+      try {
+        const items = await getAllOrderItem();
+        setOrderItems(items);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+      }
     };
 
     fetchAdditionals();

@@ -10,6 +10,7 @@ import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import TokenService from "../../../api/service/TokenService";
+import UserStorage from "../../../storage/user.storage";
 
 export default function Home() {
   const navigation = useNavigation();
@@ -27,8 +28,10 @@ export default function Home() {
     setLoading(true);
     try {
       const data = await ProductService.fetchProducts(searchText, pageNum);
-      
+
       if(data.message?.detail === 'Token inválido!') {
+        const userStorage = new UserStorage();
+        await userStorage.removeUserData();
         TokenService.clearToken();
         ToastAndroid.show("Token expirado, será rediracionado para tela de Login!", ToastAndroid.SHORT);
         navigation.reset({ // Redefine a pilha para que a tela de login seja a única acessível
