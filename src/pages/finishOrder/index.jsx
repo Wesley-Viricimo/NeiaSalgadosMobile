@@ -1,179 +1,219 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import AddressModal from "../../components/addressModal/index"; // Importando o novo componente de Modal
+import AddressModal from "../../components/addressModal/index";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AddressCard from "../../components/addressCard/index";  // Importando o novo componente de AddressCard
+import AddressCard from "../../components/addressCard/index";
 import { styles } from "./styles";
+import AdditionalOption from "../../components/additionalOption"; // Importando o componente de Adicional
+import { OrderService } from "../../api/service/OrderService";
 
 export default function FinishOrder() {
-    const navigation = useNavigation();
-    const [selectedOption, setSelectedOption] = useState("entrega");  // Set default option to "entrega"
-    const [modalVisible, setModalVisible] = useState(false);
-    const [paymentOption, setPaymentOption] = useState("pagarEntrega"); // Variável para controlar a opção de pagamento
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(""); // Controla o pagamento selecionado
+  const navigation = useNavigation();
+  const [selectedOption, setSelectedOption] = useState("entrega");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [paymentOption, setPaymentOption] = useState("pagarEntrega");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const [additionals, setAdditionals] = useState([]); // Estado para armazenar os adicionais
+  const [selectedAdditionals, setSelectedAdditionals] = useState({}); // Estado para armazenar os adicionais selecionados
 
-    // Dados de endereço estáticos para visualização
-    const staticAddress = {
-        type: "casa",  // Ou "trabalho"
-        road: "Rua Hermínio Cavalari",
-        number: "701",
-        district: "Sítios de Recreio Panambi",
-        city: "Marília",
-        state: "São Paulo",
-        complement: "Apartamento 926, bloco 9"
+  // Dados de endereço estáticos para visualização
+  const staticAddress = {
+    type: "casa",
+    road: "Rua Hermínio Cavalari",
+    number: "701",
+    district: "Sítios de Recreio Panambi",
+    city: "Marília",
+    state: "São Paulo",
+    complement: "Apartamento 926, bloco 9",
+  };
+
+  // Função para buscar adicionais da API
+  useEffect(() => {
+    const fetchAdditionals = async () => {
+      // Exemplo de chamada à API
+      const response = await OrderService.getAdditionals();
+      if(response.status === 200) {
+        setAdditionals(response.data);
+      } else {
+        Alert.alert("Erro", "Não foi possível carregar os adicionais.");
+      }
     };
 
-    return (
-        <SafeAreaView style={styles.container}>
-            {/* Header fixo */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-back" size={24} color="#fff" />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>Finalize seu Pedido</Text>
+    fetchAdditionals();
+  }, []);
+
+  // Função para alterar a seleção do adicional
+  const handleAdditionalSelection = (id) => {
+    setSelectedAdditionals((prevSelected) => {
+      const newSelected = { ...prevSelected };
+      if (newSelected[id]) {
+        delete newSelected[id]; // Desmarcar
+      } else {
+        newSelected[id] = true; // Marcar
+      }
+      return newSelected;
+    });
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header fixo */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Finalize seu Pedido</Text>
+      </View>
+
+      {/* Opções de entrega e retirada */}
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={[styles.tab, selectedOption === "entrega" && styles.selectedTab]}
+          onPress={() => setSelectedOption("entrega")}
+        >
+          <Text style={[styles.tabText, selectedOption === "entrega" && styles.selectedTabText]}>
+            Entrega
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, selectedOption === "retirada" && styles.selectedTab]}
+          onPress={() => setSelectedOption("retirada")}
+        >
+          <Text style={[styles.tabText, selectedOption === "retirada" && styles.selectedTabText]}>
+            Retirada
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Se opção for entrega, exibe botão de seleção de endereço */}
+      {selectedOption === "entrega" && (
+        <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
+          <Text style={styles.selectAddressButtonText}>Selecione o endereço de entrega</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* Seção de conteúdo scrollável */}
+      <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
+        {/* Exibindo as informações do endereço selecionado para entrega */}
+        {selectedOption === "entrega" && staticAddress && (
+          <AddressCard address={staticAddress} />
+        )}
+
+        {/* Exibindo informações do endereço de retirada */}
+        {selectedOption === "retirada" && (
+          <View style={styles.pickupAddressContainer}>
+            <View style={styles.iconContainer}>
+              <Icon name="place" size={24} color="#000" />
             </View>
-
-            {/* Opções de entrega e retirada */}
-            <View style={styles.tabContainer}>
-                <TouchableOpacity
-                    style={[styles.tab, selectedOption === "entrega" && styles.selectedTab]}
-                    onPress={() => setSelectedOption("entrega")}
-                >
-                    <Text style={[styles.tabText, selectedOption === "entrega" && styles.selectedTabText]}>
-                        Entrega
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.tab, selectedOption === "retirada" && styles.selectedTab]}
-                    onPress={() => setSelectedOption("retirada")}
-                >
-                    <Text style={[styles.tabText, selectedOption === "retirada" && styles.selectedTabText]}>
-                        Retirada
-                    </Text>
-                </TouchableOpacity>
+            <View style={styles.addressTextContainer}>
+              <Text style={styles.pickupTextBold}>Retire seu pedido em:</Text>
+              <Text style={styles.pickupText}>R Antônio Luiz do Prado, 55</Text>
+              <Text style={styles.pickupText}>Jardim das Oliveiras</Text>
+              <Text style={styles.pickupText}>Paraguaçu Paulista - São Paulo</Text>
             </View>
+          </View>
+        )}
 
-            {/* Se opção for entrega, exibe botão de seleção de endereço */}
-            {selectedOption === "entrega" && (
-                <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
-                    <Text style={styles.selectAddressButtonText}>Selecione o endereço de entrega</Text>
-                </TouchableOpacity>
-            )}
+        {/* Tempo estimado para entrega ou retirada */}
+        <View style={styles.timeContainer}>
+          <Text style={styles.timeText}>
+            {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
+          </Text>
+          <Text style={styles.timeValue}>
+            {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
+          </Text>
+        </View>
 
-            {/* Seção de conteúdo scrollável */}
-            <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
-                {/* Exibindo as informações do endereço selecionado para entrega */}
-                {selectedOption === "entrega" && staticAddress && (
-                    <AddressCard address={staticAddress} /> // Exibe o card com as informações do endereço
-                )}
+        {/* Linha de separação */}
+        <View style={styles.separator} />
 
-                {/* Exibindo informações do endereço de retirada */}
-                {selectedOption === "retirada" && (
-                    <View style={styles.pickupAddressContainer}>
-                        <View style={styles.iconContainer}>
-                            <Icon name="place" size={24} color="#000" />
-                        </View>
-                        <View style={styles.addressTextContainer}>
-                            <Text style={styles.pickupTextBold}>Retire seu pedido em:</Text>
-                            <Text style={styles.pickupText}>R Antônio Luiz do Prado, 55</Text>
-                            <Text style={styles.pickupText}>Jardim das Oliveiras</Text>
-                            <Text style={styles.pickupText}>Paraguaçu Paulista - São Paulo</Text>
-                        </View>
-                    </View>
-                )}
+        {/* Seção de Pagamento */}
+        <View style={styles.paymentSection}>
+          <Text style={styles.paymentText}>Pagamento</Text>
 
-                {/* Tempo estimado para entrega ou retirada */}
-                <View style={styles.timeContainer}>
-                    <Text style={styles.timeText}>
-                        {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
-                    </Text>
-                    <Text style={styles.timeValue}>
-                        {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
-                    </Text>
-                </View>
+          {/* Opções de pagamento */}
+          <TouchableOpacity onPress={() => setPaymentOption("pagarEntrega")}>
+            <Text style={styles.paymentOptionText}>
+              {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
+            </Text>
+            {paymentOption === "pagarEntrega" && <View style={styles.selectedPaymentOptionLine} />}
+          </TouchableOpacity>
 
-                {/* Linha de separação */}
-                <View style={styles.separator} />
+          {/* Texto de escolha da forma de pagamento */}
+          <Text style={styles.choosePaymentText}>Escolha a forma de pagamento</Text>
 
-                {/* Seção de Pagamento */}
-                <View style={styles.paymentSection}>
-                    <Text style={styles.paymentText}>Pagamento</Text>
+          {/* Opções de pagamento */}
+          <View style={styles.radioGroupContainer}>
+            {/* Dinheiro */}
+            <TouchableOpacity
+              style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
+              onPress={() => setSelectedPaymentMethod("dinheiro")}
+            >
+              <Icon
+                name="attach-money"
+                size={24}
+                color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"}
+              />
+              <Text style={styles.radioOptionText}>Dinheiro</Text>
+            </TouchableOpacity>
 
-                    {/* Opções de pagamento */}
-                    <TouchableOpacity
-                        onPress={() => setPaymentOption("pagarEntrega")}
-                    >
-                        <Text style={styles.paymentOptionText}>
-                            {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
-                        </Text>
-                        {paymentOption === "pagarEntrega" && (
-                            <View style={styles.selectedPaymentOptionLine} /> // Aplica a linha somente se estiver selecionado
-                        )}
-                    </TouchableOpacity>
+            {/* Cartão */}
+            <TouchableOpacity
+              style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
+              onPress={() => setSelectedPaymentMethod("cartao")}
+            >
+              <Icon
+                name="credit-card"
+                size={24}
+                color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"}
+              />
+              <Text style={styles.radioOptionText}>Cartão</Text>
+            </TouchableOpacity>
 
-                    {/* Texto de escolha da forma de pagamento */}
-                    <Text style={styles.choosePaymentText}>Escolha a forma de pagamento</Text>
+            {/* Pix */}
+            <TouchableOpacity
+              style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
+              onPress={() => setSelectedPaymentMethod("pix")}
+            >
+              <Icon
+                name="account-balance-wallet"
+                size={24}
+                color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"}
+              />
+              <Text style={styles.radioOptionText}>Pix</Text>
+            </TouchableOpacity>
+          </View>
 
-                    {/* Opções de pagamento */}
-                    <View style={styles.radioGroupContainer}>
-                        {/* Dinheiro */}
-                        <TouchableOpacity
-                            style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
-                            onPress={() => setSelectedPaymentMethod("dinheiro")}
-                        >
-                            <Icon
-                                name="attach-money"
-                                size={24}
-                                color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"}
-                            />
-                            <Text style={styles.radioOptionText}>Dinheiro</Text>
-                        </TouchableOpacity>
+          {/* Seção de Adicionais */}
+          <Text style={styles.choosePaymentText}>Adicionais</Text>
 
-                        {/* Cartão */}
-                        <TouchableOpacity
-                            style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
-                            onPress={() => setSelectedPaymentMethod("cartao")}
-                        >
-                            <Icon
-                                name="credit-card"
-                                size={24}
-                                color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"}
-                            />
-                            <Text style={styles.radioOptionText}>Cartão</Text>
-                        </TouchableOpacity>
-
-                        {/* Pix */}
-                        <TouchableOpacity
-                            style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
-                            onPress={() => setSelectedPaymentMethod("pix")}
-                        >
-                            <Icon
-                                name="account-balance-wallet"
-                                size={24}
-                                color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"}
-                            />
-                            <Text style={styles.radioOptionText}>Pix</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                </View>
-            </ScrollView>
-
-            {/* Modal de Endereço */}
-            <AddressModal
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                onSelectAddress={(address) => {
-                    // Aqui você poderia setar o endereço selecionado da API
-                    setModalVisible(false); // Fecha o modal após selecionar o endereço
-                }}
-                onAddAddress={() => {
-                    console.log("Cadastrar novo endereço");
-                    setModalVisible(false);
-                }}
+          {/* Renderizando os adicionais */}
+          {additionals.map((additional) => (
+            <AdditionalOption
+              key={additional.idAdditional}
+              title={additional.description}
+              price={additional.price}
+              checked={selectedAdditionals[additional.idAdditional] || false}
+              onPress={() => handleAdditionalSelection(additional.idAdditional)}
             />
-        </SafeAreaView>
-    );
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* Modal de Endereço */}
+      <AddressModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSelectAddress={(address) => {
+          setModalVisible(false);
+        }}
+        onAddAddress={() => {
+          console.log("Cadastrar novo endereço");
+          setModalVisible(false);
+        }}
+      />
+    </SafeAreaView>
+  );
 }

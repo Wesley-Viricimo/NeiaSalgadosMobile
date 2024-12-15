@@ -10,15 +10,12 @@ export const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#333",
   },
   price: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#888",
-  },
-  checkboxContainer: {
-    padding: 5,
-  },
+  }
 });
