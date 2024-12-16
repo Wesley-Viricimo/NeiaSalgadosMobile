@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert, ToastAndroid } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import AddressModal from "../../components/addressModal/index";
@@ -9,7 +9,7 @@ import { styles } from "./styles";
 import AdditionalOption from "../../components/additionalOption"; // Importando o componente de Adicional
 import { OrderService } from "../../api/service/OrderService";
 import OrderItemCard from "../../components/orderItemCard/index"; // Importando o novo componente OrderItemCard
-import { getAllOrderItem } from "../../database/orderItemService";
+import { getAllOrderItem, removeOrderItemById } from "../../database/orderItemService";
 
 export default function FinishOrder() {
   const navigation = useNavigation();
@@ -71,6 +71,26 @@ export default function FinishOrder() {
       }
       return newSelected;
     });
+  };
+
+  // Função para remover um produto do banco de dados e atualizar a lista de itens
+  const handleRemoveProduct = async (id) => {
+    try {
+      await removeOrderItemById(id); // Remove o item do banco de dados
+      ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
+
+      // Recarregar os itens do pedido após a remoção
+      const updatedItems = await getAllOrderItem();
+      setOrderItems(updatedItems); 
+
+      // Se não houver mais itens no pedido, retornar para a tela anterior
+      if (updatedItems.length === 0) {
+        navigation.goBack();
+      }
+    } catch (error) {
+      ToastAndroid.show("Erro ao remover o produto!", ToastAndroid.LONG);
+      console.error(error);
+    }
   };
 
   return (
@@ -226,6 +246,7 @@ export default function FinishOrder() {
                 description={item.description}
                 quantity={item.quantity}
                 price={item.price}
+                onRemove={() => handleRemoveProduct(item.id)} // Corrigido aqui, passando uma função de callback
               />
             ))}
           </View>

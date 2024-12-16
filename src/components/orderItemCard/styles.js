@@ -2,24 +2,38 @@ import { StyleSheet } from "react-native";
 
 export const orderItemCardStyles = StyleSheet.create({
   orderItemCard: {
-    backgroundColor: "#fff",
+    backgroundColor: "#f9f9f9", 
     padding: 15,
-    marginBottom: 10,
-    borderRadius: 8,
+    marginBottom: 12,
+    borderRadius: 12, 
     shadowColor: "#000",
     shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 3,
+    shadowRadius: 10, 
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 4, 
   },
   orderItemDescription: {
-    fontSize: 16,
+    fontSize: 18, 
     fontWeight: "bold",
-    color: "#333",
+    color: "#2c3e50",  
+    marginBottom: 6, 
   },
   orderItemDetails: {
     fontSize: 14,
-    color: "#666",
-    marginTop: 5,
+    color: "#7f8c8d",
+    marginTop: 3,
   },
+  removeButton: {
+    flexDirection: "row",  
+    alignItems: "center", 
+    marginTop: 20,
+  },
+  removeText: {
+    fontSize: 14,
+    color: "#e74c3c",
+    textDecorationLine: "underline", 
+    fontWeight: "bold", 
+    marginLeft: 5, 
+  },
+ 
 });
