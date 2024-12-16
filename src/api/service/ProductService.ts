@@ -19,7 +19,7 @@ class ProductService {
       const response = await apiClient(`/product?title=${encodeURIComponent(title)}&page=${page}&perPage=10`, options);
 
       if (response.message?.summary === "Unauthorized") {
-        return Promise.reject(response.message.detail);
+        return response;
       }
 
       const responseProductsList: ProductResponse[] = [];

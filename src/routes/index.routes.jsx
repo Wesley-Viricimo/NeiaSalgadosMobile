@@ -5,9 +5,9 @@ import BottomRoutes from './bottom.routes';
 import UserStorage from '../storage/user.storage';
 import { View, StyleSheet } from 'react-native';
 import * as Animatable from 'react-native-animatable'; // Importa a biblioteca de animações
-import ProductControl from '../pages/productControlScreens/productControl';
 import UserRegistration from '../pages/registrationScreens/userRegistration';
 import ConfirmationCode from '../pages/registrationScreens/confirmationCode';
+import FinishOrder from '../pages/finishOrder';
 
 export default function Routes() {
   const Stack = createStackNavigator();
@@ -74,6 +74,7 @@ export default function Routes() {
       <Stack.Screen name="BottomRoutes" component={BottomRoutes} />
       <Stack.Screen name="UserRegistration" component={UserRegistration} />
       <Stack.Screen name="ConfirmationCode" component={ConfirmationCode} />
+      <Stack.Screen name="FinishOrder" component={FinishOrder} />
     </Stack.Navigator>
   );
 }

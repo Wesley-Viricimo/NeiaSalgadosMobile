@@ -11,6 +11,7 @@ export const initializeDatabase = async () => {
       PRAGMA journal_mode = WAL;
       CREATE TABLE IF NOT EXISTS orderItem (
         id INTEGER PRIMARY KEY NOT NULL,
+        description TEXT,
         quantity INTEGER NOT NULL,
         price FLOAT,
         observation TEXT
@@ -34,6 +35,13 @@ export const executeQuery = async (query, params = []) => {
   const result = await dbInstance.getFirstAsync(query, params); // Usando getFirstAsync para pegar o primeiro resultado
   return result;
 };
+
+export const executeQueryAll = async (query, params = []) => {
+  if (!dbInstance) await initializeDatabase();
+  const result = await dbInstance.getAllAsync(query, params); // Usando getAllAsync para pegar todos os resultados
+  return result;
+};
+
 
 // Obter a primeira linha do resultado
 export const getFirstRow = async (query, params = []) => {

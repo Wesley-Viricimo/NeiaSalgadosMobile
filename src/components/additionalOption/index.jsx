@@ -11,14 +11,13 @@ export default function AdditionalOption({ title, price, checked, onPress }) {
         <Text style={styles.price}>+ R$ {price.toFixed(2)}</Text>
       </View>
       <TouchableOpacity
-        style={styles.checkboxContainer}
         onPress={onPress}
         activeOpacity={0.7}
       >
         <MaterialIcons
           name={checked ? "check-box" : "check-box-outline-blank"}
-          size={24}
-          color={checked ? "#4caf50" : "#aaa"}
+          size={30}
+          color={checked ? "#FF4500" : "#aaa"}
         />
       </TouchableOpacity>
     </View>

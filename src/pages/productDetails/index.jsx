@@ -14,6 +14,7 @@ import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getOrderItemById, removeOrderItemById, upsertOrderItem } from "../../database/orderItemService";
+import LoadingAnimation from "../../components/loadingAnimation";
 
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
@@ -46,11 +47,12 @@ export default function ProductDetails() {
 
   const handleAddToCart = async () => {
     try {
-      await upsertOrderItem(product.idProduct, quantity, product.price, observation);
-      console.log('quantity details', quantity);
+      await upsertOrderItem(product.idProduct, product.title, quantity, product.price, observation);
       onAddToCart(product.idProduct, quantity); // Atualiza estado de produtos vendidos na Home
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
-      navigation.goBack();
+      setTimeout(() => {  
+        navigation.goBack();
+      }, 1200);
     } catch (error) {
       ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);
       console.error(error);
@@ -62,7 +64,9 @@ export default function ProductDetails() {
       await removeOrderItemById(product.idProduct);
       onAddToCart(product.idProduct, 0);
       ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
-      navigation.goBack();
+      setTimeout(() => {  
+        navigation.goBack();
+      }, 1200);
     } catch (error) {
       ToastAndroid.show("Erro ao remover o produto!", ToastAndroid.LONG);
       console.error(error);
@@ -71,10 +75,7 @@ export default function ProductDetails() {
 
   if (loading) {
     return (
-      <View style={[styles.container, styles.loadingContainer]}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Carregando informações...</Text>
-      </View>
+       <LoadingAnimation/>
     );
   }
 
