@@ -108,7 +108,9 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SearchBar value={inputValue} onChange={setInputValue} />
+      {/* Renderiza o SearchBar apenas quando não estiver carregando */}
+      {!loading && <SearchBar value={inputValue} onChange={setInputValue} />}
+      
       {loading && page === 1 ? (
         <LoadingAnimation />
       ) : (

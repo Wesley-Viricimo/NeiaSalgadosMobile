@@ -50,7 +50,9 @@ export default function ProductDetails() {
       await upsertOrderItem(product.idProduct, product.title, quantity, product.price, observation);
       onAddToCart(product.idProduct, quantity); // Atualiza estado de produtos vendidos na Home
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
-      navigation.goBack();
+      setTimeout(() => {  
+        navigation.goBack();
+      }, 1200);
     } catch (error) {
       ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);
       console.error(error);
@@ -62,7 +64,9 @@ export default function ProductDetails() {
       await removeOrderItemById(product.idProduct);
       onAddToCart(product.idProduct, 0);
       ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
-      navigation.goBack();
+      setTimeout(() => {  
+        navigation.goBack();
+      }, 1200);
     } catch (error) {
       ToastAndroid.show("Erro ao remover o produto!", ToastAndroid.LONG);
       console.error(error);

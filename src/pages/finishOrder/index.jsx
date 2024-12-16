@@ -77,7 +77,6 @@ export default function FinishOrder() {
   const handleRemoveProduct = async (id) => {
     try {
       await removeOrderItemById(id); // Remove o item do banco de dados
-      ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
 
       // Recarregar os itens do pedido após a remoção
       const updatedItems = await getAllOrderItem();
@@ -85,6 +84,8 @@ export default function FinishOrder() {
 
       // Se não houver mais itens no pedido, retornar para a tela anterior
       if (updatedItems.length === 0) {
+        ToastAndroid.show("Produtos removidos do carrinho!", ToastAndroid.SHORT);
+        
         navigation.reset({
           index: 0,
           routes: [{ name: 'BottomRoutes' }],
