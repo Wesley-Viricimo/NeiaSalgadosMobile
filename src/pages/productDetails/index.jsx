@@ -14,6 +14,7 @@ import { styles } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getOrderItemById, removeOrderItemById, upsertOrderItem } from "../../database/orderItemService";
+import LoadingAnimation from "../../components/loadingAnimation";
 
 export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
@@ -70,10 +71,7 @@ export default function ProductDetails() {
 
   if (loading) {
     return (
-      <View style={[styles.container, styles.loadingContainer]}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Carregando informações...</Text>
-      </View>
+       <LoadingAnimation/>
     );
   }
 

@@ -81,11 +81,14 @@ export default function FinishOrder() {
 
       // Recarregar os itens do pedido após a remoção
       const updatedItems = await getAllOrderItem();
-      setOrderItems(updatedItems); 
+      setOrderItems(updatedItems);
 
       // Se não houver mais itens no pedido, retornar para a tela anterior
       if (updatedItems.length === 0) {
-        navigation.goBack();
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'BottomRoutes' }],
+        });
       }
     } catch (error) {
       ToastAndroid.show("Erro ao remover o produto!", ToastAndroid.LONG);

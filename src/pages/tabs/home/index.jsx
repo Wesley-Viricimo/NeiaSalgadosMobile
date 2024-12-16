@@ -125,7 +125,7 @@ export default function Home() {
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.1}
           ListFooterComponent={
-            loading ? <LoadingAnimation small /> : null
+            loading ? <LoadingAnimation/> : null
           }
           ListEmptyComponent={
             !loading && <EmptyListMessage message="Nenhum produto encontrado!" />
