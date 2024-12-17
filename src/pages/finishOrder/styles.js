@@ -225,7 +225,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   orderItemsSection: {
-    marginTop: 30
+    marginTop: 30,
   },
   // Estilo para o título da seção de itens do pedido
   orderItemsTitle: {
@@ -251,5 +251,38 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "#FF4500", // Cor laranja para o preço
+  },
+  summaryContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+  },
+
+  // Linha do resumo (cada linha com rótulo e valor)
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+  },
+  // Texto do rótulo (ex: "Subtotal:", "Adicionais:", etc.)
+  summaryText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333", // Cor escura para os rótulos
+  },
+  // Texto do valor (ex: "R$ 30.00", etc.)
+  summaryPrice: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333", // Cor laranja para destacar o preço
+  },
+  // Caso queira uma linha de separação final, pode adicionar aqui
+  summaryRowLast: {
+    borderBottomWidth: 0, // Remover a linha divisória na última linha
   },
 });

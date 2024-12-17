@@ -6,10 +6,10 @@ import AddressModal from "../../components/addressModal/index";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddressCard from "../../components/addressCard/index";
 import { styles } from "./styles";
-import AdditionalOption from "../../components/additionalOption"; // Importando o componente de Adicional
+import AdditionalOption from "../../components/additionalOption";
 import { OrderService } from "../../api/service/OrderService";
-import OrderItemCard from "../../components/orderItemCard/index"; // Importando o novo componente OrderItemCard
-import { getAllOrderItem, removeOrderItemById } from "../../database/orderItemService";
+import OrderItemCard from "../../components/orderItemCard/index";
+import { getAllOrderItem, removeOrderItemById, sumOrderItemQuantities } from "../../database/orderItemService";
 
 export default function FinishOrder() {
   const navigation = useNavigation();
@@ -17,11 +17,13 @@ export default function FinishOrder() {
   const [modalVisible, setModalVisible] = useState(false);
   const [paymentOption, setPaymentOption] = useState("pagarEntrega");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-  const [additionals, setAdditionals] = useState([]); // Estado para armazenar os adicionais
-  const [selectedAdditionals, setSelectedAdditionals] = useState({}); // Estado para armazenar os adicionais selecionados
-  const [orderItems, setOrderItems] = useState([]); // Estado para armazenar os itens do pedido
+  const [additionals, setAdditionals] = useState([]);
+  const [selectedAdditionals, setSelectedAdditionals] = useState({});
+  const [orderItems, setOrderItems] = useState([]);
+  const [subtotal, setSubtotal] = useState(0);
+  const [additionalTotal, setAdditionalTotal] = useState(0);
 
-  // Dados de endereço estáticos para visualização
+  // Dados de endereço estáticos
   const staticAddress = {
     type: "casa",
     road: "Rua Hermínio Cavalari",
@@ -51,6 +53,7 @@ export default function FinishOrder() {
       try {
         const items = await getAllOrderItem();
         setOrderItems(items);
+        calculateSubtotal(items);
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
       }
@@ -59,6 +62,26 @@ export default function FinishOrder() {
     fetchAdditionals();
     fetchOrderItems();
   }, []);
+
+  // Função para calcular o subtotal
+  const calculateSubtotal = (items) => {
+    let total = 0;
+    items.forEach((item) => {
+      total += item.quantity * item.price;
+    });
+    setSubtotal(total);
+  };
+
+  // Função para calcular o valor total dos adicionais selecionados
+  const calculateAdditionalTotal = () => {
+    let total = 0;
+    additionals.forEach((additional) => {
+      if (selectedAdditionals[additional.idAdditional]) {
+        total += additional.price;
+      }
+    });
+    setAdditionalTotal(total);
+  };
 
   // Função para alterar a seleção do adicional
   const handleAdditionalSelection = (id) => {
@@ -69,6 +92,7 @@ export default function FinishOrder() {
       } else {
         newSelected[id] = true; // Marcar
       }
+      calculateAdditionalTotal(); // Atualiza o total dos adicionais
       return newSelected;
     });
   };
@@ -76,19 +100,17 @@ export default function FinishOrder() {
   // Função para remover um produto do banco de dados e atualizar a lista de itens
   const handleRemoveProduct = async (id) => {
     try {
-      await removeOrderItemById(id); // Remove o item do banco de dados
+      await removeOrderItemById(id);
 
-      // Recarregar os itens do pedido após a remoção
       const updatedItems = await getAllOrderItem();
       setOrderItems(updatedItems);
+      calculateSubtotal(updatedItems); // Recalcula o subtotal após a remoção
 
-      // Se não houver mais itens no pedido, retornar para a tela anterior
       if (updatedItems.length === 0) {
         ToastAndroid.show("Produtos removidos do carrinho!", ToastAndroid.SHORT);
-        
         navigation.reset({
           index: 0,
-          routes: [{ name: 'BottomRoutes' }],
+          routes: [{ name: 'BottomRoutes' }], // Redireciona para a tela inicial, por exemplo
         });
       }
     } catch (error) {
@@ -96,6 +118,9 @@ export default function FinishOrder() {
       console.error(error);
     }
   };
+
+  const deliveryFee = 0; // Taxa fixa de entrega por enquanto
+  const total = subtotal + additionalTotal + deliveryFee; // Cálculo do valor total
 
   return (
     <SafeAreaView style={styles.container}>
@@ -134,7 +159,6 @@ export default function FinishOrder() {
         </TouchableOpacity>
       )}
 
-      {/* Seção de conteúdo scrollável */}
       <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
         {/* Exibindo as informações do endereço selecionado para entrega */}
         {selectedOption === "entrega" && staticAddress && (
@@ -173,7 +197,6 @@ export default function FinishOrder() {
         <View style={styles.paymentSection}>
           <Text style={styles.paymentText}>Pagamento</Text>
 
-          {/* Opções de pagamento */}
           <TouchableOpacity onPress={() => setPaymentOption("pagarEntrega")}>
             <Text style={styles.paymentOptionText}>
               {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
@@ -181,47 +204,30 @@ export default function FinishOrder() {
             {paymentOption === "pagarEntrega" && <View style={styles.selectedPaymentOptionLine} />}
           </TouchableOpacity>
 
-          {/* Texto de escolha da forma de pagamento */}
           <Text style={styles.choosePaymentText}>Escolha a forma de pagamento</Text>
 
-          {/* Opções de pagamento */}
           <View style={styles.radioGroupContainer}>
-            {/* Dinheiro */}
             <TouchableOpacity
               style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
               onPress={() => setSelectedPaymentMethod("dinheiro")}
             >
-              <Icon
-                name="attach-money"
-                size={24}
-                color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"}
-              />
+              <Icon name="attach-money" size={24} color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"} />
               <Text style={styles.radioOptionText}>Dinheiro</Text>
             </TouchableOpacity>
 
-            {/* Cartão */}
             <TouchableOpacity
               style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
               onPress={() => setSelectedPaymentMethod("cartao")}
             >
-              <Icon
-                name="credit-card"
-                size={24}
-                color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"}
-              />
+              <Icon name="credit-card" size={24} color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"} />
               <Text style={styles.radioOptionText}>Cartão</Text>
             </TouchableOpacity>
 
-            {/* Pix */}
             <TouchableOpacity
               style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
               onPress={() => setSelectedPaymentMethod("pix")}
             >
-              <Icon
-                name="account-balance-wallet"
-                size={24}
-                color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"}
-              />
+              <Icon name="account-balance-wallet" size={24} color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"} />
               <Text style={styles.radioOptionText}>Pix</Text>
             </TouchableOpacity>
           </View>
@@ -229,7 +235,6 @@ export default function FinishOrder() {
           {/* Seção de Adicionais */}
           <Text style={styles.choosePaymentText}>Adicionais</Text>
 
-          {/* Renderizando os adicionais */}
           {additionals.map((additional) => (
             <AdditionalOption
               key={additional.idAdditional}
@@ -240,24 +245,42 @@ export default function FinishOrder() {
             />
           ))}
 
-          {/* Seção de Itens do Pedido */}
+          {/* Resumo do Pedido */}
           <View style={styles.orderItemsSection}>
             <Text style={styles.orderItemsTitle}>Resumo do pedido</Text>
-            {/* Exibindo os itens do pedido */}
             {orderItems.map((item) => (
               <OrderItemCard
                 key={item.id}
                 description={item.description}
                 quantity={item.quantity}
                 price={item.price}
-                onRemove={() => handleRemoveProduct(item.id)} // Corrigido aqui, passando uma função de callback
+                onRemove={() => handleRemoveProduct(item.id)}
               />
             ))}
+          </View>
+
+          {/* 4 Linhas de Informações */}
+          <View style={styles.summaryContainer}>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryText}>Subtotal:</Text>
+              <Text style={styles.summaryPrice}>R$ {subtotal.toFixed(2)}</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryText}>Adicionais:</Text>
+              <Text style={styles.summaryPrice}>R$ {additionalTotal.toFixed(2)}</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryText}>Taxa de entrega:</Text>
+              <Text style={styles.summaryPrice}>R$ {deliveryFee.toFixed(2)}</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryText}>Total:</Text>
+              <Text style={styles.summaryPrice}>R$ {total.toFixed(2)}</Text>
+            </View>
           </View>
         </View>
       </ScrollView>
 
-      {/* Modal de Endereço */}
       <AddressModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
