@@ -10,6 +10,7 @@ const OrderItemCard = ({ description, quantity, price, onRemove }) => {
     <View style={orderItemCardStyles.orderItemCard}>
       <Text style={orderItemCardStyles.orderItemDescription}>{description}</Text>
       <Text style={orderItemCardStyles.orderItemDetails}>Qtd: {quantity}</Text>
+      <Text style={orderItemCardStyles.orderItemDetails}>Preço unitário: {price.toFixed(2)}</Text>
       <Text style={orderItemCardStyles.orderItemDetails}>
         Subtotal dos itens: R$ {subTotal.toFixed(2)}
       </Text>
