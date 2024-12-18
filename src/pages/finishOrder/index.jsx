@@ -73,15 +73,17 @@ export default function FinishOrder() {
   };
 
   // Função para calcular o valor total dos adicionais selecionados
-  const calculateAdditionalTotal = () => {
+  const calculateAdditionalTotal = (newSelected = selectedAdditionals) => {
     let total = 0;
+    // Agora usamos os dados diretamente, recebendo o estado atualizado
     additionals.forEach((additional) => {
-      if (selectedAdditionals[additional.idAdditional]) {
+      if (newSelected[additional.idAdditional]) {
         total += additional.price;
       }
     });
-    setAdditionalTotal(total);
+    setAdditionalTotal(total); // Atualiza o total
   };
+  
 
   // Função para alterar a seleção do adicional
   const handleAdditionalSelection = (id) => {
@@ -92,10 +94,11 @@ export default function FinishOrder() {
       } else {
         newSelected[id] = true; // Marcar
       }
-      calculateAdditionalTotal(); // Atualiza o total dos adicionais
+      // Chama a função de cálculo do total dentro da atualização do estado
+      calculateAdditionalTotal(newSelected);
       return newSelected;
     });
-  };
+  };  
 
   // Função para remover um produto do banco de dados e atualizar a lista de itens
   const handleRemoveProduct = async (id) => {
@@ -152,14 +155,13 @@ export default function FinishOrder() {
         </TouchableOpacity>
       </View>
 
-      {/* Se opção for entrega, exibe botão de seleção de endereço */}
-      {selectedOption === "entrega" && (
-        <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.selectAddressButtonText}>Selecione o endereço de entrega</Text>
-        </TouchableOpacity>
-      )}
-
       <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
+        {/* Se opção for entrega, exibe botão de seleção de endereço */}
+        {selectedOption === "entrega" && (
+          <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
+            <Text style={styles.selectAddressButtonText}>Selecione o endereço de entrega</Text>
+          </TouchableOpacity>
+        )}
         {/* Exibindo as informações do endereço selecionado para entrega */}
         {selectedOption === "entrega" && staticAddress && (
           <AddressCard address={staticAddress} />
