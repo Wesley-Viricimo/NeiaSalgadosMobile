@@ -75,7 +75,6 @@ export default function FinishOrder() {
   // Função para calcular o valor total dos adicionais selecionados
   const calculateAdditionalTotal = (newSelected = selectedAdditionals) => {
     let total = 0;
-    // Agora usamos os dados diretamente, recebendo o estado atualizado
     additionals.forEach((additional) => {
       if (newSelected[additional.idAdditional]) {
         total += additional.price;
@@ -94,7 +93,6 @@ export default function FinishOrder() {
       } else {
         newSelected[id] = true; // Marcar
       }
-      // Chama a função de cálculo do total dentro da atualização do estado
       calculateAdditionalTotal(newSelected);
       return newSelected;
     });
@@ -124,6 +122,11 @@ export default function FinishOrder() {
 
   const deliveryFee = 0; // Taxa fixa de entrega por enquanto
   const total = subtotal + additionalTotal + deliveryFee; // Cálculo do valor total
+
+  // Função para finalizar o pedido
+  const handleFinishOrder = () => {
+    Alert.alert("Pedido Realizado", "Seu pedido foi realizado com sucesso!");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -280,6 +283,14 @@ export default function FinishOrder() {
               <Text style={styles.summaryPrice}>R$ {total.toFixed(2)}</Text>
             </View>
           </View>
+
+          {/* Botão de Finalizar Pedido */}
+          <TouchableOpacity
+            style={styles.placeOrderButton}
+            onPress={handleFinishOrder}
+          >
+            <Text style={styles.placeOrderButtonText}>Finalizar Pedido</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
 

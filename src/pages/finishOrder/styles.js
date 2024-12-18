@@ -285,4 +285,18 @@ export const styles = StyleSheet.create({
   summaryRowLast: {
     borderBottomWidth: 0, // Remover a linha divisória na última linha
   },
+  placeOrderButton: {
+    backgroundColor: "#FF4500", // Cor de fundo do botão (laranja)
+    paddingVertical: 14, // Espaçamento interno vertical
+    paddingHorizontal: 30, // Espaçamento interno horizontal
+    borderRadius: 8, // Bordas arredondadas
+    marginTop: 30, // Margem superior
+    alignItems: "center", // Alinha o texto ao centro
+    justifyContent: "center", // Justifica o conteúdo ao centro
+  },
+  placeOrderButtonText: {
+    fontSize: 18, // Tamanho da fonte
+    fontWeight: "bold", // Negrito
+    color: "#fff", // Cor do texto (branco)
+  },
 });
