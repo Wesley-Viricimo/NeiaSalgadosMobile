@@ -82,7 +82,6 @@ export default function FinishOrder() {
     });
     setAdditionalTotal(total); // Atualiza o total
   };
-  
 
   // Função para alterar a seleção do adicional
   const handleAdditionalSelection = (id) => {
