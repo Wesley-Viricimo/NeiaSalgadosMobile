@@ -299,4 +299,10 @@ export const styles = StyleSheet.create({
     fontWeight: "bold", // Negrito
     color: "#fff", // Cor do texto (branco)
   },
+  noAddressText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: "#FF0000", // Cor vermelha para destacar o texto
+    textAlign: "center", // Centraliza o texto
+  },
 });

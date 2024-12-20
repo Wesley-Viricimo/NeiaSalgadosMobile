@@ -22,17 +22,7 @@ export default function FinishOrder() {
   const [orderItems, setOrderItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [additionalTotal, setAdditionalTotal] = useState(0);
-
-  // Dados de endereço estáticos
-  const staticAddress = {
-    type: "casa",
-    road: "Rua Hermínio Cavalari",
-    number: "701",
-    district: "Sítios de Recreio Panambi",
-    city: "Marília",
-    state: "São Paulo",
-    complement: "Apartamento 926, bloco 9",
-  };
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   // Função para buscar adicionais da API
   useEffect(() => {
@@ -95,7 +85,7 @@ export default function FinishOrder() {
       calculateAdditionalTotal(newSelected);
       return newSelected;
     });
-  };  
+  };
 
   // Função para remover um produto do banco de dados e atualizar a lista de itens
   const handleRemoveProduct = async (id) => {
@@ -160,13 +150,18 @@ export default function FinishOrder() {
       <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
         {/* Se opção for entrega, exibe botão de seleção de endereço */}
         {selectedOption === "entrega" && (
-          <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
-            <Text style={styles.selectAddressButtonText}>Selecione o endereço de entrega</Text>
-          </TouchableOpacity>
-        )}
-        {/* Exibindo as informações do endereço selecionado para entrega */}
-        {selectedOption === "entrega" && staticAddress && (
-          <AddressCard address={staticAddress} isClickable={false}/> // Impede que o card seja clicável
+          <>
+            <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
+              <Text style={styles.selectAddressButtonText}>
+                {selectedAddress ? "Alterar endereço de entrega" : "Selecione o endereço de entrega"}
+              </Text>
+            </TouchableOpacity>
+            {selectedAddress ? (
+              <AddressCard address={selectedAddress} isClickable={false} /> // Exibe o endereço selecionado
+            ) : (
+              <Text style={styles.noAddressText}>Nenhum endereço selecionado</Text>
+            )}
+          </>
         )}
 
         {/* Exibindo informações do endereço de retirada */}
@@ -297,6 +292,7 @@ export default function FinishOrder() {
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSelectAddress={(address) => {
+          setSelectedAddress(address);
           setModalVisible(false);
         }}
         onAddAddress={() => {
