@@ -166,7 +166,7 @@ export default function FinishOrder() {
         )}
         {/* Exibindo as informações do endereço selecionado para entrega */}
         {selectedOption === "entrega" && staticAddress && (
-          <AddressCard address={staticAddress} />
+          <AddressCard address={staticAddress} isClickable={false}/> // Impede que o card seja clicável
         )}
 
         {/* Exibindo informações do endereço de retirada */}
