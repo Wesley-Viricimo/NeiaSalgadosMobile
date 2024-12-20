@@ -3,7 +3,7 @@ import TokenService from "./TokenService";
 
 export class AddressService {
 
-    static async fetchUserAddres() {
+    static async fetchUserAddres(page: number) {
         try {
             const token = await TokenService.getToken();
 
@@ -15,7 +15,7 @@ export class AddressService {
                 },
               };
 
-              const responseData = await apiClient(`/address/user/all`, options);
+              const responseData = await apiClient(`/address/user/all?page=${page}`, options);
 
               if(responseData.statusCode === 200) {
                 return {

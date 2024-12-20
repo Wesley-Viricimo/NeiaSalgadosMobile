@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
         borderColor: "#ccc",
         padding: 15,
         marginHorizontal: 10,
+        minHeight: 120, // Definindo uma altura mínima para garantir que todos os cards tenham o mesmo tamanho
     },
     cardContent: {
         flexDirection: "row", // Ícone e detalhes do endereço lado a lado
