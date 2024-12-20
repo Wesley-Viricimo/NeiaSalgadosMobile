@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { Modal, View, Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
 import { styles } from "./styles";
-// import { fetchDeliveryAddresses } from "../../api/addressService"; // função para buscar endereços da API (a ser implementada)
+import { AddressService } from "../../api/service/AddressService"; // função para buscar endereços da API (a ser implementada)
 
 export default function AddressModal({ visible, onClose, onAddAddress }) {
     const [addresses, setAddresses] = useState([]);
 
     // Função para buscar endereços
-    // const fetchAddresses = async () => {
-    //     try {
-    //         const data = await fetchDeliveryAddresses(); // Função que pega os endereços da API
-    //         setAddresses(data);
-    //     } catch (error) {
-    //         console.error("Erro ao buscar endereços:", error);
-    //     }
-    // };
+    const fetchAddresses = async () => {
+        try {
+            const data = await AddressService.fetchUserAddres(); // Função que pega os endereços da API
+            console.log('data', data);
+            setAddresses(data);
+        } catch (error) {
+            console.error("Erro ao buscar endereços:", error);
+        }
+    };
 
-    // useEffect(() => {
-    //     if (visible) {
-    //         fetchAddresses();
-    //     }
-    // }, [visible]);
+    useEffect(() => {
+        if (visible) {
+            fetchAddresses();
+        }
+    }, [visible]);
 
     return (
         <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
