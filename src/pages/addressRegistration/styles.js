@@ -14,21 +14,23 @@ export const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 5,
+  },
+  rowContainerStacing: {
+    marginBottom: 20
   },
   halfWidthInputContainer: {
-    flex: 0.70,  // Rua ocupa 75% da largura
-    marginRight: 10,
+    flex: 0.70,  // Rua ocupa 70% da largura
   },
   narrowInputContainer: {
-    flex: 0.30,  // Número ocupa 25% da largura
+    flex: 0.30,  // Número ocupa 30% da largura
+    marginRight: 10,
   },
   halfWidthInputContainerCep: {
-    flex: 0.30,  // Rua ocupa 75% da largura
+    flex: 0.30,  // CEP ocupa 30% da largura
     marginRight: 10,
   },
   narrowInputContainerState: {
-    flex: 0.70,  // Número ocupa 25% da largura
+    flex: 0.70,  // Estado ocupa 70% da largura
   },
   inputContainer: {
     flexDirection: 'row',
@@ -39,9 +41,6 @@ export const styles = StyleSheet.create({
     borderColor: colors.placeholder,
     paddingHorizontal: spacing.small,
     paddingVertical: spacing.small,
-  },
-  icon: {
-    marginRight: spacing.small,
   },
   input: {
     flex: 1,
