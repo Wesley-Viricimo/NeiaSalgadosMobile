@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, TextInput, Alert, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, Alert, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import CustomInput from '../../components/customInput/index';
 import LoadingButton from '../../components/loadingButton/index';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './styles';
 import { AddressService } from '../../api/service/AddressService';
+import { colors } from '../../global/styles';
 
 export default function AddressRegistration() {
   const navigation = useNavigation();
@@ -25,12 +26,8 @@ export default function AddressRegistration() {
     setIsFetching(true); 
     try {
       const response = await AddressService.fetchAddressByCep(cep);
+      console.log('response', response);
       if (response.status === 200) {
-        console.log('state', response.data.state);
-        console.log('city', response.data.city);
-        console.log('district', response.data.district);
-        console.log('road', response.data.road);
-
         setState(response.data.state);
         setCity(response.data.city);
         setDistrict(response.data.district);
@@ -114,11 +111,9 @@ export default function AddressRegistration() {
 
         <CustomInput label="Cidade" value={city} onChangeText={setCity} editable={false} />
         <CustomInput label="Bairro" value={district} onChangeText={setDistrict} editable={false} />
-
         <CustomInput label="Rua" value={street} onChangeText={setStreet} editable={false} />
 
         <View style={[styles.rowContainer, styles.rowContainerStacing]}>
-
           <View style={styles.narrowInputContainer}>
             <Text style={styles.label}>Número</Text>
             <View style={styles.inputContainer}>
@@ -143,6 +138,14 @@ export default function AddressRegistration() {
             </View>
           </View>
         </View>
+
+        {/* Progress Indicator */}
+        {isFetching && (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Text style={styles.loaderText}>Buscando endereço...</Text>
+          </View>
+        )}
 
         {/* Botão de Loading */}
         <LoadingButton isLoading={isLoading || isFetching} onPress={handleRegister} text="Cadastrar Endereço" />

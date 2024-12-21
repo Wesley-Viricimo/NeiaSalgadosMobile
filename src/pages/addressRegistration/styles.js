@@ -16,7 +16,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   rowContainerStacing: {
-    marginBottom: 20
+    marginBottom: 20,
+    marginTop: 10
+  },
+  rowContainerStacing: {
+    marginBottom: 20,
+    marginTop: 10
   },
   halfWidthInputContainer: {
     flex: 0.70,  // Rua ocupa 70% da largura
@@ -44,11 +49,11 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     color: '#333',
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.placeholder,
     marginBottom: 4,
     fontFamily: 'Roboto-Regular',
@@ -56,7 +61,22 @@ export const styles = StyleSheet.create({
   cancelText: {
     color: 'red',
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  loaderContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999, // Garantir que o indicador de progresso fique sobre outros componentes
+  },
+  loaderText: {
+    marginTop: 10,
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });
