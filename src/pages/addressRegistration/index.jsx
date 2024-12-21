@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, TextInput, Alert, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, TouchableOpacity, TextInput, Alert, ScrollView, ActivityIndicator, Animated } from 'react-native';
 import CustomInput from '../../components/customInput/index';
 import LoadingButton from '../../components/loadingButton/index';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
 import { styles } from './styles';
 import { AddressService } from '../../api/service/AddressService';
 import { colors } from '../../global/styles';
+import LoadingAnimation from '../../components/loadingAnimation/index';  // Importe o componente LoadingAnimation
 
 export default function AddressRegistration() {
   const navigation = useNavigation();
 
+  // Estados para os campos do endereço
   const [cep, setCep] = useState('');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
@@ -21,12 +22,17 @@ export default function AddressRegistration() {
   const [complement, setComplement] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);  // Estado para controlar se está fazendo a requisição do CEP
+  const [isLoadingScreenVisible, setIsLoadingScreenVisible] = useState(true);  // Estado para controlar a exibição da tela de loading
 
+  // Estados para animação de entrada
+  const fadeAnim = useState(new Animated.Value(0))[0]; // Opacidade inicial (0)
+  const slideAnim = useState(new Animated.Value(30))[0]; // Posição inicial (fora da tela)
+
+  // Função para buscar dados do endereço usando o CEP
   const fetchAddressData = async (cep) => {
-    setIsFetching(true); 
+    setIsFetching(true);
     try {
       const response = await AddressService.fetchAddressByCep(cep);
-      console.log('response', response);
       if (response.status === 200) {
         setState(response.data.state);
         setCity(response.data.city);
@@ -38,18 +44,20 @@ export default function AddressRegistration() {
     } catch (error) {
       Alert.alert('Erro', 'Erro ao buscar endereço. Tente novamente.');
     } finally {
-      setIsFetching(false);  // Desativa o carregamento
+      setIsFetching(false); // Desativa o carregamento
     }
   };
 
-  const handleCepChange = (text) => {
-    setCep(text);
+  // Função para lidar com a alteração do CEP
+  const handleCepChange = (cep) => {
+    setCep(cep);
 
-    if (text.length === 8) {  // Quando o CEP atingir 8 caracteres, faz a requisição
-      fetchAddressData(text);
+    if (cep.length === 8) {  // Quando o CEP atingir 8 caracteres, faz a requisição
+      fetchAddressData(cep);
     }
   };
 
+  // Função de registro de endereço
   const handleRegister = async () => {
     if (!cep || !state || !city || !district || !street || !number) {
       return Alert.alert('Erro', 'Os campos obrigatórios devem ser preenchidos!');
@@ -76,83 +84,112 @@ export default function AddressRegistration() {
     }
   };
 
+  // Mostrar a tela de carregamento por 1 segundo ao carregar a tela
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoadingScreenVisible(false);
+      // Animar os componentes após o carregamento
+      Animated.timing(fadeAnim, {
+        toValue: 1, // Alvo da opacidade
+        duration: 300, // Duração da animação
+        useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
+      }).start();
+
+      Animated.timing(slideAnim, {
+        toValue: 0, // Alvo da posição
+        duration: 500, // Duração da animação
+        useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
+      }).start();
+    }, 1000);  // Exibe a tela de carregamento por 1 segundo
+
+    return () => clearTimeout(timer); // Limpa o timeout caso o componente seja desmontado
+  }, []);
+
+  // Se a tela de carregamento estiver visível, exibe a animação
+  if (isLoadingScreenVisible) {
+    return <LoadingAnimation />;
+  }
+
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.header}>Cadastro de Endereço</Text>
+        {/* Animação de fade e slide */}
+        <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+          <Text style={styles.header}>Cadastro de Endereço</Text>
 
-        <View style={styles.rowContainer}>
-          <View style={styles.halfWidthInputContainerCep}>
-            <Text style={styles.label}>CEP</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                value={cep}
-                onChangeText={handleCepChange}
-                maxLength={8}
-                keyboardType="numeric"
-                editable={!isFetching} // Desabilita a digitação enquanto o CEP está sendo buscado
-              />
+          <View style={styles.rowContainer}>
+            <View style={styles.halfWidthInputContainerCep}>
+              <Text style={styles.label}>CEP</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  value={cep}
+                  onChangeText={handleCepChange}
+                  maxLength={8}
+                  keyboardType="numeric"
+                  editable={!isFetching} // Desabilita a digitação enquanto o CEP está sendo buscado
+                />
+              </View>
+            </View>
+
+            <View style={styles.narrowInputContainerState}>
+              <Text style={styles.label}>Estado</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input]}  // Adicionando estilo de campo inativo
+                  value={state}
+                  onChangeText={setState}
+                  editable={false} // Campos desabilitados para digitação
+                />
+              </View>
             </View>
           </View>
 
-          <View style={styles.narrowInputContainerState}>
-            <Text style={styles.label}>Estado</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={[styles.input]}  // Adicionando estilo de campo inativo
-                value={state}
-                onChangeText={setState}
-                editable={false} // Campos desabilitados para digitação
-              />
+          <CustomInput label="Cidade" value={city} onChangeText={setCity} editable={false} />
+          <CustomInput label="Bairro" value={district} onChangeText={setDistrict} editable={false} />
+          <CustomInput label="Rua" value={street} onChangeText={setStreet} editable={false} />
+
+          <View style={[styles.rowContainer, styles.rowContainerStacing]}>
+            <View style={styles.narrowInputContainer}>
+              <Text style={styles.label}>Número</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  value={number}
+                  onChangeText={setNumber}
+                  keyboardType="numeric"
+                  maxLength={8}
+                />
+              </View>
+            </View>
+
+            <View style={styles.halfWidthInputContainer}>
+              <Text style={styles.label}>Complemento</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={[styles.input]}  // Adicionando estilo de campo inativo
+                  value={complement}
+                  onChangeText={setComplement}
+                />
+              </View>
             </View>
           </View>
-        </View>
 
-        <CustomInput label="Cidade" value={city} onChangeText={setCity} editable={false} />
-        <CustomInput label="Bairro" value={district} onChangeText={setDistrict} editable={false} />
-        <CustomInput label="Rua" value={street} onChangeText={setStreet} editable={false} />
-
-        <View style={[styles.rowContainer, styles.rowContainerStacing]}>
-          <View style={styles.narrowInputContainer}>
-            <Text style={styles.label}>Número</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                value={number}
-                onChangeText={setNumber}
-                keyboardType="numeric"
-                maxLength={8}
-              />
+          {/* Progress Indicator */}
+          {isFetching && (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color={colors.primary} />
+              <Text style={styles.loaderText}>Buscando endereço...</Text>
             </View>
-          </View>
+          )}
 
-          <View style={styles.halfWidthInputContainer}>
-            <Text style={styles.label}>Complemento</Text>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={[styles.input]}  // Adicionando estilo de campo inativo
-                value={complement}
-                onChangeText={setComplement}
-              />
-            </View>
-          </View>
-        </View>
+          {/* Botão de Loading */}
+          <LoadingButton isLoading={isLoading || isFetching} onPress={handleRegister} text="Cadastrar Endereço" />
 
-        {/* Progress Indicator */}
-        {isFetching && (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color={colors.primary} />
-            <Text style={styles.loaderText}>Buscando endereço...</Text>
-          </View>
-        )}
-
-        {/* Botão de Loading */}
-        <LoadingButton isLoading={isLoading || isFetching} onPress={handleRegister} text="Cadastrar Endereço" />
-
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={styles.cancelText}>Cancelar</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.cancelText}>Cancelar</Text>
+          </TouchableOpacity>
+        </Animated.View>
       </ScrollView>
     </SafeAreaView>
   );

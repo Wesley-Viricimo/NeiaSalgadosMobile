@@ -66,13 +66,14 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   loaderContainer: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: -50 }, { translateY: -50 }],
+    position: 'absolute',  // Coloca o loader sobre outros componentes
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,  // Preenche toda a tela
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 999, // Garantir que o indicador de progresso fique sobre outros componentes
+    zIndex: 999,  // Garantir que o indicador de progresso fique sobre outros componentes
   },
   loaderText: {
     marginTop: 10,
