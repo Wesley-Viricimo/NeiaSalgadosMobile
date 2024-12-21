@@ -12,7 +12,7 @@ const AddressCard = ({ address, isClickable, onSelect }) => {
       <Icon name="home" size={24} color="#000" />
     ) : type === "trabalho" ? (
       <Icon name="work" size={24} color="#000" />
-    ) : null;
+    ) : <Icon name="place" size={24} color="#000"/>;
   };
 
   // Se o card for clicável, envolva com TouchableOpacity

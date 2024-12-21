@@ -60,35 +60,38 @@ export const styles = StyleSheet.create({
   scrollContentContainer: {
     paddingBottom: 20, // Adiciona um pouco de espaço no final do conteúdo
   },
-
-  // Estilos para o endereço de retirada
   pickupAddressContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 20,
     marginHorizontal: 15,
-    backgroundColor: "#f9f9f9",
-    padding: 15,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
+    backgroundColor: "#ffffff", // Fundo branco para destaque
+    padding: 20, // Espaçamento interno maior
+    borderRadius: 10, // Cantos arredondados para suavidade
+    shadowColor: "#000", // Sombra para criar profundidade
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4, // Para sombra no Android
   },
   iconContainer: {
-    marginRight: 15,
+    marginRight: 20, // Mais espaço entre o ícone e o texto
+    justifyContent: "center",
   },
   addressTextContainer: {
     flex: 1,
   },
   pickupTextBold: {
     fontWeight: "bold",
-    fontSize: 16,
-    color: "#333",
+    fontSize: 20, // Fonte maior para destacar o título
+    color: "#2c3e50", // Cor moderna e vibrante
+    marginBottom: 8, // Espaçamento para o próximo texto
   },
   pickupText: {
-    fontSize: 14,
-    color: "#555",
-  },
-
+    fontSize: 17, // Fonte maior para melhor legibilidade
+    color: "#7f8c8d", // Cor suave para complementar o título
+    marginBottom: 4, // Espaçamento entre as linhas do endereço
+  },  
   // Estilos para tempo estimado
   timeContainer: {
     marginTop: 20,

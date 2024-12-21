@@ -1,36 +1,39 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-    card: {
-        marginTop: 20,
-        backgroundColor: "#f9f9f9",
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: "#ccc",
-        padding: 15,
-        marginHorizontal: 10,
-        minHeight: 120, // Definindo uma altura mínima para garantir que todos os cards tenham o mesmo tamanho
-    },
-    cardContent: {
-        flexDirection: "row", // Ícone e detalhes do endereço lado a lado
-        alignItems: "center", // Alinha tudo ao centro verticalmente
-    },
-    iconContainer: {
-        marginRight: 15, // Espaço entre o ícone e as informações
-        justifyContent: "center", // Alinha o ícone verticalmente no centro
-    },
-    addressDetails: {
-        flex: 1, // As informações do endereço ocupam o restante do espaço
-    },
-    addressType: {
-        fontWeight: "bold",
-        fontSize: 18,
-        color: "#333",
-        marginBottom: 5, // Espaçamento entre o tipo de endereço e as informações
-    },
-    addressText: {
-        fontSize: 16,
-        color: "#555",
-        marginBottom: 5, // Espaçamento entre as linhas do endereço
-    },
+  card: {
+    marginTop: 20,
+    backgroundColor: "#ffffff", // Fundo branco para destacar o card
+    borderRadius: 10, // Cantos mais arredondados
+    shadowColor: "#000", // Sombra suave para destaque
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4, // Para sombra no Android
+    padding: 20, // Maior espaço interno
+    marginHorizontal: 15, // Espaçamento lateral
+    minHeight: 140, // Altura mínima ajustada
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconContainer: {
+    marginRight: 20, // Maior espaço entre o ícone e os detalhes
+    justifyContent: "center",
+  },
+  addressDetails: {
+    flex: 1,
+  },
+  addressType: {
+    fontWeight: "bold",
+    fontSize: 20, // Fonte maior para o tipo do endereço
+    color: "#2c3e50", // Cor mais moderna
+    marginBottom: 8,
+  },
+  addressText: {
+    fontSize: 16,
+    color: "#7f8c8d", // Cor mais suave para o texto
+    marginBottom: 6,
+  },
 });

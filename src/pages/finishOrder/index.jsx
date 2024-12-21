@@ -9,7 +9,7 @@ import { styles } from "./styles";
 import AdditionalOption from "../../components/additionalOption";
 import { OrderService } from "../../api/service/OrderService";
 import OrderItemCard from "../../components/orderItemCard/index";
-import { getAllOrderItem, removeOrderItemById, sumOrderItemQuantities } from "../../database/orderItemService";
+import { getAllOrderItem, removeOrderItemById } from "../../database/orderItemService";
 
 export default function FinishOrder() {
   const navigation = useNavigation();
@@ -166,6 +166,7 @@ export default function FinishOrder() {
 
         {/* Exibindo informações do endereço de retirada */}
         {selectedOption === "retirada" && (
+          // <AddressCard address={{type: "casa", road: "R Antônio Luiz do Prado, 55", district:"Jardim das Oliveiras", city: "Paraguaçu Paulista", state: "São Paulo"}} isClickable={false}/>
           <View style={styles.pickupAddressContainer}>
             <View style={styles.iconContainer}>
               <Icon name="place" size={24} color="#000" />
