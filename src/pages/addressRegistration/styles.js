@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors, spacing } from '../../global/styles';
 
 export const styles = StyleSheet.create({
   container: {
@@ -7,20 +8,27 @@ export const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 40,
     textAlign: 'center',
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 5,
   },
   halfWidthInputContainer: {
-    flex: 0.75,  // Rua ocupa 75% da largura
+    flex: 0.70,  // Rua ocupa 75% da largura
     marginRight: 10,
   },
   narrowInputContainer: {
-    flex: 0.25,  // Número ocupa 25% da largura
+    flex: 0.30,  // Número ocupa 25% da largura
+  },
+  halfWidthInputContainerCep: {
+    flex: 0.30,  // Rua ocupa 75% da largura
+    marginRight: 10,
+  },
+  narrowInputContainerState: {
+    flex: 0.70,  // Número ocupa 25% da largura
   },
   inputContainer: {
     flexDirection: 'row',
@@ -28,9 +36,12 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    borderColor: colors.placeholder,
+    paddingHorizontal: spacing.small,
+    paddingVertical: spacing.small,
+  },
+  icon: {
+    marginRight: spacing.small,
   },
   input: {
     flex: 1,
@@ -39,8 +50,9 @@ export const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#666',
+    color: colors.placeholder,
     marginBottom: 4,
+    fontFamily: 'Roboto-Regular',
   },
   cancelText: {
     color: 'red',

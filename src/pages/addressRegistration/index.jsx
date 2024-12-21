@@ -4,6 +4,7 @@ import CustomInput from '../../components/customInput/index';
 import LoadingButton from '../../components/loadingButton/index';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { styles } from './styles';
 
 export default function AddressRegistration() {
@@ -53,10 +54,35 @@ export default function AddressRegistration() {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.header}>Cadastro de Endereço</Text>
 
-        <CustomInput label="CEP" value={cep} onChangeText={setCep} icon="location" />
-        <CustomInput label="Estado" value={state} onChangeText={setState} icon="flag" />
-        <CustomInput label="Cidade" value={city} onChangeText={setCity} icon="business" />
-        <CustomInput label="Bairro" value={district} onChangeText={setDistrict} icon="home" />
+         {/* Novo componente para os campos "Rua" e "Número" lado a lado */}
+         <View style={styles.rowContainer}>
+          <View style={styles.halfWidthInputContainerCep}>
+            <Text style={styles.label}>CEP</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={cep}
+                onChangeText={setCep}
+                maxLength={8}
+                keyboardType="numeric"
+              />
+            </View>
+          </View>
+
+          <View style={styles.narrowInputContainerState}>
+            <Text style={styles.label}>Estado</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={state}
+                onChangeText={setState}
+              />
+            </View>
+          </View>
+        </View>
+
+        <CustomInput label="Cidade" value={city} onChangeText={setCity} />
+        <CustomInput label="Bairro" value={district} onChangeText={setDistrict} />
 
         {/* Novo componente para os campos "Rua" e "Número" lado a lado */}
         <View style={styles.rowContainer}>
@@ -79,12 +105,13 @@ export default function AddressRegistration() {
                 value={number}
                 onChangeText={setNumber}
                 keyboardType="numeric"
+                maxLength={8}
               />
             </View>
           </View>
         </View>
 
-        <CustomInput label="Complemento" value={complement} onChangeText={setComplement} icon="home" />
+        <CustomInput label="Complemento" value={complement} onChangeText={setComplement} />
 
         <LoadingButton isLoading={isLoading} onPress={handleRegister} text="Cadastrar Endereço" />
 
