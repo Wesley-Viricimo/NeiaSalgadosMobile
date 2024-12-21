@@ -13,6 +13,8 @@ import ProductDetails from "../pages/productDetails";
 import ProductControl from "../pages/productControlScreens/productControl";
 import ProductCreate from "../pages/productControlScreens/productCreate";
 import FinishOrderFooter from "../components/finishOrderFooter";
+import AddressRegistration from "../pages/addressRegistration";
+import FinishOrder from "../pages/finishOrder";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -105,6 +107,8 @@ export default function BottomRoutes() {
                 <Stack.Screen name="ProductDetails" component={ProductDetails} />
                 <Stack.Screen name="ProductControl" component={ProductControl} />
                 <Stack.Screen name="ProductCreate" component={ProductCreate} />
+                <Stack.Screen name="FinishOrder" component={FinishOrder} />
+                <Stack.Screen name="AddressRegistration" component={AddressRegistration} />
             </Stack.Navigator>
         </View>
     );

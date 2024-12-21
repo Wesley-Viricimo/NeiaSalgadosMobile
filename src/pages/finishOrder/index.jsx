@@ -297,7 +297,7 @@ export default function FinishOrder() {
           setModalVisible(false);
         }}
         onAddAddress={() => {
-          console.log("Cadastrar novo endereço");
+          navigation.navigate("AddressRegistration");
           setModalVisible(false);
         }}
       />

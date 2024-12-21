@@ -2,42 +2,50 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
     padding: 20,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
     marginBottom: 20,
-    color: '#333',
-  },
-  inputContainer: {
-    marginBottom: 15,
+    textAlign: 'center',
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 20,
   },
-  halfWidthInput: {
-    flex: 1,
+  halfWidthInputContainer: {
+    flex: 0.75,  // Rua ocupa 75% da largura
     marginRight: 10,
+  },
+  narrowInputContainer: {
+    flex: 0.25,  // Número ocupa 25% da largura
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   input: {
     flex: 1,
+    fontSize: 14,
+    color: '#333',
   },
-  registerButton: {
-    marginTop: 20,
-    backgroundColor: '#FF4500',
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderRadius: 5,
+  label: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
   },
   cancelText: {
+    color: 'red',
     textAlign: 'center',
-    marginTop: 15,
-    color: '#FF4500',
+    marginTop: 20,
     fontSize: 16,
   },
 });
