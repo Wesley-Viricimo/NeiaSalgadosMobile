@@ -7,7 +7,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from './styles';
 import { AddressService } from '../../api/service/AddressService';
 import { colors } from '../../global/styles';
-import LoadingAnimation from '../../components/loadingAnimation/index';  // Importe o componente LoadingAnimation
 
 export default function AddressRegistration() {
   const navigation = useNavigation();
@@ -22,7 +21,6 @@ export default function AddressRegistration() {
   const [complement, setComplement] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);  // Estado para controlar se está fazendo a requisição do CEP
-  const [isLoadingScreenVisible, setIsLoadingScreenVisible] = useState(true);  // Estado para controlar a exibição da tela de loading
 
   // Estados para animação de entrada
   const fadeAnim = useState(new Animated.Value(0))[0]; // Opacidade inicial (0)
@@ -84,31 +82,21 @@ export default function AddressRegistration() {
     }
   };
 
-  // Mostrar a tela de carregamento por 1 segundo ao carregar a tela
+  // Função para animar os componentes na montagem da tela
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoadingScreenVisible(false);
-      // Animar os componentes após o carregamento
-      Animated.timing(fadeAnim, {
-        toValue: 1, // Alvo da opacidade
-        duration: 300, // Duração da animação
-        useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
-      }).start();
+    // Animação de fade e slide logo após o componente ser montado
+    Animated.timing(fadeAnim, {
+      toValue: 1, // Alvo da opacidade
+      duration: 1000, // Duração da animação
+      useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
+    }).start();
 
-      Animated.timing(slideAnim, {
-        toValue: 0, // Alvo da posição
-        duration: 500, // Duração da animação
-        useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
-      }).start();
-    }, 1000);  // Exibe a tela de carregamento por 1 segundo
-
-    return () => clearTimeout(timer); // Limpa o timeout caso o componente seja desmontado
-  }, []);
-
-  // Se a tela de carregamento estiver visível, exibe a animação
-  if (isLoadingScreenVisible) {
-    return <LoadingAnimation />;
-  }
+    Animated.timing(slideAnim, {
+      toValue: 0, // Alvo da posição
+      duration: 700, // Duração da animação
+      useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
+    }).start();
+  }, []); // Apenas uma vez quando o componente for montado
 
   return (
     <SafeAreaView>
