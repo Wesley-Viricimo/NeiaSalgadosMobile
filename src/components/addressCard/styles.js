@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   addressText: {
-    fontSize: 16,
+    fontSize: 17,
     color: "#7f8c8d", // Cor mais suave para o texto
     marginBottom: 6,
   },
