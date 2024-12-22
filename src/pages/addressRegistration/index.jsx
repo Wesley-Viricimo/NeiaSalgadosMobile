@@ -63,18 +63,22 @@ export default function AddressRegistration() {
 
     setIsLoading(true);
     try {
-      // Aqui vai o código para registrar o endereço na sua API
-      // const response = await AddressService.registerAddress({
-      //   cep, state, city, district, street, number, complement,
-      // });
+      const response = await AddressService.createAddress({
+        cep,
+        state,
+        city,
+        district,
+        road: street,
+        number,
+        complement,
+      });
 
-      // if (response.status === 201) {
-      //   Alert.alert('Sucesso', 'Endereço cadastrado com sucesso!');
-      //   navigation.goBack();
-      // } else {
-      //   Alert.alert('Erro', response.message || 'Erro ao cadastrar endereço.');
-      // }
-
+      if (response.status === 201) {
+        Alert.alert('Sucesso', 'Endereço cadastrado com sucesso!');
+        navigation.goBack();
+      } else {
+        Alert.alert('Erro', 'Erro ao cadastrar endereço. Tente novamente.');
+      }
     } catch (error) {
       Alert.alert('Erro', 'Erro inesperado ao cadastrar endereço.');
     } finally {
