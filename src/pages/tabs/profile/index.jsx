@@ -13,7 +13,7 @@ const Profile = () => {
 
   // Estados para animação
   const fadeAnim = useState(new Animated.Value(0))[0]; // Opacidade inicial (0)
-  const slideAnim = useState(new Animated.Value(30))[0]; // Posição inicial (fora da tela)
+  const slideAnim = useState(new Animated.Value(20))[0]; // Posição inicial (fora da tela)
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -26,13 +26,13 @@ const Profile = () => {
     // Animação de fade e slide
     Animated.timing(fadeAnim, {
       toValue: 1, // Opacidade final
-      duration: 1000, // Duração em milissegundos
+      duration: 400, // Duração em milissegundos
       useNativeDriver: true, // Usa aceleração de hardware
     }).start();
 
     Animated.timing(slideAnim, {
       toValue: 0, // Deslocamento final
-      duration: 700, // Duração em milissegundos
+      duration: 400, // Duração em milissegundos
       useNativeDriver: true, // Usa aceleração de hardware
     }).start();
   }, []);

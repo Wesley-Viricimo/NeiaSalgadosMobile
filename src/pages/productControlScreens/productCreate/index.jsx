@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Alert, Animated } from "react-native";
 import { styles } from "./styles";
 import FilePicker from "../../../components/filePicker/index";
 import InputField from "../../../components/inputField/index";
@@ -16,7 +16,27 @@ const ProductCreate = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(""); // Categoria selecionada
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  // Estados de animação
+  const [fadeAnim] = useState(new Animated.Value(0)); // Opacidade inicial
+  const [slideAnim] = useState(new Animated.Value(30)); // Deslocamento inicial
+
+  useEffect(() => {
+    // Inicia a animação ao montar o componente
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1, // Opacidade final
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0, // Posição final
+        duration: 800,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handleSubmit = async () => {
     if (!description || !price || !selectedCategory) {
@@ -61,13 +81,26 @@ const ProductCreate = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+      {/* Header animado */}
+      <Animated.View
+        style={[
+          styles.header,
+          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+        ]}
+      >
         <Text onPress={() => navigation.goBack()} style={styles.backButton}>
           {"<"}
         </Text>
         <Text style={styles.headerTitle}>Cadastrar Novo Produto</Text>
-      </View>
-      <View style={styles.body}>
+      </Animated.View>
+
+      {/* Corpo animado */}
+      <Animated.View
+        style={[
+          styles.body,
+          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+        ]}
+      >
         <FilePicker onFileSelect={setFile} />
         <View style={styles.filePreview}>
           {file ? (
@@ -97,7 +130,7 @@ const ProductCreate = () => {
           keyboardType="numeric"
         />
         <SubmitButton title="Cadastrar Produto" onPress={handleSubmit} />
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 };
