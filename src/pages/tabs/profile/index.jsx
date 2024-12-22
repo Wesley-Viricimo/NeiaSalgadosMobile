@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Text, View, Alert } from "react-native";
+import { FlatList, Text, View, Alert, Animated } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import OptionItem from "../../../components/optionItem/index";
 import UserStorage from "../../../storage/user.storage";
@@ -11,6 +11,10 @@ const Profile = () => {
   const [username, setUsername] = useState("");
   const navigation = useNavigation();
 
+  // Estados para animação
+  const fadeAnim = useState(new Animated.Value(0))[0]; // Opacidade inicial (0)
+  const slideAnim = useState(new Animated.Value(30))[0]; // Posição inicial (fora da tela)
+
   useEffect(() => {
     const fetchUserName = async () => {
       const userStorage = new UserStorage();
@@ -18,6 +22,19 @@ const Profile = () => {
       setUsername(userData.name || "Usuário");
     };
     fetchUserName();
+
+    // Animação de fade e slide
+    Animated.timing(fadeAnim, {
+      toValue: 1, // Opacidade final
+      duration: 1000, // Duração em milissegundos
+      useNativeDriver: true, // Usa aceleração de hardware
+    }).start();
+
+    Animated.timing(slideAnim, {
+      toValue: 0, // Deslocamento final
+      duration: 700, // Duração em milissegundos
+      useNativeDriver: true, // Usa aceleração de hardware
+    }).start();
   }, []);
 
   const handleLogout = () => {
@@ -33,11 +50,11 @@ const Profile = () => {
           text: "Sim",
           onPress: async () => {
             const userStorage = new UserStorage();
-            await userStorage.removeUserData(); // Limpa as informações do usuário
+            await userStorage.removeUserData();
             TokenService.clearToken();
-            navigation.reset({ // Redefine a pilha para que a tela de login seja a única acessível
+            navigation.reset({
               index: 0,
-              routes: [{ name: "Login" }]
+              routes: [{ name: "Login" }],
             });
           },
         },
@@ -88,7 +105,7 @@ const Profile = () => {
       id: "6",
       title: "Sair",
       iconName: "logout",
-      onPress: handleLogout, // Chama a função de logout ao clicar em "Sair"
+      onPress: handleLogout,
     },
   ];
 
@@ -104,27 +121,29 @@ const Profile = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.greeting}>Olá, {username}</Text>
-        <View style={styles.divider} />
-      </View>
-      <FlatList
-        data={initialOptions}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-      />
-      <View style={styles.footer}>
-        {footerOptions.map((item) => (
-          <OptionItem
-            key={item.id}
-            title={item.title}
-            iconName={item.iconName}
-            onPress={item.onPress}
-            showSubtitle={false}
-          />
-        ))}
-      </View>
+      <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+        <View style={styles.header}>
+          <Text style={styles.greeting}>Olá, {username}</Text>
+          <View style={styles.divider} />
+        </View>
+        <FlatList
+          data={initialOptions}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+        />
+        <View style={styles.footer}>
+          {footerOptions.map((item) => (
+            <OptionItem
+              key={item.id}
+              title={item.title}
+              iconName={item.iconName}
+              onPress={item.onPress}
+              showSubtitle={false}
+            />
+          ))}
+        </View>
+      </Animated.View>
     </SafeAreaView>
   );
 };

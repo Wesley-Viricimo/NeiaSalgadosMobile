@@ -20,13 +20,17 @@ export const styles = StyleSheet.create({
     backgroundColor: "#ddd",
     marginTop: 8,
   },
+  listContent: {
+    flexGrow: 1,
+    paddingBottom: 60, // Adiciona espaço para o footer
+  },
   footer: {
-    position: "absolute", // Fixar no final da tela
-    bottom: -18, // Encostar na parte inferior
-    left: 0,
-    right: 0,
+    bottom: -115, // Encostar na parte inferior
+    flexDirection: "column",
+    justifyContent: "flex-end",
     backgroundColor: "#fff",
-    paddingVertical: 16,
+    borderTopWidth: 1,
     borderTopColor: "#ddd",
+    paddingVertical: 16,
   },
 });
