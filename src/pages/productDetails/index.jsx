@@ -6,7 +6,7 @@ import {
   TextInput,
   ScrollView,
   ToastAndroid,
-  ActivityIndicator,
+  Animated,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import ProductFooter from "../../components/productFooter";
@@ -21,6 +21,9 @@ export default function ProductDetails() {
   const [observation, setObservation] = useState("");
   const [loading, setLoading] = useState(true);
   const [isInCart, setIsInCart] = useState(false);
+  const [fadeAnim] = useState(new Animated.Value(0)); // Opacidade (de 0 a 1)
+  const [translateAnim] = useState(new Animated.Value(30)); // Deslocamento (de 30 para 0)
+
   const route = useRoute();
   const navigation = useNavigation();
   const { product, soldQuantity, onAddToCart } = route.params;
@@ -43,14 +46,27 @@ export default function ProductDetails() {
       }
     };
     fetchProductData();
-  }, [product.idProduct]);  
+
+    // Animação de fade e translação para os componentes após o carregamento inicial
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(translateAnim, {
+      toValue: 0,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  }, [product.idProduct]);
 
   const handleAddToCart = async () => {
     try {
       await upsertOrderItem(product.idProduct, product.title, quantity, product.price, observation);
       onAddToCart(product.idProduct, quantity); // Atualiza estado de produtos vendidos na Home
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
-      setTimeout(() => {  
+      setTimeout(() => {
         navigation.goBack();
       }, 1200);
     } catch (error) {
@@ -64,7 +80,7 @@ export default function ProductDetails() {
       await removeOrderItemById(product.idProduct);
       onAddToCart(product.idProduct, 0);
       ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
-      setTimeout(() => {  
+      setTimeout(() => {
         navigation.goBack();
       }, 1200);
     } catch (error) {
@@ -74,43 +90,85 @@ export default function ProductDetails() {
   };
 
   if (loading) {
-    return (
-       <LoadingAnimation/>
-    );
+    return <LoadingAnimation />;
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Image source={{ uri: product.urlImage }} style={styles.image} />
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.description}>{product.description}</Text>
-        <View style={styles.observationContainer}>
-          <View style={styles.label}>
-            <View style={styles.iconBackground}>
-              <Ionicons name="chatbubble" size={15} color="#fff" />
+        {/* Animação de fade e translação na imagem do produto */}
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{ translateY: translateAnim }],
+          }}
+        >
+          <Image source={{ uri: product.urlImage }} style={styles.image} />
+        </Animated.View>
+
+        {/* Animação de fade e translação no título do produto */}
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{ translateY: translateAnim }],
+          }}
+        >
+          <Text style={styles.title}>{product.title}</Text>
+        </Animated.View>
+
+        {/* Animação de fade e translação na descrição do produto */}
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{ translateY: translateAnim }],
+          }}
+        >
+          <Text style={styles.description}>{product.description}</Text>
+        </Animated.View>
+
+        {/* Animação de fade e translação na seção de observações */}
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{ translateY: translateAnim }],
+          }}
+        >
+          <View style={styles.observationContainer}>
+            <View style={styles.label}>
+              <View style={styles.iconBackground}>
+                <Ionicons name="chatbubble" size={15} color="#fff" />
+              </View>
+              <Text style={styles.labelText}>Alguma observação?</Text>
+              <Text style={styles.charCount}>{`${observation.length}/140`}</Text>
             </View>
-            <Text style={styles.labelText}>Alguma observação?</Text>
-            <Text style={styles.charCount}>{`${observation.length}/140`}</Text>
+            <TextInput
+              style={styles.observationInput}
+              multiline
+              maxLength={140}
+              placeholder="Ex: tirar cebola, maionese à parte etc."
+              value={observation}
+              onChangeText={(text) => setObservation(text)}
+            />
           </View>
-          <TextInput
-            style={styles.observationInput}
-            multiline
-            maxLength={140}
-            placeholder="Ex: tirar cebola, maionese à parte etc."
-            value={observation}
-            onChangeText={(text) => setObservation(text)}
-          />
-        </View>
+        </Animated.View>
       </ScrollView>
-      <ProductFooter
-        price={product.price}
-        quantity={quantity}
-        setQuantity={setQuantity}
-        onAddToCart={handleAddToCart}
-        onPressClearIcon={handleRemoveFromCart}
-        isInCart={isInCart} // Novo prop
-      />
+
+      {/* Rodapé com animação de fade e translação */}
+      <Animated.View
+        style={{
+          opacity: fadeAnim,
+          transform: [{ translateY: translateAnim }],
+        }}
+      >
+        <ProductFooter
+          price={product.price}
+          quantity={quantity}
+          setQuantity={setQuantity}
+          onAddToCart={handleAddToCart}
+          onPressClearIcon={handleRemoveFromCart}
+          isInCart={isInCart} // Novo prop
+        />
+      </Animated.View>
     </SafeAreaView>
   );
 }

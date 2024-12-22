@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Alert, ToastAndroid } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ToastAndroid,
+  Animated
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import AddressModal from "../../components/addressModal/index";
@@ -24,7 +32,10 @@ export default function FinishOrder() {
   const [additionalTotal, setAdditionalTotal] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  // Função para buscar adicionais da API
+  // Animações
+  const fadeAnim = useState(new Animated.Value(0))[0]; // Opacidade (de 0 a 1)
+  const translateAnim = useState(new Animated.Value(30))[0]; // Deslocamento (de 30 para 0)
+
   useEffect(() => {
     const fetchAdditionals = async () => {
       try {
@@ -51,6 +62,19 @@ export default function FinishOrder() {
 
     fetchAdditionals();
     fetchOrderItems();
+
+    // Animações de fade-in e translação
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(translateAnim, {
+      toValue: 0,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
   // Função para calcular o subtotal
@@ -120,15 +144,19 @@ export default function FinishOrder() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header fixo */}
-      <View style={styles.header}>
+      <Animated.View
+        style={[styles.header, { opacity: fadeAnim, transform: [{ translateY: translateAnim }] }]}
+      >
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Finalize seu Pedido</Text>
-      </View>
+      </Animated.View>
 
       {/* Opções de entrega e retirada */}
-      <View style={styles.tabContainer}>
+      <Animated.View
+        style={[styles.tabContainer, { opacity: fadeAnim, transform: [{ translateY: translateAnim }] }]}
+      >
         <TouchableOpacity
           style={[styles.tab, selectedOption === "entrega" && styles.selectedTab]}
           onPress={() => setSelectedOption("entrega")}
@@ -145,12 +173,17 @@ export default function FinishOrder() {
             Retirada
           </Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
 
       <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
         {/* Se opção for entrega, exibe botão de seleção de endereço */}
         {selectedOption === "entrega" && (
-          <>
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
+              transform: [{ translateY: translateAnim }]
+            }}
+          >
             <TouchableOpacity style={styles.selectAddressButton} onPress={() => setModalVisible(true)}>
               <Text style={styles.selectAddressButtonText}>
                 {selectedAddress ? "Alterar endereço de entrega" : "Selecione o endereço de entrega"}
@@ -161,12 +194,11 @@ export default function FinishOrder() {
             ) : (
               <Text style={styles.noAddressText}>Nenhum endereço selecionado</Text>
             )}
-          </>
+          </Animated.View>
         )}
 
         {/* Exibindo informações do endereço de retirada */}
         {selectedOption === "retirada" && (
-          // <AddressCard address={{type: "casa", road: "R Antônio Luiz do Prado, 55", district:"Jardim das Oliveiras", city: "Paraguaçu Paulista", state: "São Paulo"}} isClickable={false}/>
           <View style={styles.pickupAddressContainer}>
             <View style={styles.iconContainer}>
               <Icon name="place" size={24} color="#000" />
@@ -181,71 +213,83 @@ export default function FinishOrder() {
         )}
 
         {/* Tempo estimado para entrega ou retirada */}
-        <View style={styles.timeContainer}>
-          <Text style={styles.timeText}>
-            {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
-          </Text>
-          <Text style={styles.timeValue}>
-            {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
-          </Text>
-        </View>
+        <Animated.View
+          style={{ opacity: fadeAnim, transform: [{ translateY: translateAnim }] }}
+        >
+          <View style={styles.timeContainer}>
+            <Text style={styles.timeText}>
+              {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
+            </Text>
+            <Text style={styles.timeValue}>
+              {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
+            </Text>
+          </View>
+        </Animated.View>
 
         {/* Linha de separação */}
         <View style={styles.separator} />
 
         {/* Seção de Pagamento */}
-        <View style={styles.paymentSection}>
-          <Text style={styles.paymentText}>Pagamento</Text>
+        <Animated.View
+          style={{ opacity: fadeAnim, transform: [{ translateY: translateAnim }] }}
+        >
+          <View style={styles.paymentSection}>
+            <Text style={styles.paymentText}>Pagamento</Text>
 
-          <TouchableOpacity onPress={() => setPaymentOption("pagarEntrega")}>
-            <Text style={styles.paymentOptionText}>
-              {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
-            </Text>
-            {paymentOption === "pagarEntrega" && <View style={styles.selectedPaymentOptionLine} />}
-          </TouchableOpacity>
-
-          <Text style={styles.choosePaymentText}>Escolha a forma de pagamento</Text>
-
-          <View style={styles.radioGroupContainer}>
-            <TouchableOpacity
-              style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
-              onPress={() => setSelectedPaymentMethod("dinheiro")}
-            >
-              <Icon name="attach-money" size={24} color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"} />
-              <Text style={styles.radioOptionText}>Dinheiro</Text>
+            <TouchableOpacity onPress={() => setPaymentOption("pagarEntrega")}>
+              <Text style={styles.paymentOptionText}>
+                {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
+              </Text>
+              {paymentOption === "pagarEntrega" && <View style={styles.selectedPaymentOptionLine} />}
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
-              onPress={() => setSelectedPaymentMethod("cartao")}
-            >
-              <Icon name="credit-card" size={24} color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"} />
-              <Text style={styles.radioOptionText}>Cartão</Text>
-            </TouchableOpacity>
+            <Text style={styles.choosePaymentText}>Escolha a forma de pagamento</Text>
 
-            <TouchableOpacity
-              style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
-              onPress={() => setSelectedPaymentMethod("pix")}
-            >
-              <Icon name="account-balance-wallet" size={24} color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"} />
-              <Text style={styles.radioOptionText}>Pix</Text>
-            </TouchableOpacity>
+            <View style={styles.radioGroupContainer}>
+              <TouchableOpacity
+                style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
+                onPress={() => setSelectedPaymentMethod("dinheiro")}
+              >
+                <Icon name="attach-money" size={24} color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"} />
+                <Text style={styles.radioOptionText}>Dinheiro</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
+                onPress={() => setSelectedPaymentMethod("cartao")}
+              >
+                <Icon name="credit-card" size={24} color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"} />
+                <Text style={styles.radioOptionText}>Cartão</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
+                onPress={() => setSelectedPaymentMethod("pix")}
+              >
+                <Icon name="account-balance-wallet" size={24} color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"} />
+                <Text style={styles.radioOptionText}>Pix</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Seção de Adicionais */}
+            <Text style={styles.choosePaymentText}>Adicionais</Text>
+
+            {additionals.map((additional) => (
+              <AdditionalOption
+                key={additional.idAdditional}
+                title={additional.description}
+                price={additional.price}
+                checked={selectedAdditionals[additional.idAdditional] || false}
+                onPress={() => handleAdditionalSelection(additional.idAdditional)}
+              />
+            ))}
           </View>
+        </Animated.View>
 
-          {/* Seção de Adicionais */}
-          <Text style={styles.choosePaymentText}>Adicionais</Text>
-
-          {additionals.map((additional) => (
-            <AdditionalOption
-              key={additional.idAdditional}
-              title={additional.description}
-              price={additional.price}
-              checked={selectedAdditionals[additional.idAdditional] || false}
-              onPress={() => handleAdditionalSelection(additional.idAdditional)}
-            />
-          ))}
-
-          {/* Resumo do Pedido */}
+        {/* Resumo do Pedido */}
+        <Animated.View
+          style={{ opacity: fadeAnim, transform: [{ translateY: translateAnim }] }}
+        >
           <View style={styles.orderItemsSection}>
             <Text style={styles.orderItemsTitle}>Resumo do pedido</Text>
             {orderItems.map((item) => (
@@ -258,8 +302,12 @@ export default function FinishOrder() {
               />
             ))}
           </View>
+        </Animated.View>
 
-          {/* 4 Linhas de Informações */}
+        {/* 4 Linhas de Informações */}
+        <Animated.View
+          style={{ opacity: fadeAnim, transform: [{ translateY: translateAnim }] }}
+        >
           <View style={styles.summaryContainer}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryText}>Subtotal:</Text>
@@ -286,7 +334,7 @@ export default function FinishOrder() {
           >
             <Text style={styles.placeOrderButtonText}>Finalizar Pedido</Text>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
       </ScrollView>
 
       <AddressModal
