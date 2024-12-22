@@ -53,13 +53,13 @@ export default function UserRegistration() {
         // Animação de fade e slide logo após o componente ser montado
         Animated.timing(fadeAnim, {
           toValue: 1, // Alvo da opacidade
-          duration: 1000, // Duração da animação
+          duration: 600, // Duração da animação
           useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
         }).start();
     
         Animated.timing(slideAnim, {
           toValue: 0, // Alvo da posição
-          duration: 700, // Duração da animação
+          duration: 600, // Duração da animação
           useNativeDriver: true, // Utiliza a aceleração de hardware para uma animação mais fluida
         }).start();
       }, []); // Apenas uma vez quando o componente for montado

@@ -50,13 +50,13 @@ export default function ProductDetails() {
     // Animação de fade e translação para os componentes após o carregamento inicial
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 800,
+      duration: 600,
       useNativeDriver: true,
     }).start();
 
     Animated.timing(translateAnim, {
       toValue: 0,
-      duration: 800,
+      duration: 600,
       useNativeDriver: true,
     }).start();
   }, [product.idProduct]);

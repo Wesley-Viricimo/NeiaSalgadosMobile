@@ -88,13 +88,13 @@ export default function Home() {
     // Inicia a animação de fade e deslizamento para os componentes
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 500,
+      duration: 600,
       useNativeDriver: true,
     }).start();
 
     Animated.timing(translateAnim, {
       toValue: 0,
-      duration: 500,
+      duration: 600,
       useNativeDriver: true,
     }).start();
 

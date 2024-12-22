@@ -66,13 +66,13 @@ export default function FinishOrder() {
     // Animações de fade-in e translação
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 800,
+      duration: 600,
       useNativeDriver: true,
     }).start();
 
     Animated.timing(translateAnim, {
       toValue: 0,
-      duration: 800,
+      duration: 600,
       useNativeDriver: true,
     }).start();
   }, []);
