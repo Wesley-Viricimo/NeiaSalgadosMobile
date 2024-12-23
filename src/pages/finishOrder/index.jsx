@@ -142,7 +142,11 @@ export default function FinishOrder() {
   const handleFinishOrder = async () => {
     setIsLoading(true); // Ativa o estado de carregamento
     try {
-      // Simulação de uma requisição ou operação de finalização do pedido
+      console.log("paymentMethod", selectedPaymentMethod);
+      console.log("typeOfDelivery", selectedOption);
+      console.log("address", selectedAddress);
+      console.log("orderItems", orderItems);
+      console.log("additionals", selectedAdditionals);
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simula um delay de 2 segundos
       Alert.alert("Pedido Realizado", "Seu pedido foi realizado com sucesso!");
     } catch (error) {
@@ -172,7 +176,7 @@ export default function FinishOrder() {
           style={[styles.tab, selectedOption === 0 && styles.selectedTab]} // Estilização tipo entrega
           onPress={() => setSelectedOption(0)}  // 0 = entrega
         >
-          <Text style={[styles.tabText, selectedOption === 0 && styles.selectedTabText]}> // Estilização tipo entrega
+          <Text style={[styles.tabText, selectedOption === 0 && styles.selectedTabText]}>
             Entrega
           </Text>
         </TouchableOpacity>
@@ -180,7 +184,7 @@ export default function FinishOrder() {
           style={[styles.tab, selectedOption === 1 && styles.selectedTab]} // Estilização tipo retira
           onPress={() => setSelectedOption(1)} // 1 = retirada
         >
-          <Text style={[styles.tabText, selectedOption === 1 && styles.selectedTabText]}> // Estilização tipo retira
+          <Text style={[styles.tabText, selectedOption === 1 && styles.selectedTabText]}>
             Retirada
           </Text>
         </TouchableOpacity>
@@ -258,42 +262,46 @@ export default function FinishOrder() {
 
             <View style={styles.radioGroupContainer}>
               <TouchableOpacity
-                style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
+                style={[styles.radioOption, selectedPaymentMethod === 0 && styles.selectedPaymentOption]} //Estilização para dinheiro
                 onPress={() => setSelectedPaymentMethod(0)} // 0 = dinheiro
               >
-                <Icon name="attach-money" size={24} color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"} />
+                <Icon name="attach-money" size={24} color={selectedPaymentMethod === 0 ? "#FF4500" : "#000"} />
                 <Text style={styles.radioOptionText}>Dinheiro</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
+                style={[styles.radioOption, selectedPaymentMethod === 2 && styles.selectedPaymentOption]} //Estilização para cartão
                 onPress={() => setSelectedPaymentMethod(2)} // 2 = cartão
               >
-                <Icon name="credit-card" size={24} color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"} />
+                <Icon name="credit-card" size={24} color={selectedPaymentMethod === 2 ? "#FF4500" : "#000"} />
                 <Text style={styles.radioOptionText}>Cartão</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
+                style={[styles.radioOption, selectedPaymentMethod === 1 && styles.selectedPaymentOption]} //Estilização para pix
                 onPress={() => setSelectedPaymentMethod(1)} // 1 = pix
               >
-                <Icon name="account-balance-wallet" size={24} color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"} />
+                <Icon name="account-balance-wallet" size={24} color={selectedPaymentMethod === 1 ? "#FF4500" : "#000"} />
                 <Text style={styles.radioOptionText}>Pix</Text>
               </TouchableOpacity>
             </View>
 
-            {/* Seção de Adicionais */}
-            <Text style={styles.choosePaymentText}>Adicionais</Text>
+            {/* Verifica se existem adicionais antes de renderizar o texto e os itens */}
+            {additionals.length > 0 && (
+              <>
+                <Text style={styles.choosePaymentText}>Adicionais</Text>
+                {additionals.map((additional) => (
+                  <AdditionalOption
+                    key={additional.idAdditional}
+                    title={additional.description}
+                    price={additional.price}
+                    checked={selectedAdditionals[additional.idAdditional] || false}
+                    onPress={() => handleAdditionalSelection(additional.idAdditional)}
+                  />
+                ))}
+              </>
+            )}
 
-            {additionals.map((additional) => (
-              <AdditionalOption
-                key={additional.idAdditional}
-                title={additional.description}
-                price={additional.price}
-                checked={selectedAdditionals[additional.idAdditional] || false}
-                onPress={() => handleAdditionalSelection(additional.idAdditional)}
-              />
-            ))}
           </View>
         </Animated.View>
 
