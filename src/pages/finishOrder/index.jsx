@@ -18,10 +18,11 @@ import AdditionalOption from "../../components/additionalOption";
 import { OrderService } from "../../api/service/OrderService";
 import OrderItemCard from "../../components/orderItemCard/index";
 import { getAllOrderItem, removeOrderItemById } from "../../database/orderItemService";
+import LoadingButton from "../../components/loadingButton";
 
 export default function FinishOrder() {
   const navigation = useNavigation();
-  const [selectedOption, setSelectedOption] = useState("entrega");
+  const [selectedOption, setSelectedOption] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [paymentOption, setPaymentOption] = useState("pagarEntrega");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
@@ -31,6 +32,7 @@ export default function FinishOrder() {
   const [subtotal, setSubtotal] = useState(0);
   const [additionalTotal, setAdditionalTotal] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Estado para controle do carregamento
 
   // Animações
   const fadeAnim = useState(new Animated.Value(0))[0]; // Opacidade (de 0 a 1)
@@ -137,8 +139,17 @@ export default function FinishOrder() {
   const total = subtotal + additionalTotal + deliveryFee; // Cálculo do valor total
 
   // Função para finalizar o pedido
-  const handleFinishOrder = () => {
-    Alert.alert("Pedido Realizado", "Seu pedido foi realizado com sucesso!");
+  const handleFinishOrder = async () => {
+    setIsLoading(true); // Ativa o estado de carregamento
+    try {
+      // Simulação de uma requisição ou operação de finalização do pedido
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Simula um delay de 2 segundos
+      Alert.alert("Pedido Realizado", "Seu pedido foi realizado com sucesso!");
+    } catch (error) {
+      Alert.alert("Erro", "Ocorreu um erro ao finalizar o pedido.");
+    } finally {
+      setIsLoading(false); // Desativa o estado de carregamento após a operação
+    }
   };
 
   return (
@@ -158,18 +169,18 @@ export default function FinishOrder() {
         style={[styles.tabContainer, { opacity: fadeAnim, transform: [{ translateY: translateAnim }] }]}
       >
         <TouchableOpacity
-          style={[styles.tab, selectedOption === "entrega" && styles.selectedTab]}
-          onPress={() => setSelectedOption("entrega")}
+          style={[styles.tab, selectedOption === 0 && styles.selectedTab]} // Estilização tipo entrega
+          onPress={() => setSelectedOption(0)}  // 0 = entrega
         >
-          <Text style={[styles.tabText, selectedOption === "entrega" && styles.selectedTabText]}>
+          <Text style={[styles.tabText, selectedOption === 0 && styles.selectedTabText]}> // Estilização tipo entrega
             Entrega
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, selectedOption === "retirada" && styles.selectedTab]}
-          onPress={() => setSelectedOption("retirada")}
+          style={[styles.tab, selectedOption === 1 && styles.selectedTab]} // Estilização tipo retira
+          onPress={() => setSelectedOption(1)} // 1 = retirada
         >
-          <Text style={[styles.tabText, selectedOption === "retirada" && styles.selectedTabText]}>
+          <Text style={[styles.tabText, selectedOption === 1 && styles.selectedTabText]}> // Estilização tipo retira
             Retirada
           </Text>
         </TouchableOpacity>
@@ -177,7 +188,7 @@ export default function FinishOrder() {
 
       <ScrollView style={styles.scrollContent} contentContainerStyle={styles.scrollContentContainer}>
         {/* Se opção for entrega, exibe botão de seleção de endereço */}
-        {selectedOption === "entrega" && (
+        {selectedOption === 0 && (
           <Animated.View
             style={{
               opacity: fadeAnim,
@@ -198,7 +209,7 @@ export default function FinishOrder() {
         )}
 
         {/* Exibindo informações do endereço de retirada */}
-        {selectedOption === "retirada" && (
+        {selectedOption === 1 && (
           <View style={styles.pickupAddressContainer}>
             <View style={styles.iconContainer}>
               <Icon name="place" size={24} color="#000" />
@@ -218,10 +229,10 @@ export default function FinishOrder() {
         >
           <View style={styles.timeContainer}>
             <Text style={styles.timeText}>
-              {selectedOption === "entrega" ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
+              {selectedOption === 0 ? "Tempo estimado para entrega:" : "Tempo estimado para retirada:"}
             </Text>
             <Text style={styles.timeValue}>
-              {selectedOption === "entrega" ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
+              {selectedOption === 0 ? "Hoje, de 50 a 60 min" : "Hoje, de 40 a 50 min"}
             </Text>
           </View>
         </Animated.View>
@@ -238,7 +249,7 @@ export default function FinishOrder() {
 
             <TouchableOpacity onPress={() => setPaymentOption("pagarEntrega")}>
               <Text style={styles.paymentOptionText}>
-                {selectedOption === "entrega" ? "Pagar na entrega" : "Pagar na retirada"}
+                {selectedOption === 0 ? "Pagar na entrega" : "Pagar na retirada"}
               </Text>
               {paymentOption === "pagarEntrega" && <View style={styles.selectedPaymentOptionLine} />}
             </TouchableOpacity>
@@ -248,7 +259,7 @@ export default function FinishOrder() {
             <View style={styles.radioGroupContainer}>
               <TouchableOpacity
                 style={[styles.radioOption, selectedPaymentMethod === "dinheiro" && styles.selectedPaymentOption]}
-                onPress={() => setSelectedPaymentMethod("dinheiro")}
+                onPress={() => setSelectedPaymentMethod(0)} // 0 = dinheiro
               >
                 <Icon name="attach-money" size={24} color={selectedPaymentMethod === "dinheiro" ? "#FF4500" : "#000"} />
                 <Text style={styles.radioOptionText}>Dinheiro</Text>
@@ -256,7 +267,7 @@ export default function FinishOrder() {
 
               <TouchableOpacity
                 style={[styles.radioOption, selectedPaymentMethod === "cartao" && styles.selectedPaymentOption]}
-                onPress={() => setSelectedPaymentMethod("cartao")}
+                onPress={() => setSelectedPaymentMethod(2)} // 2 = cartão
               >
                 <Icon name="credit-card" size={24} color={selectedPaymentMethod === "cartao" ? "#FF4500" : "#000"} />
                 <Text style={styles.radioOptionText}>Cartão</Text>
@@ -264,7 +275,7 @@ export default function FinishOrder() {
 
               <TouchableOpacity
                 style={[styles.radioOption, selectedPaymentMethod === "pix" && styles.selectedPaymentOption]}
-                onPress={() => setSelectedPaymentMethod("pix")}
+                onPress={() => setSelectedPaymentMethod(1)} // 1 = pix
               >
                 <Icon name="account-balance-wallet" size={24} color={selectedPaymentMethod === "pix" ? "#FF4500" : "#000"} />
                 <Text style={styles.radioOptionText}>Pix</Text>
@@ -328,12 +339,12 @@ export default function FinishOrder() {
           </View>
 
           {/* Botão de Finalizar Pedido */}
-          <TouchableOpacity
-            style={styles.placeOrderButton}
+          <LoadingButton
+            isLoading={isLoading} // Passa o estado isLoading para o botão
             onPress={handleFinishOrder}
-          >
-            <Text style={styles.placeOrderButtonText}>Finalizar Pedido</Text>
-          </TouchableOpacity>
+            text={"Finalizar Pedido"}
+          />
+
         </Animated.View>
       </ScrollView>
 
