@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Alert
-} from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import Loading from '../../components/Loading';
 import LoginService from '../../api/service/LoginService';
 import LoginModel from '../../model/LoginModel';

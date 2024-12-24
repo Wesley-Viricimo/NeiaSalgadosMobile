@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Animated } from "react-native";
+import { Text, TouchableOpacity, Animated } from "react-native";
 import { styles } from "./styles";
 import OptionCard from "../../../components/optionCard";
 import { useNavigation } from "@react-navigation/native";

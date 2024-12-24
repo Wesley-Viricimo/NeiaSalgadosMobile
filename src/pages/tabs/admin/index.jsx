@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Animated } from "react-native";
+import { Text, Animated } from "react-native";
 import OptionCard from "../../../components/optionCard/index";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";

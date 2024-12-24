@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  ScrollView,
-  ToastAndroid,
-  Animated,
-} from "react-native";
+import { View, Text, Image, TextInput, ScrollView, ToastAndroid, Animated } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import ProductFooter from "../../components/productFooter";
 import { styles } from "./styles";
