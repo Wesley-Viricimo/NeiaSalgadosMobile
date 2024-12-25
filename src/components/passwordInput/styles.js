@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
     marginVertical: spacing.medium,
   },
   label: {
-    fontSize: 12,
+    fontSize: 16,
     color: colors.placeholder,
     marginBottom: 4,
     fontFamily: 'Roboto-Regular',
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 15,
     color: colors.text,
     fontFamily: 'Roboto-Regular',
   },
