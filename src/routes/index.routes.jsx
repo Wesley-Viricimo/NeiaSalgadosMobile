@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import Login from '../pages/login';
 import BottomRoutes from './bottom.routes';
-import UserStorage from '../storage/user.storage';
+import UserStorage from '../service/userStorage.service';
 import { View, StyleSheet } from 'react-native';
 import * as Animatable from 'react-native-animatable'; // Importa a biblioteca de animações
 import UserRegistration from '../pages/registrationScreens/userRegistration';

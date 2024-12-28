@@ -4,7 +4,7 @@ import Loading from '../../components/Loading';
 import LoginService from '../../api/service/LoginService';
 import LoginModel from '../../model/LoginModel';
 import LoginResponse from '../../api/response/LoginResponse';
-import UserStorage from '../../storage/user.storage';
+import UserStorage from '../../service/userStorage.service';
 import { styles } from './styles';
 import { useNavigation } from '@react-navigation/native';
 import PasswordInput from '../../components/passwordInput';

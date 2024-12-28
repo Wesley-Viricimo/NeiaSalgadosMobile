@@ -1,4 +1,4 @@
-import UserStorage from '../../storage/user.storage';
+import UserStorage from '../../service/userStorage.service';
 
 class UserIdService {
   // Variável estática para armazenar o id em memória

@@ -1,4 +1,4 @@
-import UserStorage from '../../storage/user.storage';
+import UserStorage from '../../service/userStorage.service';
 
 class TokenService {
   // Variável estática para armazenar o token em memória

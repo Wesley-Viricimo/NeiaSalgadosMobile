@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, Text, View, Alert, Animated } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import OptionItem from "../../../components/optionItem/index";
-import UserStorage from "../../../storage/user.storage";
+import UserStorage from "../../../service/userStorage.service";
 import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TokenService from "../../../api/service/TokenService";

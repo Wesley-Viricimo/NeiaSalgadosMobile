@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Animated } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import UserStorage from "../storage/user.storage";
+import UserStorage from "../service/userStorage.service";
 import Home from "../pages/tabs/home";
 import Orders from "../pages/tabs/orders";
 import Profile from "../pages/tabs/profile";

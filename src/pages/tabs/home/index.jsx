@@ -10,7 +10,7 @@ import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import TokenService from "../../../api/service/TokenService";
-import UserStorage from "../../../storage/user.storage";
+import UserStorage from "../../../service/userStorage.service";
 
 export default function Home() {
   const navigation = useNavigation();
