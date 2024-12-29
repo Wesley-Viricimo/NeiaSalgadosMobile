@@ -13,12 +13,29 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.neiasalgados.mobile",
+      "buildNumber": "1",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.XXXX"
+        }
+      },
+      "pushNotification": {
+        "enabled": true
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.neiasalgados.mobile",
+      "config": {
+        "googleServicesFile": "./google-services.json"
+      },
+      "pushNotification": {
+        "enabled": true
       }
     },
     "web": {
@@ -28,7 +45,14 @@
       "API_URL": "http://10.0.2.2:3000/api/v1"
     },
     "plugins": [
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#000000"
+        }
+      ]
     ]
   }
 }
