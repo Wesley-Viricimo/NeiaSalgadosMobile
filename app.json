@@ -4,55 +4,51 @@
     "slug": "NeiaSalgadosMobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.neiasalgados.mobile",
-      "buildNumber": "1",
-      "config": {
-        "googleSignIn": {
-          "reservedClientId": "com.googleusercontent.apps.XXXX"
-        }
-      },
-      "pushNotification": {
-        "enabled": true
-      }
+      "bundleIdentifier": "com.neiasalgados.mobile"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.neiasalgados.mobile",
-      "config": {
-        "googleServicesFile": "./google-services.json"
-      },
-      "pushNotification": {
-        "enabled": true
-      }
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "API_URL": "http://10.0.2.2:3000/api/v1"
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-sqlite",
+      "expo-router",
       [
-        "expo-notifications",
+        "expo-splash-screen",
         {
-          "icon": "./assets/notification-icon.png",
-          "color": "#000000"
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
         }
       ]
-    ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "API_URL": "http://10.0.2.2:3000/api/v1",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a5a4fc8e-c7a2-4803-a78e-e9158849db75"
+      }
+    },
+    "owner": "wesley.viricimo"
   }
 }
