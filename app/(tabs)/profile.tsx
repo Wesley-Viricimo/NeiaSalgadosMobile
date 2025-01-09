@@ -78,14 +78,14 @@ const Profile = () => {
       id: "2",
       title: "Cupons",
       subtitle: "Cupons de desconto",
-      iconName: "local-offer",
+      iconName: "pricetag",
       onPress: () => alert("Cupons"),
     },
     {
       id: "3",
       title: "Endereços",
       subtitle: "Endereços cadastrados",
-      iconName: "location-on",
+      iconName: "location",
       onPress: () => alert("Endereços"),
     },
     {
@@ -107,7 +107,7 @@ const Profile = () => {
     {
       id: "6",
       title: "Sair",
-      iconName: "logout",
+      iconName: "exit",
       onPress: handleLogout,
     },
   ];
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     },
     header: {
       paddingHorizontal: 16,
-      paddingVertical: 25,
+      paddingVertical: 10,
       backgroundColor: "#fff",
     },
     greeting: {
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
       paddingBottom: 60, // Adiciona espaço para o footer
     },
     footer: {
-      bottom: -115, // Encostar na parte inferior
+      bottom: -120, // Encostar na parte inferior
       flexDirection: "column",
       justifyContent: "flex-end",
       backgroundColor: "#fff",

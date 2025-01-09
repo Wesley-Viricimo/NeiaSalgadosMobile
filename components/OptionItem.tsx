@@ -20,7 +20,7 @@ const OptionItem = ({ title, subtitle, iconName, onPress, showSubtitle = true }:
         <Text style={styles.title}>{title}</Text>
         {showSubtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       </View>
-      <Ionicons name={"chevron-right" as keyof typeof Ionicons.glyphMap} size={24} color="#ccc" />
+      <Ionicons name="chevron-forward" size={24} color="#ccc" />
     </TouchableOpacity>
   );
 };

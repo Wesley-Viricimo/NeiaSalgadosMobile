@@ -55,17 +55,17 @@ const Admin = () => {
         ]}
       >
         <OptionCard
-          iconName="pending-actions"
+          iconName="hourglass"
           title="Pedidos Pendentes"
           onPress={handlePendingOrders}
         />
         <OptionCard
-          iconName="list-alt"
+          iconName="list"
           title="Todos os Pedidos"
           onPress={handleAllOrders}
         />
         <OptionCard
-          iconName="inventory"
+          iconName="cube"
           title="Controle de Produtos"
           onPress={handleProductControl}
         />
