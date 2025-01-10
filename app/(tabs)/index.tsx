@@ -4,7 +4,7 @@ import React from "react";
 const Home = () => {
   return (
     <SafeAreaView>
-      <Text>Orders</Text>
+      <Text>Aqui é a home page</Text>
     </SafeAreaView>
   );
 };
