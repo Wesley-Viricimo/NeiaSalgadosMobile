@@ -33,6 +33,11 @@ export default function Home() {
   const [fadeAnim] = useState(new Animated.Value(0)); // Opacidade (de 0 a 1)
   const [translateAnim] = useState(new Animated.Value(30)); // Deslocamento para baixo (de 30 para 0)
 
+  useEffect(() => {
+    // Chama o loadProducts sempre que a tela de Home é exibida.
+    loadProducts(debouncedInput, 1);
+  }, [debouncedInput]);
+
   const loadProducts = async (searchText: string = "", pageNum: number = 1) => {
     if (loading || (pageNum > 1 && !hasMore)) return;
     setLoading(true);
@@ -48,8 +53,6 @@ export default function Home() {
         return;
       }
   
-      console.log('Data received:', data);
-  
       // Verifique se `data` é um array e se tem elementos
       if (Array.isArray(data) && data.length > 0) {
         const updatedSoldProducts = { ...soldProducts };
@@ -57,14 +60,12 @@ export default function Home() {
         // Atualizar quantidade de produtos vendidos
         await Promise.all(
           data.map(async (product: Product) => {
-            console.log('product', product);
             const orderItem: any = await getOrderItemById(product.idProduct);
             updatedSoldProducts[product.idProduct] = orderItem?.quantity || 0;
           })
         );
   
         setSoldProducts(updatedSoldProducts);
-        console.log('Setting products:', data);
         setProducts((prev) =>
           pageNum === 1 ? data : [...prev, ...data]
         );
@@ -117,20 +118,15 @@ export default function Home() {
   };
 
   const handleCardPress = (product: Product) => {
-    router.navigate("/productDetails", {
-      product,
-      soldQuantity: soldProducts[product.idProduct] || 0,
-      onAddToCart: (id: number, quantity: number) => {
-        if (quantity > 0) {
-          setSoldProducts((prev) => ({ ...prev, [id]: quantity }));
-        } else {
-          setSoldProducts((prev) => {
-            const updated = { ...prev };
-            delete updated[id];
-            return updated;
-          });
-        }
-      },
+    router.push({
+      pathname: "/productDetails", // Caminho para a tela de detalhes
+      params: { 
+        idProduct: product.idProduct, 
+        title: product.title, 
+        description: product.description, 
+        price: product.price, 
+        urlImage: product.urlImage
+      }
     });
   };
 

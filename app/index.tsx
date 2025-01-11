@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import UserStorage from "../service/UserStorageService"; // Supondo que você tenha o caminho correto
 import { ActivityIndicator, View } from "react-native";
 import { useNavigation } from "@react-navigation/native"; // Importando o hook de navegação
+import LoadingAnimation from "@/components/LoadingAnimation";
 
 export default function Index() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function Index() {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+        <LoadingAnimation />
       </View>
     ); // Exibe um carregamento enquanto verifica os dados do usuário
   }

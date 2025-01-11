@@ -5,3 +5,7 @@ export interface Product {
     price: number;
     urlImage: string;
 }
+
+export type ProductDetailsParams = {
+    product: Product
+};

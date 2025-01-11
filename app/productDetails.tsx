@@ -1,31 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, TextInput, ScrollView, Animated, StyleSheet, ToastAndroid } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
 import ProductDetailsFooter from "../components/ProductDetailsFooter";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getOrderItemById, removeOrderItemById, upsertOrderItem } from "../database/orderItemService";
 import LoadingAnimation from "../components/LoadingAnimation";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { ProductDetailsParams } from "@/types/ProductTypes";
+import { useRouter } from "expo-router";
 
-// types.ts ou em ProductDetails.tsx
-type RootStackParamList = {
-  ProductDetails: {
-    product: {
-      idProduct: number;
-      title: string;
-      description: string;
-      price: number;
-      urlImage: string;
-    };
-    soldQuantity: number;
-    onAddToCart: (idProduct: number, quantity: number) => void;
-  };
-};
-
-type ProductDetailsRouteProp = RouteProp<RootStackParamList, "ProductDetails">;
-
-const ProductDetails: React.FC = () => {
+type ProductDetailsRouteProp = RouteProp<ProductDetailsParams, "product">;
+  
+export default function ProductDetails () {
   const [quantity, setQuantity] = useState<number>(1);
   const [observation, setObservation] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -34,15 +20,16 @@ const ProductDetails: React.FC = () => {
   const [translateAnim] = useState(new Animated.Value(30)); // Deslocamento (de 30 para 0)
 
   const route = useRoute<ProductDetailsRouteProp>();
-  const navigation = useNavigation();
-  const { product, soldQuantity, onAddToCart } = route.params;
+  const router = useRouter();
+
+  const { idProduct, title, description, price, urlImage } = route.params;
 
   useEffect(() => {
     const fetchProductData = async () => {
       try {
-        const item: any = await getOrderItemById(product.idProduct);
+        const item: any = await getOrderItemById(idProduct);
         if (item) {
-          setQuantity(item.quantity || soldQuantity); // Sincroniza com soldQuantity
+          setQuantity(item.quantity); // Sincroniza com soldQuantity
           setObservation(item.observation || "");
           setIsInCart(true); // Produto já está no carrinho
         } else {
@@ -68,22 +55,19 @@ const ProductDetails: React.FC = () => {
       duration: 600,
       useNativeDriver: true,
     }).start();
-  }, [product.idProduct]);
+  }, [idProduct]);
 
   const handleAddToCart = async () => {
     try {
       await upsertOrderItem(
-        product.idProduct,
-        product.title,
+        idProduct,
+        title,
         quantity,
-        product.price,
+        price,
         observation
       );
-      onAddToCart(product.idProduct, quantity); // Atualiza estado de produtos vendidos na Home
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
-      setTimeout(() => {
-        navigation.goBack();
-      }, 1200);
+      router.replace('/(tabs)');
     } catch (error) {
       ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);
       console.error(error);
@@ -92,12 +76,9 @@ const ProductDetails: React.FC = () => {
 
   const handleRemoveFromCart = async () => {
     try {
-      await removeOrderItemById(product.idProduct);
-      onAddToCart(product.idProduct, 0);
+      await removeOrderItemById(idProduct);
       ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
-      setTimeout(() => {
-        navigation.goBack();
-      }, 1200);
+      router.replace('/(tabs)');
     } catch (error) {
       ToastAndroid.show("Erro ao remover o produto!", ToastAndroid.LONG);
       console.error(error);
@@ -117,7 +98,7 @@ const ProductDetails: React.FC = () => {
             transform: [{ translateY: translateAnim }],
           }}
         >
-          <Image source={{ uri: product.urlImage }} style={styles.image} />
+          <Image source={{ uri: urlImage }} style={styles.image} />
         </Animated.View>
 
         <Animated.View
@@ -126,7 +107,7 @@ const ProductDetails: React.FC = () => {
             transform: [{ translateY: translateAnim }],
           }}
         >
-          <Text style={styles.title}>{product.title}</Text>
+          <Text style={styles.title}>{title}</Text>
         </Animated.View>
 
         <Animated.View
@@ -135,7 +116,7 @@ const ProductDetails: React.FC = () => {
             transform: [{ translateY: translateAnim }],
           }}
         >
-          <Text style={styles.description}>{product.description}</Text>
+          <Text style={styles.description}>{description}</Text>
         </Animated.View>
 
         <Animated.View
@@ -173,7 +154,7 @@ const ProductDetails: React.FC = () => {
         }}
       >
         <ProductDetailsFooter
-          price={product.price}
+          price={price}
           quantity={quantity}
           setQuantity={setQuantity}
           onAddToCart={handleAddToCart}
@@ -248,5 +229,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-export default ProductDetails;
