@@ -1,14 +1,9 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet, ImageSourcePropType } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Product } from "@/types/ProductTypes";
 
 // Definindo o tipo para o objeto `product`
-interface Product {
-  title?: string;
-  description?: string;
-  price?: number;
-  urlImage?: string;
-}
 
 // Definindo o tipo das propriedades do componente
 interface ProductCardProps {

@@ -6,9 +6,9 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import * as Notifications from "expo-notifications";
-
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { NotificationProvider } from "@/context/NotificationContext";
+import { initializeDatabase } from "@/database/database";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -28,6 +28,11 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    const setupDatabase = async () => {
+      await initializeDatabase();
+    };
+    setupDatabase();
+
     if (loaded) {
       SplashScreen.hideAsync();
     }
@@ -43,7 +48,8 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
+          <Stack.Screen name="productDetails" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>
