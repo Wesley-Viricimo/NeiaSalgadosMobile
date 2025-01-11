@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function EmptyListMessage({ message }) {
+export default function EmptyListMessage({ message }: { message: string }) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{message}</Text>
