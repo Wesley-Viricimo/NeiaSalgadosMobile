@@ -55,7 +55,7 @@ export default function FinishOrderFooter() {
             {/* Botão "Ver Carrinho" com o texto dentro de um componente Text */}
             <TouchableOpacity 
                 style={styles.cartButton}
-                onPress={() => router.navigate("FinishOrder")}> 
+                onPress={() => router.navigate("/finishOrder")}> 
                 <Text style={styles.cartButtonText}>Ver Carrinho</Text>
             </TouchableOpacity>
         </View>
