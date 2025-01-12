@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing } from '@/global/styles';
 
 interface CustomInputProps {
-    icon: string;
+    icon?: string;
     label: string;
     value: string;
     onChangeText: (text: string) => void;

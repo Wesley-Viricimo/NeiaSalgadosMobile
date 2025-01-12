@@ -391,7 +391,7 @@ export default function FinishOrder() {
           setModalVisible(false);
         }}
         onAddAddress={() => {
-        //   router.navigate("AddressRegistration");
+          router.push("/addressRegistration");
           setModalVisible(false);
         }}
       />

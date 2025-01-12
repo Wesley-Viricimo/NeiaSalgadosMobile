@@ -37,7 +37,7 @@ export class AddressService {
         }
     }
 
-    static async fetchAddressByCep(cep: number) {
+    static async fetchAddressByCep(cep: string) {
         try {
             const token = await TokenService.getToken();
 
