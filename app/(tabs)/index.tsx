@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 import TokenService from "../../service/TokenService";
 import UserStorage from "../../service/UserStorageService";
 import { Product } from "@/types/ProductTypes";
+import { eventEmitter } from "@/utils/eventEmitter";
 
 // Definindo tipos para os dados
 interface SoldProducts {
@@ -34,8 +35,13 @@ export default function Home() {
   const [translateAnim] = useState(new Animated.Value(30)); // Deslocamento para baixo (de 30 para 0)
 
   useEffect(() => {
-    // Chama o loadProducts sempre que a tela de Home é exibida.
-    loadProducts(debouncedInput, 1);
+    const listener = () => {
+      loadProducts(debouncedInput, 1);
+    };
+    eventEmitter.on('productUpdated', listener);
+    return () => {
+      eventEmitter.off('productUpdated', listener); 
+    };
   }, [debouncedInput]);
 
   const loadProducts = async (searchText: string = "", pageNum: number = 1) => {
@@ -84,7 +90,7 @@ export default function Home() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedInput(inputValue);
-    }, 300);
+    }, 250);
     return () => clearTimeout(handler);
   }, [inputValue]);
 

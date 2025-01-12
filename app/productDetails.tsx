@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, TextInput, ScrollView, Animated, StyleSheet, ToastAndroid } from "react-native";
+import { View, Text, Image, TextInput, ScrollView, StyleSheet, ToastAndroid } from "react-native";
 import ProductDetailsFooter from "../components/ProductDetailsFooter";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,16 +8,15 @@ import LoadingAnimation from "../components/LoadingAnimation";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { ProductDetailsParams } from "@/types/ProductTypes";
 import { useRouter } from "expo-router";
+import { eventEmitter } from "@/utils/eventEmitter";
 
 type ProductDetailsRouteProp = RouteProp<ProductDetailsParams, "product">;
-  
+
 export default function ProductDetails () {
   const [quantity, setQuantity] = useState<number>(1);
   const [observation, setObservation] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [isInCart, setIsInCart] = useState<boolean>(false);
-  const [fadeAnim] = useState(new Animated.Value(0)); // Opacidade (de 0 a 1)
-  const [translateAnim] = useState(new Animated.Value(30)); // Deslocamento (de 30 para 0)
 
   const route = useRoute<ProductDetailsRouteProp>();
   const router = useRouter();
@@ -42,32 +41,14 @@ export default function ProductDetails () {
       }
     };
     fetchProductData();
-
-    // Animação de fade e translação para os componentes após o carregamento inicial
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-
-    Animated.timing(translateAnim, {
-      toValue: 0,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
   }, [idProduct]);
 
   const handleAddToCart = async () => {
     try {
-      await upsertOrderItem(
-        idProduct,
-        title,
-        quantity,
-        price,
-        observation
-      );
+      await upsertOrderItem(idProduct, title, quantity, price, observation);
+      eventEmitter.emit("productUpdated");
       ToastAndroid.show("Produto adicionado ao carrinho!", ToastAndroid.SHORT);
-      router.replace('/(tabs)');
+      router.back();
     } catch (error) {
       ToastAndroid.show("Erro ao adicionar ao carrinho!", ToastAndroid.LONG);
       console.error(error);
@@ -77,8 +58,9 @@ export default function ProductDetails () {
   const handleRemoveFromCart = async () => {
     try {
       await removeOrderItemById(idProduct);
+      eventEmitter.emit("productUpdated");
       ToastAndroid.show("Produto removido do carrinho!", ToastAndroid.SHORT);
-      router.replace('/(tabs)');
+      router.back();
     } catch (error) {
       ToastAndroid.show("Erro ao remover o produto!", ToastAndroid.LONG);
       console.error(error);
@@ -92,76 +74,39 @@ export default function ProductDetails () {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Animated.View
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: translateAnim }],
-          }}
-        >
-          <Image source={{ uri: urlImage }} style={styles.image} />
-        </Animated.View>
+        <Image source={{ uri: urlImage }} style={styles.image} />
 
-        <Animated.View
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: translateAnim }],
-          }}
-        >
-          <Text style={styles.title}>{title}</Text>
-        </Animated.View>
+        <Text style={styles.title}>{title}</Text>
 
-        <Animated.View
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: translateAnim }],
-          }}
-        >
-          <Text style={styles.description}>{description}</Text>
-        </Animated.View>
+        <Text style={styles.description}>{description}</Text>
 
-        <Animated.View
-          style={{
-            opacity: fadeAnim,
-            transform: [{ translateY: translateAnim }],
-          }}
-        >
-          <View style={styles.observationContainer}>
-            <View style={styles.label}>
-              <View style={styles.iconBackground}>
-                <Ionicons name="chatbubble" size={15} color="#fff" />
-              </View>
-              <Text style={styles.labelText}>Alguma observação?</Text>
-              <Text
-                style={styles.charCount}
-              >{`${observation.length}/140`}</Text>
+        <View style={styles.observationContainer}>
+          <View style={styles.label}>
+            <View style={styles.iconBackground}>
+              <Ionicons name="chatbubble" size={15} color="#fff" />
             </View>
-            <TextInput
-              style={styles.observationInput}
-              multiline
-              maxLength={140}
-              placeholder="Ex: tirar cebola, maionese à parte etc."
-              value={observation}
-              onChangeText={(text) => setObservation(text)}
-            />
+            <Text style={styles.labelText}>Alguma observação?</Text>
+            <Text style={styles.charCount}>{`${observation.length}/140`}</Text>
           </View>
-        </Animated.View>
+          <TextInput
+            style={styles.observationInput}
+            multiline
+            maxLength={140}
+            placeholder="Ex: tirar cebola, maionese à parte etc."
+            value={observation}
+            onChangeText={(text) => setObservation(text)}
+          />
+        </View>
       </ScrollView>
 
-      <Animated.View
-        style={{
-          opacity: fadeAnim,
-          transform: [{ translateY: translateAnim }],
-        }}
-      >
-        <ProductDetailsFooter
-          price={price}
-          quantity={quantity}
-          setQuantity={setQuantity}
-          onAddToCart={handleAddToCart}
-          onPressClearIcon={handleRemoveFromCart}
-          isInCart={isInCart}
-        />
-      </Animated.View>
+      <ProductDetailsFooter
+        price={price}
+        quantity={quantity}
+        setQuantity={setQuantity}
+        onAddToCart={handleAddToCart}
+        onPressClearIcon={handleRemoveFromCart}
+        isInCart={isInCart}
+      />
     </SafeAreaView>
   );
 };

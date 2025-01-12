@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Text, Animated, StyleSheet } from "react-native";
+import { Text, Animated, StyleSheet, View } from "react-native";
 import OptionCard from "../../components/OptionCard";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
 
 const Admin = () => {
 
@@ -48,10 +47,9 @@ const Admin = () => {
         <Text style={styles.greeting}>Painel Administrativo</Text>
       </Animated.View>
 
-      <Animated.View
+      <View
         style={[
           styles.optionsContainer,
-          { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
         ]}
       >
         <OptionCard
@@ -74,7 +72,7 @@ const Admin = () => {
           title="Controle de Usuários"
           onPress={handleUserControl}
         />
-      </Animated.View>
+      </View>
     </SafeAreaView>
   );
 };
