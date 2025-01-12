@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, View, Alert, StyleSheet } from "react-native";
-import OptionItem from "../../components/OptionItem";
-import UserStorage from "../../service/UserStorageService";
+import OptionItem from "@/components/OptionItem";
+import UserStorage from "@/service/UserStorageService";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TokenService from "../../service/TokenService";
+import TokenService from "@/service/TokenService";
 
 interface Option {
   id: string;

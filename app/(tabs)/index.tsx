@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, ToastAndroid, Animated, StyleSheet } from "react-native";
-import SearchBar from "../../components/SearchBar";
-import ProductCard from "../../components/ProductCard";
-import LoadingAnimation from "../../components/LoadingAnimation";
-import EmptyListMessage from "../../components/EmptyListMessage";
-import ProductService from "../../api/service/ProductService";
-import { getOrderItemById } from "../../database/orderItemService";
+import SearchBar from "@/components/SearchBar";
+import ProductCard from "@/components/ProductCard";
+import LoadingAnimation from "@/components/LoadingAnimation";
+import EmptyListMessage from "@/components/EmptyListMessage";
+import ProductService from "@/api/service/ProductService";
+import { getOrderItemById } from "@/database/orderItemService";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import TokenService from "../../service/TokenService";
-import UserStorage from "../../service/UserStorageService";
+import TokenService from "@/service/TokenService";
+import UserStorage from "@/service/UserStorageService";
 import { Product } from "@/types/ProductTypes";
 import { eventEmitter } from "@/utils/eventEmitter";
 

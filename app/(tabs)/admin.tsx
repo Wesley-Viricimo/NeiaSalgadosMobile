@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text, Animated, StyleSheet, View } from "react-native";
-import OptionCard from "../../components/OptionCard";
+import OptionCard from "@/components/OptionCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Admin = () => {
