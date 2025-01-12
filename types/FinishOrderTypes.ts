@@ -21,4 +21,5 @@ export interface Address {
   road: string;
   number: string
   complement?: string;
+  type?: string;
 }

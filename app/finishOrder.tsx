@@ -11,13 +11,13 @@ import { getAllOrderItem, removeOrderItemById } from "@/database/orderItemServic
 import LoadingButton from "@/components/LoadingButton";
 import { useRouter } from "expo-router";
 import { eventEmitter } from "@/utils/eventEmitter";
-import { Additional, OrderItem } from "@/types/FinishOrderTypes";
+import { Additional, Address, OrderItem } from "@/types/FinishOrderTypes";
 
 export default function FinishOrder() {
   const router = useRouter();
 
-  const [selectedOption, setSelectedOption] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<number>(0);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [paymentOption, setPaymentOption] = useState("pagarEntrega");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [additionals, setAdditionals] = useState<Additional[]>([]);
@@ -25,7 +25,7 @@ export default function FinishOrder() {
   const [orderItems, setOrderItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [additionalTotal, setAdditionalTotal] = useState(0);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [isLoading, setIsLoading] = useState(false); // Estado para controle do carregamento
 
   useEffect(() => {
@@ -300,7 +300,7 @@ export default function FinishOrder() {
                   styles.radioOption,
                   selectedPaymentMethod === "1" && styles.selectedPaymentOption,
                 ]} //Estilização para pix
-                onPress={() => setSelectedPaymentMethod("")} // 1 = pix
+                onPress={() => setSelectedPaymentMethod("1")} // 1 = pix
               >
                 <Ionicons
                   name="accessibility"
@@ -386,7 +386,7 @@ export default function FinishOrder() {
       <AddressModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        onSelectAddress={(address) => {
+        onSelectAddress={(address: Address) => {
           setSelectedAddress(address);
           setModalVisible(false);
         }}

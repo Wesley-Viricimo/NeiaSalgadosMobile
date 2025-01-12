@@ -10,7 +10,7 @@ interface AddressModalProps {
     visible: boolean;
     onClose: () => void;
     onAddAddress: () => void;
-    onSelectAddress: (address: any) => void;
+    onSelectAddress: (address: Address) => void;
 }
 
 export default function AddressModal({ visible, onClose, onAddAddress, onSelectAddress }: AddressModalProps) {

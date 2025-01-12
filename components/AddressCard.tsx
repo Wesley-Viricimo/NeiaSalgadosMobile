@@ -2,17 +2,10 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet } from "react-native";
+import { Address } from "@/types/FinishOrderTypes";
 
 interface AddressCardProps {
-    address: {
-        type: string;
-        road: string;
-        number: string;
-        district: string;
-        city: string;
-        state: string;
-        complement?: string;
-    };
+    address: Address;
     isClickable: boolean;
     onSelect?: (address: any) => void;
 }
