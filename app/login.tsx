@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
-import Loading from "../components/Loading";
-import LoginService from "../api/service/LoginService";
-import LoginModel from "../model/LoginModel";
-import LoginResponse from "../api/response/LoginResponse";
-import UserStorageService from "../service/UserStorageService";
+import Loading from "@/components/Loading";
+import LoginService from "@/api/service/LoginService";
+import LoginModel from "@/model/LoginModel";
+import LoginResponse from "@/api/response/LoginResponse";
+import UserStorageService from "@/service/UserStorageService";
 import { useRouter } from "expo-router";
-import PasswordInput from "../components/PasswordInput";
-import CustomInput from "../components/CustomInput";
+import PasswordInput from "@/components/PasswordInput";
+import CustomInput from "@/components/CustomInput";
 import * as Notifications from "expo-notifications"; // Importar expo-notifications
 
 export default function Login() {

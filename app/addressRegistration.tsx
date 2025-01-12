@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, TextInput, Alert, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
 import CustomInput from '@/components/CustomInput';
 import LoadingButton from '@/components/LoadingButton';
@@ -118,7 +118,7 @@ export default function AddressRegistration() {
                 <TextInput
                   style={styles.input}
                   value={number}
-                  onChangeText={(text) => setNumber(text)} // Convert to string
+                  onChangeText={(text) => setNumber(text)}
                   keyboardType="numeric"
                   maxLength={8}
                 />

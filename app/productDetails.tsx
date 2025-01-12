@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, TextInput, ScrollView, StyleSheet, ToastAndroid } from "react-native";
-import ProductDetailsFooter from "../components/ProductDetailsFooter";
+import ProductDetailsFooter from "@/components/ProductDetailsFooter";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getOrderItemById, removeOrderItemById, upsertOrderItem } from "../database/orderItemService";
-import LoadingAnimation from "../components/LoadingAnimation";
+import { getOrderItemById, removeOrderItemById, upsertOrderItem } from "@/database/orderItemService";
+import LoadingAnimation from "@/components/LoadingAnimation";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { ProductDetailsParams } from "@/types/ProductTypes";
 import { useRouter } from "expo-router";

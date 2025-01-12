@@ -1,6 +1,6 @@
 import apiClient from '../apiClient';
-import ProductResponse from '../response/ProductResponse';
-import TokenService from '../../service/TokenService';
+import ProductResponse from '@/api/response/ProductResponse';
+import TokenService from '@/service/TokenService';
 
 class ProductService {
   // Método estático para buscar produtos

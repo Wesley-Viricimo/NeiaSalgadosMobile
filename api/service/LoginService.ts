@@ -1,6 +1,6 @@
 import apiClient from '../apiClient';
-import LoginModel from '../../model/LoginModel';
-import LoginResponse from '../response/LoginResponse';
+import LoginModel from '@/model/LoginModel';
+import LoginResponse from '@/api/response/LoginResponse';
 
 class LoginService {
     static async login(loginModel: LoginModel): Promise<LoginResponse | string> {

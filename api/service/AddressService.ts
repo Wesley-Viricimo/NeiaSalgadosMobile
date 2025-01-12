@@ -1,6 +1,6 @@
-import AddressModel from "../../model/AddressModel";
+import AddressModel from "@/model/AddressModel";
 import apiClient from "../apiClient";
-import TokenService from "../../service/TokenService";
+import TokenService from "@/service/TokenService";
 
 export class AddressService {
 
@@ -84,8 +84,6 @@ export class AddressService {
               };
 
               const responseData = await apiClient('/address', options);
-
-              console.log('responseData', responseData);
 
               if(responseData.statusCode === 201) {
                 return {

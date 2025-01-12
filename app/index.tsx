@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import UserStorage from "../service/UserStorageService"; // Supondo que você tenha o caminho correto
-import { ActivityIndicator, View } from "react-native";
+import UserStorage from "@/service/UserStorageService";
+import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native"; // Importando o hook de navegação
 import LoadingAnimation from "@/components/LoadingAnimation";
 

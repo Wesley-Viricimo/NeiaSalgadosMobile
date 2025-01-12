@@ -1,6 +1,6 @@
-import ResendCodeModel from "../../model/ResendCodeModel";
-import UserModel from "../../model/UserModel";
-import VerifyCodeModel from "../../model/VerifyCodeModel";
+import ResendCodeModel from "@/model/ResendCodeModel";
+import UserModel from "@/model/UserModel";
+import VerifyCodeModel from "@/model/VerifyCodeModel";
 import apiClient from "../apiClient";
 
 export default class UserService {
