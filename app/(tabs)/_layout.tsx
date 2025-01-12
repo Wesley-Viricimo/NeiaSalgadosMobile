@@ -6,7 +6,7 @@ import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import FinishOrderFooter from '@/components/FinishOrderFooter'; // Importe o componente
+import FinishOrderFooter from '@/components/FinishOrderFooter';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();

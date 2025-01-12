@@ -7,7 +7,6 @@ class UserStorage {
     // Função para salvar os dados do usuário
     saveUserData = async (data: {id: string; name: string; role: string; token: string }) => {
         try {
-            console.log('Salvando dados do usuário:', data);
             await AsyncStorage.setItem(USER_KEY, JSON.stringify(data));
         } catch (error) {
             console.error('Erro ao salvar dados do usuário:', error);

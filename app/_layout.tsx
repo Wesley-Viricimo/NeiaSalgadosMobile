@@ -51,6 +51,8 @@ export default function RootLayout() {
           <Stack.Screen name="productDetails" options={{ headerShown: false }} />
           <Stack.Screen name="finishOrder" options={{ headerShown: false }} />
           <Stack.Screen name="addressRegistration" options={{ headerShown: false }} />
+          <Stack.Screen name="confirmationCode" options={{ headerShown: false }} />
+          <Stack.Screen name="userRegistration" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />

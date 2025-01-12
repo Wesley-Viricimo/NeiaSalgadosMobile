@@ -4,6 +4,7 @@ import OptionItem from "@/components/OptionItem";
 import UserStorage from "@/service/UserStorageService";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TokenService from "@/service/TokenService";
+import { useRouter } from "expo-router"
 
 interface Option {
   id: string;
@@ -13,7 +14,8 @@ interface Option {
   onPress: () => void;
 }
 
-const Profile = () => {
+export default function Profile(){
+  const router = useRouter();
   const [username, setUsername] = useState("");
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const Profile = () => {
             const userStorage = new UserStorage();
             await userStorage.removeUserData();
             TokenService.clearToken();
-            //VOLTAR PARA TELA DE LOGIN
+            router.replace("/login");
           },
         },
       ],
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
     paddingBottom: 60, // Adiciona espaço para o footer
   },
   footer: {
-    bottom: -120, // Encostar na parte inferior
+    bottom: -15, // Encostar na parte inferior
     flexDirection: "column",
     justifyContent: "flex-end",
     backgroundColor: "#fff",
@@ -167,5 +169,3 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
 });
-
-export default Profile;

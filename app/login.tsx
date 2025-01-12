@@ -107,8 +107,8 @@ export default function Login() {
       </TouchableOpacity>
 
       {/* Texto para Cadastro */}
-      {/* <TouchableOpacity onPress={/() => navigation.navigate("UserRegistration")}> */}
-      <TouchableOpacity onPress={() => Alert.alert("Cadastro")}>
+      <TouchableOpacity onPress={() => router.push("/userRegistration")}>
+      {/* <TouchableOpacity onPress={() => Alert.alert("Cadastro")}> */}
         <Text style={styles.linkText}>Cadastre-se</Text>
       </TouchableOpacity>
     </View>
