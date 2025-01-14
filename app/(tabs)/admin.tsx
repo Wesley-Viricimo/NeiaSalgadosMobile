@@ -2,8 +2,11 @@ import React from "react";
 import { Text, StyleSheet, View } from "react-native";
 import OptionCard from "@/components/OptionCard";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 export default function Admin() {
+  const router = useRouter();
+  
   const handlePendingOrders = () => {
     console.log("Pedidos Pendentes");
   };
@@ -13,7 +16,7 @@ export default function Admin() {
   };
 
   const handleProductControl = () => {
-    // navigation.navigate("ProductControl");
+    router.push("/productCreate");
   };
 
   const handleUserControl = () => {

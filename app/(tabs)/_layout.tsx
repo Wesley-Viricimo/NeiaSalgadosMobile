@@ -6,7 +6,7 @@ import { HapticTab } from '@/components/HapticTab';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import FinishOrderFooter from '@/components/FinishOrderFooter';
+import FinishOrderFooter from '@/components/FinishOrderFooter'; // Importe o componente
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -63,8 +63,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-
-      {/* Exibe o rodapé sobre as tabs, se a quantidade for maior que 0 */}
       <FinishOrderFooter />
     </View>
   );
