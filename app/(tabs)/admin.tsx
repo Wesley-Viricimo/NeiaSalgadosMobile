@@ -16,7 +16,7 @@ export default function Admin() {
   };
 
   const handleProductControl = () => {
-    router.push("/productCreate");
+    router.push("/productControl");
   };
 
   const handleUserControl = () => {
