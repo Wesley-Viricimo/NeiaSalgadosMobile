@@ -57,7 +57,7 @@ export default function ProductControl() {
         <OptionCard
           iconName="add-box"
           title="Cadastrar Novo Produto"
-          onPress={() => router.push("/login")}
+          onPress={() => router.push("/productCreate")}
         />
       </Animated.View>
     </SafeAreaView>
