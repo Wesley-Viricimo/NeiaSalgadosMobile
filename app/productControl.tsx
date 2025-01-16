@@ -48,16 +48,17 @@ export default function ProductControl() {
           styles.optionsContainer,
           { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
         ]}
+        
       >
         <OptionCard
-          iconName="edit"
-          title="Alterar / Deletar Produtos"
-          onPress={() => console.log("Alterar / Deletar Produtos")}
-        />
-        <OptionCard
-          iconName="add-box"
+          iconName="add-circle"
           title="Cadastrar Novo Produto"
           onPress={() => router.push("/productCreate")}
+        />
+        <OptionCard
+          iconName="create"
+          title="Alterar / Deletar Produtos"
+          onPress={() => console.log("Alterar / Deletar Produtos")}
         />
       </Animated.View>
     </SafeAreaView>
