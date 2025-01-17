@@ -4,7 +4,7 @@ import OptionItem from "@/components/OptionItem";
 import UserStorage from "@/service/UserStorageService";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TokenService from "@/service/TokenService";
-import { useRouter } from "expo-router"
+import { useRouter } from "expo-router";
 
 interface Option {
   id: string;
@@ -12,20 +12,27 @@ interface Option {
   subtitle: string;
   iconName: string;
   onPress: () => void;
+  disabled?: boolean; // Novo campo para desabilitar a opção
 }
 
-export default function Profile(){
+export default function Profile() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("Usuário");
+  const [isAdminOrDev, setIsAdminOrDev] = useState(false);
+  const userStorage = new UserStorage();
 
   useEffect(() => {
-    const fetchUserName = async () => {
-      const userStorage = new UserStorage();
+    const fetchUserData = async () => {
       const userData = await userStorage.getUserData();
       setUsername(userData.name || "Usuário");
+
+      // Verifica se a role do usuário é admin ou dev
+      if (userData.role === "ADMIN" || userData.role === "DEV") {
+        setIsAdminOrDev(true);
+      }
     };
 
-    fetchUserName();
+    fetchUserData();
   }, []);
 
   const handleLogout = () => {
@@ -40,7 +47,6 @@ export default function Profile(){
         {
           text: "Sim",
           onPress: async () => {
-            const userStorage = new UserStorage();
             await userStorage.removeUserData();
             TokenService.clearToken();
             router.replace("/login");
@@ -82,15 +88,25 @@ export default function Profile(){
     },
   ];
 
+  if (isAdminOrDev) {
+    initialOptions.push({
+      id: "5",
+      title: "Administrativo",
+      subtitle: "Painel Administrativo",
+      iconName: "settings",
+      onPress: () => router.push("/admin")
+    });
+  }
+
   const footerOptions = [
     {
-      id: "5",
+      id: "6",
       title: "Configurações",
       iconName: "settings",
       onPress: () => alert("Configurações"),
     },
     {
-      id: "6",
+      id: "7",
       title: "Sair",
       iconName: "exit",
       onPress: handleLogout,
@@ -102,7 +118,15 @@ export default function Profile(){
       title={item.title}
       subtitle={item.subtitle}
       iconName={item.iconName}
-      onPress={item.onPress}
+      onPress={
+        item.disabled
+          ? () =>
+              Alert.alert(
+                "Acesso Negado",
+                "Você não tem permissão para acessar esta área."
+              )
+          : item.onPress
+      }
       showSubtitle={!!item.subtitle}
     />
   );
@@ -133,7 +157,7 @@ export default function Profile(){
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

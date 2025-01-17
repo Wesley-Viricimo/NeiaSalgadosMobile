@@ -90,7 +90,7 @@ export default function Home() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedInput(inputValue);
-    }, 250);
+    }, 350);
     return () => clearTimeout(handler);
   }, [inputValue]);
 
