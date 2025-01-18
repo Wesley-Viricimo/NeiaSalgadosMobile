@@ -89,30 +89,32 @@ export default function Home() {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedInput(inputValue);
-    }, 350);
+      if (inputValue !== debouncedInput) {
+        setDebouncedInput(inputValue);
+      }
+    }, 150);
+  
     return () => clearTimeout(handler);
-  }, [inputValue]);
+  }, [inputValue, debouncedInput]);
 
+  Animated.timing(fadeAnim, {
+    toValue: 1,
+    duration: 600,
+    useNativeDriver: true,
+  }).start();
+
+  Animated.timing(translateAnim, {
+    toValue: 0,
+    duration: 600,
+    useNativeDriver: true,
+  }).start();
+  
   useEffect(() => {
-    setPage(1);
-    setHasMore(true);
-    setProducts([]); // Limpar a lista de produtos quando o input for alterado
-
-    // Inicia a animação de fade e deslizamento para os componentes
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-
-    Animated.timing(translateAnim, {
-      toValue: 0,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-
-    loadProducts(debouncedInput, 1); // Carregar produtos com o valor de busca
+    if (debouncedInput === inputValue) {
+      setPage(1);
+      setHasMore(true);
+      loadProducts(debouncedInput, 1);
+    }
   }, [debouncedInput]);
 
   const handleLoadMore = () => {
