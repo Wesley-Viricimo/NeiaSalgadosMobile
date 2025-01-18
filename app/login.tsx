@@ -10,6 +10,7 @@ import PasswordInput from "@/components/PasswordInput";
 import CustomInput from "@/components/CustomInput";
 import * as Notifications from "expo-notifications"; // Importar expo-notifications
 import Constants from "expo-constants";
+import UserService from "@/api/service/UserService";
 
 export default function Login() {
   const router = useRouter();
@@ -18,16 +19,14 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const userStorge = new UserStorageService();
 
-  // Função para obter o token de push e enviar para a API
   const registerForPushNotificationsAsync = async () => {
       try {
           const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
           const token = (await Notifications.getExpoPushTokenAsync({
               projectId: projectId,
             }).then((res) => res.data));
-            
-          console.log("Expo Push Token:", token);
 
+           await UserService.saveTokenNotification(token);
       } catch (error) {
           console.error("Erro ao obter o token de push:", error);
       }
@@ -49,7 +48,6 @@ export default function Login() {
 
           // Registra o token de push para o usuário logado
           await registerForPushNotificationsAsync();
-
           router.replace("/(tabs)");
 
         } else {

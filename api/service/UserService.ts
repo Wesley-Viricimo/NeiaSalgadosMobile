@@ -2,6 +2,7 @@ import ResendCodeModel from "@/model/ResendCodeModel";
 import UserModel from "@/model/UserModel";
 import VerifyCodeModel from "@/model/VerifyCodeModel";
 import apiClient from "../apiClient";
+import TokenService from "@/service/TokenService";
 
 export default class UserService {
 
@@ -98,6 +99,37 @@ export default class UserService {
       } else {
         throw new Error('Erro desconhecido ao reenviar código de verificação');
       }
+    }
+  }
+
+  static async saveTokenNotification(notificationToken: string) {
+    try {
+      const token = await TokenService.getToken();
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: JSON.stringify(notificationToken)
+      };
+
+      const responseData = await apiClient(`/user/save-notificationToken`, options);
+
+      if(responseData.statusCode === 201) {
+        return {
+          status: responseData.statusCode,
+          message: responseData.message.detail
+        };
+      }
+
+      return {
+        message: responseData.message.detail
+      };
+
+    } catch (error) {
+      
     }
   }
 }
