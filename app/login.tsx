@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 import PasswordInput from "@/components/PasswordInput";
 import CustomInput from "@/components/CustomInput";
 import * as Notifications from "expo-notifications"; // Importar expo-notifications
+import Constants from "expo-constants";
 
 export default function Login() {
   const router = useRouter();
@@ -17,34 +18,20 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const userStorge = new UserStorageService();
 
-  // // Função para obter o token de push e enviar para a API
-  // const registerForPushNotificationsAsync = async () => {
-  //     try {
-  //         const { status } = await Notifications.requestPermissionsAsync();
-  //         if (status !== "granted") {
-  //             alert("Falha ao obter permissão para notificações!");
-  //             return;
-  //         }
-  //         const token = (await Notifications.getExpoPushTokenAsync({
-  //             projectId: 'dc3085fd-ddd4-4403-9841-1cd7e16ba489',
-  //           })).data;
-  //         console.log("Expo Push Token:", token);
+  // Função para obter o token de push e enviar para a API
+  const registerForPushNotificationsAsync = async () => {
+      try {
+          const projectId = Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+          const token = (await Notifications.getExpoPushTokenAsync({
+              projectId: projectId,
+            }).then((res) => res.data));
+            
+          console.log("Expo Push Token:", token);
 
-  //         // Enviar o token para a API (exemplo de requisição)
-  //         await fetch('https://sua-api.com/api/save-push-token', {
-  //             method: 'POST',
-  //             headers: {
-  //                 'Content-Type': 'application/json',
-  //             },
-  //             body: JSON.stringify({
-  //                 token: token,
-  //                 userId: userStorge.getUserData().id, // Enviar o ID do usuário armazenado
-  //             }),
-  //         });
-  //     } catch (error) {
-  //         console.error("Erro ao obter o token de push:", error);
-  //     }
-  // };
+      } catch (error) {
+          console.error("Erro ao obter o token de push:", error);
+      }
+  };
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -59,6 +46,9 @@ export default function Login() {
             role: data.role,
             token: data.token,
           });
+
+          // Registra o token de push para o usuário logado
+          await registerForPushNotificationsAsync();
 
           router.replace("/(tabs)");
 

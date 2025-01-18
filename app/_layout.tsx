@@ -1,4 +1,8 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -33,6 +37,19 @@ export default function RootLayout() {
     };
     setupDatabase();
 
+    const requestPermissionNotification = async () => {
+      try {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status !== "granted") {
+          alert("Falha ao obter permissão para notificações!");
+        }
+      } catch (error) {
+        console.error("Erro ao obter permissão para notificações:", error);
+      }
+    };
+
+    requestPermissionNotification();
+
     if (loaded) {
       SplashScreen.hideAsync();
     }
@@ -48,12 +65,27 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="productDetails" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="productDetails"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="finishOrder" options={{ headerShown: false }} />
-          <Stack.Screen name="addressRegistration" options={{ headerShown: false }} />
-          <Stack.Screen name="confirmationCode" options={{ headerShown: false }} />
-          <Stack.Screen name="userRegistration" options={{ headerShown: false }} />
-          <Stack.Screen name="productControl" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="addressRegistration"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="confirmationCode"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="userRegistration"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="productControl"
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="productCreate" options={{ headerShown: false }} />
           <Stack.Screen name="admin" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
