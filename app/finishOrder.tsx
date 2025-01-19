@@ -12,6 +12,7 @@ import LoadingButton from "@/components/LoadingButton";
 import { useRouter } from "expo-router";
 import { eventEmitter } from "@/utils/eventEmitter";
 import { Additional, Address, OrderItem } from "@/types/FinishOrderTypes";
+import OrderValidation from "@/validations/OrderValidation";
 
 export default function FinishOrder() {
   const router = useRouter();
@@ -118,6 +119,14 @@ export default function FinishOrder() {
   const handleFinishOrder = async () => {
     setIsLoading(true); // Ativa o estado de carregamento
     try {
+      const orderValidation = new OrderValidation(selectedPaymentMethod, selectedAddress, selectedOption);
+      const messageValidation = orderValidation.validateFinishOrder();
+
+      if (messageValidation) {
+        Alert.alert("Erro", messageValidation);
+        return;
+      }
+
       console.log("paymentMethod", selectedPaymentMethod);
       console.log("typeOfDelivery", selectedOption);
       console.log("address", selectedAddress);
