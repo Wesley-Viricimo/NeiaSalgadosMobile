@@ -1,5 +1,3 @@
-import { Address } from "@/types/FinishOrderTypes";
-
 export interface Product {
     idProduct: number;
 }
@@ -16,15 +14,15 @@ export interface AdditionalItem {
 class FinishOrderModel {
     paymentMethod: number;
     typeOfDelivery: number;
-    address: Address | null;
+    idAddress: number | undefined;
     orderItens: OrderItem[];
     additionalItens: AdditionalItem[] | null;
 
 
-    constructor(paymentMethod: number, typeOfDelivery: number, address: Address | null, orderItens: OrderItem[], additionalItens: AdditionalItem[] | null) {
+    constructor(paymentMethod: number, typeOfDelivery: number, idAddress: number | undefined, orderItens: OrderItem[], additionalItens: AdditionalItem[] | null) {
         this.paymentMethod = paymentMethod;
         this.typeOfDelivery = typeOfDelivery;
-        this.address = address;
+        this.idAddress = idAddress;
         this.orderItens = orderItens;
         this.additionalItens = additionalItens;
     }

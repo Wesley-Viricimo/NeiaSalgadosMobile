@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 import { eventEmitter } from "@/utils/eventEmitter";
 import { Additional, Address, OrderItem } from "@/types/FinishOrderTypes";
 import OrderValidation from "@/validations/OrderValidation";
+import FinishOrderModel from "@/model/FinishOrderModel";
 
 export default function FinishOrder() {
   const router = useRouter();
@@ -22,8 +23,8 @@ export default function FinishOrder() {
   const [paymentOption, setPaymentOption] = useState("pagarEntrega");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [additionals, setAdditionals] = useState<Additional[]>([]);
-  const [selectedAdditionals, setSelectedAdditionals] = useState<{ [key: number]: boolean }>({});
-  const [orderItems, setOrderItems] = useState([]);
+  const [selectedAdditionals, setSelectedAdditionals] = useState<{ [idAdditional: number]: boolean }>({});
+  const [orderItems, setOrderItems] = useState<any>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [additionalTotal, setAdditionalTotal] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
@@ -127,13 +128,36 @@ export default function FinishOrder() {
         return;
       }
 
-      console.log("paymentMethod", selectedPaymentMethod);
-      console.log("typeOfDelivery", selectedOption);
-      console.log("address", selectedAddress);
-      console.log("orderItems", orderItems);
-      console.log("additionals", selectedAdditionals);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simula um delay de 2 segundos
-      Alert.alert("Pedido Realizado", "Seu pedido foi realizado com sucesso!");
+      const orderItens: { product: { idProduct: number }; quantity: number }[] = [];
+
+      for (let item of orderItems) {
+        const orderItem = {
+          product: {
+            idProduct: Number(item.id),
+          },
+          quantity: item.quantity,
+        };
+      
+        orderItens.push(orderItem);
+      }
+
+      const finishOrderModel = new FinishOrderModel(
+        Number(selectedPaymentMethod), 
+        Number(selectedOption), 
+        selectedAddress?.idAddress, 
+        orderItens, 
+        Object.keys(selectedAdditionals)
+          .filter(id => selectedAdditionals[Number(id)])
+          .map(id => ({ idAdditional: Number(id) })));
+
+      const response = await OrderService.createOrder(finishOrderModel);
+
+      if (response.status === 201) {
+        Alert.alert('Sucesso', 'Pedido realizado com sucesso!');        
+      } else {
+        Alert.alert('Erro', 'Erro ao realizar pedido. Tente novamente.');
+      }
+
     } catch (error) {
       Alert.alert("Erro", "Ocorreu um erro ao finalizar o pedido.");
     } finally {
@@ -176,7 +200,10 @@ export default function FinishOrder() {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, selectedOption === 1 && styles.selectedTab]} // Estilização tipo retira
-          onPress={() => setSelectedOption(1)} // 1 = retirada
+          onPress={() => {
+            setSelectedOption(1);
+            setSelectedAddress(null);
+          }} // 1 = retirada        
         >
           <Text
             style={[
