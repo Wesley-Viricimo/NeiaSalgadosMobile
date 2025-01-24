@@ -150,6 +150,13 @@ export default function FinishOrder() {
           .filter(id => selectedAdditionals[Number(id)])
           .map(id => ({ idAdditional: Number(id) })));
 
+          console.log('selectedOption', selectedOption)
+          console.log('selectedPaymentMethod', selectedPaymentMethod)
+          console.log('selectedAdditionals', selectedAdditionals)
+          console.log('orderItems', orderItems)
+          console.log('subtotal', subtotal)
+          console.log('additionalTotal', additionalTotal)
+
       const response = await OrderService.createOrder(finishOrderModel);
 
       if (response.status === 201) {
