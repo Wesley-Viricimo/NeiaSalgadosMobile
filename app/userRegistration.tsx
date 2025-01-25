@@ -86,7 +86,7 @@ export default function UserRegistration() {
             </ScrollView>
         </SafeAreaView>
     );
-}
+} 
 
 const styles = StyleSheet.create({
     container: {
